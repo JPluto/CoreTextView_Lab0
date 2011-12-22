@@ -12,7 +12,7 @@
 
 int main(int argc, char *argv[])
 {
-    @autoreleasepool {
-        return UIApplicationMain(argc, argv, nil, NSStringFromClass([CoreTextView_Lab0AppDelegate class]));
-    }
+    NSAutoreleasePool * pool = [NSAutoreleasePool new];
+    return UIApplicationMain(argc, argv, nil, NSStringFromClass([CoreTextView_Lab0AppDelegate class]));
+    [pool drain];
 }

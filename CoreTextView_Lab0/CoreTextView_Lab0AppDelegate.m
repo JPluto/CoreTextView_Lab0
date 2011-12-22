@@ -7,6 +7,8 @@
 //
 
 #import "CoreTextView_Lab0AppDelegate.h"
+#import "CoreTextViewController.h"
+#import "CoreTextView.h"
 
 @implementation CoreTextView_Lab0AppDelegate
 
@@ -18,6 +20,15 @@
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
+    
+    CoreTextViewController * ctvc = [[CoreTextViewController alloc] initWithNibName:@"TestForm" bundle:nil];
+    [self.window addSubview:ctvc.view];
+    
+    NSString * filepath = [[NSBundle mainBundle] pathForResource:@"1" ofType:@""];
+    if (ctvc.currentTextView && [ctvc.currentTextView isKindOfClass:[CoreTextView class]]) {
+        [ctvc loadAttributedStringFromFile:filepath];
+    }
+    
     return YES;
 }
 
@@ -58,6 +69,11 @@
      Save data if appropriate.
      See also applicationDidEnterBackground:.
      */
+}
+
+- (void)onClick_reloadText:(id)sender
+{
+    
 }
 
 @end
