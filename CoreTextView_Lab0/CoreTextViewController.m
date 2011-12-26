@@ -16,6 +16,21 @@
 
 @synthesize currentTextView;
 @synthesize scrollView;
+@synthesize segmentCtrl;
+
+- (void)dealloc
+{
+    if (currentTextView) {
+        [currentTextView release];
+    }
+    if (scrollView) {
+        [scrollView release];
+    }
+    if (segmentCtrl) {
+        [segmentCtrl release];
+    }
+    [super dealloc];
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -43,19 +58,28 @@
 }
 */
 
-/*
+
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if (segmentCtrl) {
+        [segmentCtrl addTarget:self action:@selector(segmentControlValueChanged:) forControlEvents:UIControlEventValueChanged];
+    }
 }
-*/
+
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+    if (segmentCtrl) {
+        [segmentCtrl removeTarget:self action:@selector(segmentControlValueChanged:) forControlEvents:UIControlEventValueChanged];
+    }
+    self.segmentCtrl = nil;
+    self.currentTextView = nil;
+    self.scrollView = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -131,6 +155,12 @@
             [tv setNeedsDisplay];
         }
     }
+}
+
+- (void)segmentControlValueChanged:(id)sender
+{
+    NSLog(@"%@", DEBUG_FUNCTION_NAME);
+    
 }
 
 @end

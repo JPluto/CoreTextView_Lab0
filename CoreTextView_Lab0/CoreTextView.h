@@ -28,6 +28,7 @@
     CFIndex selectedStartLine;
     CFIndex selectedEndLine;
     
+    CGContextRef m_Context;
 }
 
 @property (nonatomic) CGFloat fontSize;

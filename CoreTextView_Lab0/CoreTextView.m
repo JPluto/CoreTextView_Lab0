@@ -53,6 +53,10 @@
     [super drawRect:rect];
     // Drawing code
     CGContextRef context = UIGraphicsGetCurrentContext();
+    if (context != m_Context) {
+        m_Context = context;
+    }
+    
     CGContextSetTextMatrix(context, CGAffineTransformIdentity);
     CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1, -1));
     
@@ -67,7 +71,7 @@
     CGContextFillRect(context, selectedRect);
         
     CGMutablePathRef fillPaths = CGPathCreateMutable();
-    
+
     if (ctLinesArrayRef != NULL) {
         for (lineIdx = 0; lineIdx < CFArrayGetCount(ctLinesArrayRef); lineIdx++) {
             ctLineSelectBounds = CGRectZero;
@@ -76,28 +80,29 @@
             ctlineBounds = CTLineGetImageBounds(CFArrayGetValueAtIndex(ctLinesArrayRef, lineIdx), context);
             NSLog(@"%@", NSStringFromCGRect(ctlineBounds));
             fontHeight = ascent + lineSpace;
-            if (selectedEndIndex == -1 && selectedStartIndex == -1) {
-            }else {
-                //NSLog(@"selectedStartIndex :%ld;  selectedEndIndex :%ld", selectedStartIndex, selectedEndIndex);
-                if (lineIdx == selectedStartIndex) {
+//            if (selectedEndIndex == -1 && selectedStartIndex == -1) {
+//            }else {
+                NSLog(@"selectedStartIndex :%ld;  selectedEndIndex :%ld", selectedStartIndex, selectedEndIndex);
+//                if (lineIdx == selectedStartIndex) {
+//                    ctLineSelectBounds.origin.x = visibleBounds.origin.x;
+//                    ctLineSelectBounds.origin.y = visibleBounds.origin.y + (lineIdx + 1) * fontHeight;
+//                    ctLineSelectBounds.size.width = bounds;
+//                    ctLineSelectBounds.size.height = fontHeight;
+//                }else if (lineIdx == selectedEndIndex) {
+//                    ctLineSelectBounds.origin.x = visibleBounds.origin.x;
+//                    ctLineSelectBounds.origin.y = visibleBounds.origin.y + (lineIdx + 1) * fontHeight;
+//                    ctLineSelectBounds.size.width = bounds;
+//                    ctLineSelectBounds.size.height = fontHeight;
+//                }else {
+                if (lineIdx >= selectedStartIndex && lineIdx <= selectedEndLine) {
                     ctLineSelectBounds.origin.x = visibleBounds.origin.x;
-                    ctLineSelectBounds.origin.y = visibleBounds.origin.y + (lineIdx + 1) * fontHeight;
+                    ctLineSelectBounds.origin.y = visibleBounds.origin.y + (lineIdx) * fontHeight;
                     ctLineSelectBounds.size.width = bounds;
                     ctLineSelectBounds.size.height = fontHeight;
-                }else if (lineIdx == selectedEndIndex) {
-                    ctLineSelectBounds.origin.x = visibleBounds.origin.x;
-                    ctLineSelectBounds.origin.y = visibleBounds.origin.y + (lineIdx + 1) * fontHeight;
-                    ctLineSelectBounds.size.width = bounds;
-                    ctLineSelectBounds.size.height = fontHeight;
-                }else {
-                    ctLineSelectBounds.origin.x = visibleBounds.origin.x;
-                    ctLineSelectBounds.origin.y = visibleBounds.origin.y + (lineIdx + 1) * fontHeight;
-                    ctLineSelectBounds.size.width = bounds;
-                    ctLineSelectBounds.size.height = -ctlineBounds.size.height;
+                    CGContextSetFillColorWithColor(context, [UIColor purpleColor].CGColor);
+                    CGContextFillRect(context, ctLineSelectBounds);
                 }
-                CGContextSetFillColorWithColor(context, [UIColor purpleColor].CGColor);
-                CGContextFillRect(context, ctLineSelectBounds);
-            }
+//            }
             CGContextSetFillColorWithColor(context, [[UIColor blackColor] CGColor]);
             CGContextSetTextPosition(context, visibleBounds.origin.x, visibleBounds.origin.y + (lineIdx + 1) * fontHeight);
             CTLineDraw(CFArrayGetValueAtIndex(ctLinesArrayRef, lineIdx), context);
@@ -113,7 +118,8 @@
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(self->cfAttrStringRef);
     CGMutablePathRef path = CGPathCreateMutable();
     visibleBounds = CGRectMake(10.0, 10.0, self.frame.size.width - 20, self.frame.size.height - 20);
-    CGPathAddRect(path, NULL, visibleBounds);
+    CGAffineTransform cgTransform = CGAffineTransformMakeScale(1, -1);
+    CGPathAddRect(path, &cgTransform, visibleBounds);
     
     if (visibleFrameRef != NULL) {
         CFRelease(visibleFrameRef);
@@ -153,6 +159,8 @@
     UITouch * tap = [touches anyObject];
     selectedRect = CGRectZero;
     selectedRect.origin = [tap locationInView:self];
+    selectedStartLine = -1;
+    selectedEndLine = -1;
     
     if (ctLinesArrayRef != NULL) {
         for (int i = 0; i < CFArrayGetCount(ctLinesArrayRef); i++) {
@@ -163,6 +171,7 @@
             NSLog(@"cfindex :%lu;  offset :%f,  2ndOff :%f", selectedStartIndex, offset, secondaryOff);
             if (selectedRect.origin.y < visibleBounds.origin.y + fontHeight * (i + 1) && selectedRect.origin.y > visibleBounds.origin.y + fontHeight * i) {
                 selectedStartLine = i;
+                selectedEndLine = i;
             }
         }
     }
