@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TextBaseView.h"
 
-@interface TextView : UIView
+@interface TextView : TextBaseView
 {
 @public
     CGFontRef cgFontRef;

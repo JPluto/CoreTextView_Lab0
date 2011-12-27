@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A269D87914A9578A005D1327 /* TextBaseView.m in Sources */ = {isa = PBXBuildFile; fileRef = A269D87814A9578A005D1327 /* TextBaseView.m */; };
+		A269D8B414A9725C005D1327 /* OpenGLES_TextView.m in Sources */ = {isa = PBXBuildFile; fileRef = A269D8B314A9725C005D1327 /* OpenGLES_TextView.m */; };
 		A284C5A01499D794005A6BF3 /* TextScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = A284C59F1499D793005A6BF3 /* TextScrollView.m */; };
 		A284C5A41499E06D005A6BF3 /* SimpleTextProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = A284C5A31499E06D005A6BF3 /* SimpleTextProcessor.m */; };
 		A28EDB46146D073800B88AEB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A28EDB45146D073800B88AEB /* UIKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -47,6 +49,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A269D87714A9578A005D1327 /* TextBaseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextBaseView.h; sourceTree = "<group>"; };
+		A269D87814A9578A005D1327 /* TextBaseView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextBaseView.m; sourceTree = "<group>"; };
+		A269D8B214A9725C005D1327 /* OpenGLES_TextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLES_TextView.h; sourceTree = "<group>"; };
+		A269D8B314A9725C005D1327 /* OpenGLES_TextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenGLES_TextView.m; sourceTree = "<group>"; };
 		A284C59E1499D793005A6BF3 /* TextScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextScrollView.h; sourceTree = "<group>"; };
 		A284C59F1499D793005A6BF3 /* TextScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextScrollView.m; sourceTree = "<group>"; };
 		A284C5A21499E06C005A6BF3 /* SimpleTextProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleTextProcessor.h; sourceTree = "<group>"; };
@@ -164,10 +170,14 @@
 				A28EDB62146D087300B88AEB /* CoreTextView.m */,
 				A2E3815B1498710A002C3FAA /* TextView.h */,
 				A2E3815C1498710A002C3FAA /* TextView.m */,
+				A269D8B214A9725C005D1327 /* OpenGLES_TextView.h */,
+				A269D8B314A9725C005D1327 /* OpenGLES_TextView.m */,
 				A284C59E1499D793005A6BF3 /* TextScrollView.h */,
 				A284C59F1499D793005A6BF3 /* TextScrollView.m */,
 				A284C5A21499E06C005A6BF3 /* SimpleTextProcessor.h */,
 				A284C5A31499E06D005A6BF3 /* SimpleTextProcessor.m */,
+				A269D87714A9578A005D1327 /* TextBaseView.h */,
+				A269D87814A9578A005D1327 /* TextBaseView.m */,
 			);
 			path = CoreTextView_Lab0;
 			sourceTree = "<group>";
@@ -346,6 +356,8 @@
 				A2E3815D1498710A002C3FAA /* TextView.m in Sources */,
 				A284C5A01499D794005A6BF3 /* TextScrollView.m in Sources */,
 				A284C5A41499E06D005A6BF3 /* SimpleTextProcessor.m in Sources */,
+				A269D87914A9578A005D1327 /* TextBaseView.m in Sources */,
+				A269D8B414A9725C005D1327 /* OpenGLES_TextView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

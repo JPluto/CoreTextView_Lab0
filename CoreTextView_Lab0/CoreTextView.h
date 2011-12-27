@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TextBaseView.h"
 
-@interface CoreTextView : UIView {
+@interface CoreTextView : TextBaseView {
 @public
     CFMutableAttributedStringRef cfAttrStringRef;
     CFRange visibleRange;
