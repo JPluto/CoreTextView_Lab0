@@ -11,12 +11,15 @@
 #import "TextView.h"
 #import "TextScrollView.h"
 #import "SimpleTextProcessor.h"
+#import "TextBaseView.h"
+#import "OpenGLES_TextView.h"
 
 @implementation CoreTextViewController
 
 @synthesize currentTextView;
 @synthesize scrollView;
 @synthesize segmentCtrl;
+@synthesize textViews;
 
 - (void)dealloc
 {
@@ -28,6 +31,9 @@
     }
     if (segmentCtrl) {
         [segmentCtrl release];
+    }
+    if (textViews) {
+        [textViews release];
     }
     [super dealloc];
 }
@@ -63,15 +69,26 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    if (segmentCtrl) {
-        [segmentCtrl addTarget:self action:@selector(segmentControlValueChanged:) forControlEvents:UIControlEventValueChanged];
+    if (textViews == nil) {
+        textViews = [[NSArray alloc] initWithObjects:[TextView new], [CoreTextView new], [OpenGLES_TextView new], nil];
+        [[textViews objectAtIndex:0] setBackgroundColor:[UIColor colorWithAlpha:255 Red:222 green:228 blue:234]];
+        [[textViews objectAtIndex:1] setBackgroundColor:[UIColor colorWithAlpha:255 Red:222 green:228 blue:234]];
+        [[textViews objectAtIndex:2] setBackgroundColor:[UIColor colorWithAlpha:255 Red:222 green:228 blue:234]];
     }
+    if (segmentCtrl) {
+        if (![[segmentCtrl allTargets] containsObject:self]) {
+            [segmentCtrl addTarget:self action:@selector(segmentControlValueChanged:) forControlEvents:UIControlEventValueChanged];
+        }
+        segmentCtrl.selectedSegmentIndex = 1;
+    }
+
 }
 
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    OUT_FUNCTION_NAME();
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
     if (segmentCtrl) {
@@ -85,17 +102,9 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     NSLog(@"%@  :%@", DEBUG_FUNCTION_NAME, [self.currentTextView classForCoder]);
-    if ([self.currentTextView isKindOfClass:[CoreTextView class]]) {
-        CFMutableAttributedStringRef cfattstringref = [self loadAttributedStringFromFile:[[NSBundle mainBundle] pathForResource:@"2" ofType:nil]];
-        CoreTextView * ctv = (CoreTextView*)self.currentTextView;
-        ctv->cfAttrStringRef = (CFMutableAttributedStringRef)CFRetain(cfattstringref);
-        [ctv loadVisibleTextForCFRange:CFRangeMake(ctv->startGlyphIndex + ctv->totalGlyphCount, 0)];
-    }else if ([self.currentTextView isKindOfClass:[TextView class]]) {
-        TextView * textView = (TextView*)self.currentTextView;
-        [textView setText:[[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"1" ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
-        
-        textView->cgFontRef = CGFontCreateWithFontName((CFStringRef)@"Arial");
-
+    if ([self.currentTextView respondsToSelector:@selector(loadText:)]) {
+        NSString * fileContent = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"2" ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        [self.currentTextView loadText:fileContent];
     }
 }
 
@@ -103,28 +112,6 @@
 {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-
-
-- (CFMutableAttributedStringRef)loadAttributedStringFromFile:(NSString *)filePath
-{
-    NSLog(@"filepath:%@", filePath);
-    NSError * error = nil;
-    
-    NSString * contents = [[NSString stringWithContentsOfFile:filePath encoding:NSUTF16StringEncoding error:&error] stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-    contents = [contents stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"];
-    //NSLog(@"contents = %@", contents);
-    
-    NSMutableAttributedString * attStr = nil;
-    UIFont * font = [UIFont fontWithName:@"System" size:20.0];
-    
-    attStr = [[[NSMutableAttributedString alloc] initWithString:contents attributes:[NSDictionary dictionaryWithObjectsAndKeys:font, (NSString *)kCTFontAttributeName, nil]] autorelease];
-    
-    [attStr addAttribute:(id)kCTForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(0, 100)];
-
-    CFMutableAttributedStringRef attrString = (CFMutableAttributedStringRef) attStr;
-    
-    return attrString;
 }
 
 - (void)onClick_Reload:(id)sender
@@ -159,8 +146,19 @@
 
 - (void)segmentControlValueChanged:(id)sender
 {
-    NSLog(@"%@", DEBUG_FUNCTION_NAME);
+    NSLog(@"%@,  %u", DEBUG_FUNCTION_NAME, segmentCtrl.selectedSegmentIndex);
     
+    ((UIView*)[textViews objectAtIndex:segmentCtrl.selectedSegmentIndex]).frame = self.currentTextView.frame;
+    [currentTextView removeFromSuperview];
+    currentTextView = [textViews objectAtIndex:segmentCtrl.selectedSegmentIndex];
+    [scrollView addSubview:currentTextView];
+    
+    if ([currentTextView respondsToSelector:@selector(loadText:)]) {
+        NSString * contents = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"2" ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        
+        [currentTextView loadText:contents];
+    }
+
 }
 
 @end

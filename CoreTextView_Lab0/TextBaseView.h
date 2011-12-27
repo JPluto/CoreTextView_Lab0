@@ -8,9 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TextBaseView : UIView
+@protocol TextBaseDelegate <NSObject>
+
+@optional
+- (void)loadText:(NSString*)aString;
+
+@end
+
+@interface TextBaseView : UIView <TextBaseDelegate>
 
 @property (nonatomic) CGFloat fontSize;
 @property (nonatomic) CGFloat lineSpace;
+@property (nonatomic, retain) NSString * text;
 
 @end

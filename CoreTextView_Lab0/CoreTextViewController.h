@@ -9,18 +9,19 @@
 #import <UIKit/UIKit.h>
 
 @class TextScrollView;
+@class TextBaseView;
 
 @interface CoreTextViewController : UIViewController <UIScrollViewDelegate>
 
-@property (nonatomic, retain) IBOutlet UIView * currentTextView;
+@property (nonatomic, retain) IBOutlet TextBaseView * currentTextView;
 @property (nonatomic, retain) IBOutlet TextScrollView * scrollView;
 @property (nonatomic, retain) IBOutlet UISegmentedControl * segmentCtrl;
-
-- (CFMutableAttributedStringRef) loadAttributedStringFromFile:(NSString *)filePath;
+@property (nonatomic, retain) NSArray * textViews;
 
 - (IBAction)onClick_Reload:(id)sender;
 - (IBAction)onClick_DecreaseFontSize:(id)sender;
 - (IBAction)onclick_IncreaseFontSize:(id)sender;
 - (void)segmentControlValueChanged:(id)sender;
+
 
 @end

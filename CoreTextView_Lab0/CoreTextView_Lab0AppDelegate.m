@@ -23,12 +23,7 @@
     
     CoreTextViewController * ctvc = [[CoreTextViewController alloc] initWithNibName:@"TestForm" bundle:nil];
     [self.window addSubview:ctvc.view];
-    
-    NSString * filepath = [[NSBundle mainBundle] pathForResource:@"1" ofType:@""];
-    if (ctvc.currentTextView && [ctvc.currentTextView isKindOfClass:[CoreTextView class]]) {
-        [ctvc loadAttributedStringFromFile:filepath];
-    }
-    
+        
     return YES;
 }
 

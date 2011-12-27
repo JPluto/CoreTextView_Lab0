@@ -12,6 +12,13 @@
 
 @synthesize fontSize;
 @synthesize lineSpace;
+@synthesize text;
+
+- (void)dealloc
+{
+    [text release];
+    [super dealloc];
+}
 
 - (id)initWithFrame:(CGRect)frame
 {

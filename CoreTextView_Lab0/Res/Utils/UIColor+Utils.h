@@ -12,6 +12,6 @@
 @interface UIColor (Utils)
 
 + (UIColor *)colorWithARGB:(NSUInteger)argb;
-+ (UIColor *)colorWithAlpha:(NSUInteger)alpha Red:(NSUInteger)red green:(NSUInteger)green blue:(NSUInteger)blue;
++ (UIColor *)colorWithAlpha:(CGFloat)alpha Red:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue;
 
 @end

@@ -44,6 +44,12 @@
     return self;
 }
 
+- (void)loadText:(NSString *)aString
+{
+    OUT_FUNCTION_NAME();
+    self.text = [aString stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"];
+}
+
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect

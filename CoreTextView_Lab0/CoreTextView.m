@@ -50,6 +50,7 @@
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
+    OUT_FUNCTION_NAME();
     [super drawRect:rect];
     // Drawing code
     CGContextRef context = UIGraphicsGetCurrentContext();
@@ -112,8 +113,26 @@
     CFRelease(fillPaths);
 }
 
+- (void)loadText:(NSString *)aString
+{
+    NSLog(@"%@", DEBUG_FUNCTION_NAME);
+    self.text = [aString stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"];
+    
+    NSMutableAttributedString * attStr = nil;
+    UIFont * font = [UIFont fontWithName:@"System" size:20.0];
+    
+    attStr = [[[NSMutableAttributedString alloc] initWithString:self.text attributes:[NSDictionary dictionaryWithObjectsAndKeys:font, (NSString *)kCTFontAttributeName, nil]] autorelease];
+    
+    [attStr addAttribute:(id)kCTForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(0, 100)];
+    
+    CFMutableAttributedStringRef attrString = (CFMutableAttributedStringRef) attStr;
+    self->cfAttrStringRef = (CFMutableAttributedStringRef)CFRetain(attrString);
+    [self loadVisibleTextForCFRange:CFRangeMake(startGlyphIndex + totalGlyphCount, 0)];
+}
+
 - (void)loadVisibleTextForCFRange:(CFRange)rang
 {
+    OUT_FUNCTION_NAME();
     NSAutoreleasePool * pool = [NSAutoreleasePool new];
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(self->cfAttrStringRef);
     CGMutablePathRef path = CGPathCreateMutable();

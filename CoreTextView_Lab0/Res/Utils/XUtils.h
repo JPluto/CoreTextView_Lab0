@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#ifndef SafeRelease(obj)
+#ifndef SafeRelease//(obj)
 #define SafeRelease(obj) {[obj release]; obj = nil;}
 #endif
 
@@ -20,7 +20,7 @@
 #define APP_BOUNDS [[UIScreen mainScreen] bounds]
 #endif
 
-#ifndef XUStringFromBool(value)
+#ifndef XUStringFromBool//(value)
 #define XUStringFromBool(value) ((value) ? @"YES" : @"NO")
 #endif
 
@@ -29,6 +29,8 @@
 
 #define DEBUG_FUNCTION_NAME [NSString stringWithCString:__FUNCTION__ encoding:NSUTF8StringEncoding]
 #define DEBUG_FILE_NAME [NSString stringWithCString:__FILE__ encoding:NSUTF8StringEncoding]
+
+#define OUT_FUNCTION_NAME()  NSLog(@"%@ addr:%u", DEBUG_FUNCTION_NAME, (NSUInteger)self)
 
 @interface XUtils : NSObject {
 
