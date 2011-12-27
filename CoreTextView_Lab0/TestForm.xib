@@ -44,7 +44,7 @@
 					<object class="IBUISegmentedControl" id="600626983">
 						<reference key="NSNextResponder" ref="201567237"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{20, 6}, {263, 30}}</string>
+						<string key="NSFrame">{{7, 5}, {306, 30}}</string>
 						<reference key="NSSuperview" ref="201567237"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="967430416"/>
@@ -107,7 +107,7 @@
 						<reference key="NSSuperview" ref="201567237"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="700311020"/>
-						<object class="NSColor" key="IBUIBackgroundColor">
+						<object class="NSColor" key="IBUIBackgroundColor" id="215181715">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MAA</bytes>
 						</object>
@@ -158,7 +158,7 @@
 							<object class="IBUIButton" id="429128880">
 								<reference key="NSNextResponder" ref="297630568"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{100, 8}, {26, 23}}</string>
+								<string key="NSFrame">{{100, 8}, {23, 23}}</string>
 								<reference key="NSSuperview" ref="297630568"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="686425894"/>
@@ -180,7 +180,7 @@
 							<object class="IBUIButton" id="686425894">
 								<reference key="NSNextResponder" ref="297630568"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{134, 8}, {27, 22}}</string>
+								<string key="NSFrame">{{131, 8}, {23, 23}}</string>
 								<reference key="NSSuperview" ref="297630568"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView"/>
@@ -204,13 +204,7 @@
 						<reference key="NSSuperview" ref="201567237"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="715593410"/>
-						<object class="NSColor" key="IBUIBackgroundColor">
-							<int key="NSColorSpace">3</int>
-							<bytes key="NSWhite">MQA</bytes>
-							<object class="NSColorSpace" key="NSCustomColorSpace">
-								<int key="NSID">2</int>
-							</object>
-						</object>
+						<reference key="IBUIBackgroundColor" ref="215181715"/>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 					</object>
 				</object>
@@ -323,9 +317,9 @@
 						<reference key="object" ref="201567237"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="600626983"/>
 							<reference ref="297630568"/>
 							<reference ref="967430416"/>
+							<reference ref="600626983"/>
 						</object>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -356,9 +350,9 @@
 						<reference key="object" ref="297630568"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="686425894"/>
 							<reference ref="429128880"/>
 							<reference ref="715593410"/>
+							<reference ref="686425894"/>
 						</object>
 						<reference key="parent" ref="201567237"/>
 					</object>
