@@ -11,6 +11,7 @@
 @implementation TextBaseView
 
 @synthesize fontSize;
+@synthesize lineHeight;
 @synthesize lineSpace;
 @synthesize text;
 @synthesize pageCount;

@@ -15,9 +15,6 @@
     CFRange visibleRange;
     CTFrameRef visibleFrameRef;
     CGRect visibleBounds;
-    CGFloat fontSize;
-    CGFloat fontHeight;
-    CGFloat lineSpace;
     
     CFArrayRef ctLinesArrayRef;
     CFIndex startGlyphIndex;
@@ -32,7 +29,6 @@
     CGContextRef m_Context;
 }
 
-@property (nonatomic) CGFloat fontSize;
 
 - (void)loadVisibleTextForCFRange:(CFRange)rang;
 

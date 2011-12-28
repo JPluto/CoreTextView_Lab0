@@ -16,8 +16,6 @@
     
 }
 
-@property (nonatomic, retain) NSString * text;
 @property (nonatomic, retain) UIFont * font;
-@property (nonatomic) CGFloat fontSize;
 
 @end

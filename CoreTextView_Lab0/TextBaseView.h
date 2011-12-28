@@ -16,9 +16,17 @@
 @end
 
 @interface TextBaseView : UIView <TextBaseDelegate>
+{
+    CGFloat fontSize;
+    CGFloat lineSpace;
+    CGFloat lineHeight;
+    NSString * text;
+    NSInteger pageCount;
+}
 
 @property (nonatomic) CGFloat fontSize;
 @property (nonatomic) CGFloat lineSpace;
+@property (nonatomic) CGFloat lineHeight;
 @property (nonatomic, retain) NSString * text;
 @property (nonatomic) NSInteger pageCount;
 

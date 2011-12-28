@@ -11,9 +11,7 @@
 
 @implementation TextView
 
-@synthesize text;
 @synthesize font;
-@synthesize fontSize;
 
 - (id)initWithFrame:(CGRect)frame
 {
