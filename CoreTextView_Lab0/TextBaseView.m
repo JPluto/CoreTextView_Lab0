@@ -13,6 +13,7 @@
 @synthesize fontSize;
 @synthesize lineSpace;
 @synthesize text;
+@synthesize pageCount;
 
 - (void)dealloc
 {
