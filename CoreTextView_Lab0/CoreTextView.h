@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "TextBaseView.h"
 
+#define DRAW_TEXT_LINE_BY_LINE	1
+
 @interface CoreTextView : TextBaseView {
 @public
     CFMutableAttributedStringRef cfAttrStringRef;
@@ -27,6 +29,7 @@
     CFIndex selectedEndLine;
     
     CGContextRef m_Context;
+	
 }
 
 

@@ -69,20 +69,21 @@
     CGContextSetFillColorWithColor(context, [[UIColor colorWithRed:(200. / 255.0) green:0 / 255.0 blue:0 / 255.0 alpha:0.7] CGColor]);
     CGContextFillRect(context, selectedRect);
      */
-        
+	
     if (ctLinesArrayRef != NULL) {
-        
+#if DRAW_TEXT_LINE_BY_LINE
         //draw text frame setter
-        //CTFrameDraw(visibleFrameRef, context);
-        
+        CTFrameDraw(visibleFrameRef, context);
+#else
         //draw text line by line
         CFIndex lineIdx = 0;
         CGFloat ascent, descent, leading;
         double bounds;
         CGRect ctlineBounds;
         CGRect ctLineSelectBounds;
-        int j = 0;
-        
+        int j;
+        CGContextSetFillColorWithColor(context, [UIColor blackColor].CGColor);
+		//for (lineIdx = 0, j = 0; lineIdx < CFArrayGetCount(ctLinesArrayRef); lineIdx++, j++) {
         for (lineIdx = CFArrayGetCount(ctLinesArrayRef) - 1, j = 0; lineIdx >= 0; lineIdx--, j++) {
             ctLineSelectBounds = CGRectZero;
             bounds = CTLineGetTypographicBounds(CFArrayGetValueAtIndex(ctLinesArrayRef, lineIdx), &ascent, &descent, &leading);
@@ -93,7 +94,7 @@
             CGContextSetTextPosition(context, visibleBounds.origin.x, visibleBounds.origin.y + (j + 1) * (ascent  + lineSpace));
             CTLineDraw(CFArrayGetValueAtIndex(ctLinesArrayRef, lineIdx), context);
         }
-        
+#endif   
     }
 }
 
@@ -103,7 +104,8 @@
     self.text = [aString stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"];
     
     NSMutableAttributedString * attStr = nil;
-    UIFont * font = [UIFont fontWithName:@"System" size:fontSize];
+	//Helvetica
+    UIFont * font = [UIFont fontWithName:@"Arial" size:fontSize];
     
     //config attributes of AttributedString
     CTParagraphStyleSetting settings[] = {
@@ -124,7 +126,8 @@
     }
     self->cfAttrStringRef = (CFMutableAttributedStringRef)CFRetain(attrString);
     
-    [self loadVisibleTextForCFRange:CFRangeMake(startGlyphIndex + totalGlyphCount, 0)];
+    //[self loadVisibleTextForCFRange:CFRangeMake(startGlyphIndex + totalGlyphCount, 0)];
+	[self loadVisibleTextForCFRange:CFRangeMake(0, 0)];
 }
 
 - (void)loadVisibleTextForCFRange:(CFRange)rang

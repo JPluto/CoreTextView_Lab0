@@ -10,7 +10,7 @@
 
 @interface CoreTextView_Lab0AppDelegate : UIResponder <UIApplicationDelegate>
 
-@property (strong, nonatomic) UIWindow *window;
+@property (retain, nonatomic) UIWindow *window;
 
 - (void)onClick_reloadText:(id)sender;
 
