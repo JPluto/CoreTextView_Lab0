@@ -9,11 +9,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "CoreTextView_Lab0/CoreTextView.m"
-         timestampString = "347352268.79484"
+         timestampString = "347361079.50987"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "110"
-         endingLineNumber = "110"
+         startingLineNumber = "117"
+         endingLineNumber = "117"
          landmarkName = "-loadText:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -23,11 +23,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "CoreTextView_Lab0/CoreTextView.m"
-         timestampString = "347356231.088695"
+         timestampString = "347361079.50987"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "127"
-         endingLineNumber = "127"
+         startingLineNumber = "134"
+         endingLineNumber = "134"
          landmarkName = "-loadText:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -37,11 +37,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "CoreTextView_Lab0/CoreTextView.m"
-         timestampString = "347356231.87625"
+         timestampString = "347361079.50987"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "129"
-         endingLineNumber = "129"
+         startingLineNumber = "136"
+         endingLineNumber = "136"
          landmarkName = "-loadText:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -51,11 +51,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "CoreTextView_Lab0/CoreTextView.m"
-         timestampString = "347356249.509767"
+         timestampString = "347361079.50987"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "141"
-         endingLineNumber = "141"
+         startingLineNumber = "148"
+         endingLineNumber = "148"
          landmarkName = "-loadText:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -65,11 +65,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "CoreTextView_Lab0/CoreTextView.m"
-         timestampString = "347356258.625443"
+         timestampString = "347361079.50987"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "165"
-         endingLineNumber = "165"
+         startingLineNumber = "184"
+         endingLineNumber = "184"
          landmarkName = "-loadVisibleTextForCFRange:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -79,11 +79,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "CoreTextView_Lab0/CoreTextView.m"
-         timestampString = "347356271.283225"
+         timestampString = "347361079.50987"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "166"
-         endingLineNumber = "166"
+         startingLineNumber = "208"
+         endingLineNumber = "208"
          landmarkName = "-loadVisibleTextForCFRange:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -93,39 +93,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "CoreTextView_Lab0/CoreTextView.m"
-         timestampString = "347356278.111032"
+         timestampString = "347360923.697117"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "174"
-         endingLineNumber = "174"
-         landmarkName = "-loadVisibleTextForCFRange:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         isPathRelative = "1"
-         filePath = "CoreTextView_Lab0/CoreTextView.m"
-         timestampString = "347356288.655901"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "198"
-         endingLineNumber = "198"
-         landmarkName = "-loadVisibleTextForCFRange:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         isPathRelative = "1"
-         filePath = "CoreTextView_Lab0/CoreTextView.m"
-         timestampString = "347356311.946368"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "81"
-         endingLineNumber = "81"
+         startingLineNumber = "87"
+         endingLineNumber = "87"
          landmarkName = "-drawRect:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -135,11 +107,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "CoreTextView_Lab0/CoreTextView.m"
-         timestampString = "347356312.796372"
+         timestampString = "347360923.697117"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "84"
-         endingLineNumber = "84"
+         startingLineNumber = "90"
+         endingLineNumber = "90"
          landmarkName = "-drawRect:"
          landmarkType = "5">
       </FileBreakpoint>

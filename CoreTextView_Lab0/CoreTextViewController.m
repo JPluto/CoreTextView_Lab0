@@ -130,6 +130,9 @@
         id tv = self.currentTextView;
         if ([tv fontSize] > 5) {
             [tv setFontSize:[tv fontSize] - 1.0f];
+            if ([tv respondsToSelector:@selector(updateCoreTextParams)]) {
+                [tv updateCoreTextParams];
+            }
             if ([tv respondsToSelector:@selector(reloadText)]) {
                 [tv reloadText];
             }
@@ -144,6 +147,9 @@
         id tv = self.currentTextView;
         if ([tv fontSize] < 30) {
             [tv setFontSize:[tv fontSize] + 1.0f];
+            if ([tv respondsToSelector:@selector(updateCoreTextParams)]) {
+                [tv updateCoreTextParams];
+            }
             if ([tv respondsToSelector:@selector(reloadText)]) {
                 [tv reloadText];
             }

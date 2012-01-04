@@ -38,6 +38,7 @@
 }
 
 - (void)initCoreTextParams;
+- (void)updateCoreTextParams;
 - (void)loadVisibleTextForCFRange:(CFRange)rang;
 - (void)reloadText;
 

@@ -37,10 +37,15 @@
     selectedRect = CGRectZero;
     self.lineSpace = 0.0f;
     self.fontSize = 16.0f;
-    self.lineHeight = self.fontSize + lineSpace;
     NSLog(@"fontSize :%f, lineSpace :%f", self.fontSize, self.lineSpace);
     selectedStartIndex = -1;
     selectedEndIndex = -1;
+    [self updateCoreTextParams];
+}
+
+- (void)updateCoreTextParams
+{
+    self.lineHeight = fontSize + lineSpace;
 }
 
 - (void)dealloc
@@ -71,6 +76,7 @@
     CGContextScaleCTM(context, 1.0f, -1.0f);
     
     /*
+     
     CGContextSetFillColorWithColor(context, [[UIColor colorWithRed:(200. / 255.0) green:0 / 255.0 blue:0 / 255.0 alpha:0.7] CGColor]);
     CGContextFillRect(context, selectedRect);
      */
@@ -87,14 +93,13 @@
         CGRect ctlineBounds;
         CGRect ctLineSelectBounds;
         int j;
-        //CGContextSetFillColorWithColor(context, [UIColor blackColor].CGColor);
 		//for (lineIdx = 0, j = 0; lineIdx < CFArrayGetCount(ctLinesArrayRef); lineIdx++, j++) {
         for (lineIdx = CFArrayGetCount(ctLinesArrayRef) - 1, j = 0; lineIdx >= 0; lineIdx--, j++) {
             ctLineSelectBounds = CGRectZero;
             bounds = CTLineGetTypographicBounds(CFArrayGetValueAtIndex(ctLinesArrayRef, lineIdx), &ascent, &descent, &leading);
             //NSLog(@"bounds :%f, ascent :%f, descent :%f, leading :%f, lineSpace :%f", bounds, ascent, descent, leading, lineSpace);
             ctlineBounds = CTLineGetImageBounds(CFArrayGetValueAtIndex(ctLinesArrayRef, lineIdx), context);
-            CGContextSetTextPosition(context, visibleBounds.origin.x, /*visibleBounds.origin.y +*/ (j + 1) * (fontSize  + lineSpace));
+            CGContextSetTextPosition(context, visibleBounds.origin.x, visibleBounds.origin.y + (j + 1) * (fontSize  + lineSpace));
             CTLineDraw(CFArrayGetValueAtIndex(ctLinesArrayRef, lineIdx), context);
         }
 #endif   
@@ -122,8 +127,8 @@
     
     CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(settings, sizeof(settings) / sizeof(settings[0]));
     //ctFontRef = CTFontCreateUIFontForLanguage(kCTFontSystemFontType, fontSize, NULL);
-    ctFontRef = CTFontCreateWithName((CFStringRef)@"Helvetica", fontSize, NULL);
-    
+    ctFontRef = CTFontCreateWithName((CFStringRef)@"DD", fontSize, NULL);
+    NSAssert(ctFontRef != NULL, @"ctFontRef 为 NULl");
     NSDictionary * attributes = [NSDictionary dictionaryWithObjectsAndKeys:(id)ctFontRef, kCTFontAttributeName, (id)paragraphStyle, kCTParagraphStyleAttributeName, nil];
     
     attStr = [[NSMutableAttributedString alloc] initWithString:self.text attributes:attributes];
@@ -148,9 +153,12 @@
 
 - (void)refreshText:(NSString *)aString
 {
-    [self loadText:aString];
-    [self setNeedsDisplay];
-    //[self performSelectorOnMainThread:@selector(setNeedsDisplay) withObject:nil waitUntilDone:NO];
+    NSAutoreleasePool * pool = [NSAutoreleasePool new];
+    @synchronized((NSArray*)ctLinesArrayRef) {
+        [self loadText:aString];
+        [self performSelectorOnMainThread:@selector(setNeedsDisplay) withObject:nil waitUntilDone:NO];
+    }
+    [pool drain];
 }
 
 - (void)asynLoadText:(NSString *)aString
