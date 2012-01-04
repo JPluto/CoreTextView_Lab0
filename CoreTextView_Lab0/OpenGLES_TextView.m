@@ -12,6 +12,7 @@
 
 - (id)initWithFrame:(CGRect)frame
 {
+    OUT_FUNCTION_NAME();
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code

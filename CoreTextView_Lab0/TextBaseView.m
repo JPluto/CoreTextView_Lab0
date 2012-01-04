@@ -13,12 +13,14 @@
 @synthesize fontSize;
 @synthesize lineHeight;
 @synthesize lineSpace;
+@synthesize fontName;
 @synthesize text;
 @synthesize pageCount;
 
 - (void)dealloc
 {
     [text release];
+    [fontName release];
     [super dealloc];
 }
 
@@ -27,6 +29,15 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+    }
+    return self;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        //
     }
     return self;
 }

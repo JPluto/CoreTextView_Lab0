@@ -28,6 +28,15 @@
       buildConfiguration = "Debug">
       <Testables>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A28EDB40146D073800B88AEB"
+            BuildableName = "CoreTextView_Lab0.app"
+            BlueprintName = "CoreTextView_Lab0"
+            ReferencedContainer = "container:CoreTextView_Lab0.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </TestAction>
    <LaunchAction
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.GDB"

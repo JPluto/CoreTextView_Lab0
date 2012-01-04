@@ -123,22 +123,27 @@
 
 - (void)onClick_DecreaseFontSize:(id)sender
 {
-    if ([self.currentTextView isKindOfClass:[TextView class]]) {
-        TextView * tv = (TextView*)self.currentTextView;
-        if (tv.fontSize > 10) {
-            [tv setFontSize:tv.fontSize - 1];
+    if ([self.currentTextView isKindOfClass:[TextBaseView class]]) {
+        id tv = self.currentTextView;
+        if ([tv fontSize] > 5) {
+            [tv setFontSize:[tv fontSize] - 1.0f];
+            if ([tv respondsToSelector:@selector(reloadText)]) {
+                [tv reloadText];
+            }
             [tv setNeedsDisplay];
         }
     }
-    
 }
 
 - (void)onclick_IncreaseFontSize:(id)sender
 {
-    if ([self.currentTextView isKindOfClass:[TextView class]]) {
-        TextView * tv = (TextView*)self.currentTextView;
-        if (tv.fontSize < 30) {
-            [tv setFontSize:tv.fontSize + 1];
+    if ([self.currentTextView isKindOfClass:[TextBaseView class]]) {
+        id tv = self.currentTextView;
+        if ([tv fontSize] < 30) {
+            [tv setFontSize:[tv fontSize] + 1.0f];
+            if ([tv respondsToSelector:@selector(reloadText)]) {
+                [tv reloadText];
+            }
             [tv setNeedsDisplay];
         }
     }
@@ -157,6 +162,7 @@
         NSString * contents = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"2" ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         
         [currentTextView loadText:contents];
+        [currentTextView setNeedsDisplay];
     }
 
 }

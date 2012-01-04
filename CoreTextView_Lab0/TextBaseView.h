@@ -20,6 +20,7 @@
     CGFloat fontSize;
     CGFloat lineSpace;
     CGFloat lineHeight;
+    NSString * fontName;
     NSString * text;
     NSInteger pageCount;
 }
@@ -27,6 +28,7 @@
 @property (nonatomic) CGFloat fontSize;
 @property (nonatomic) CGFloat lineSpace;
 @property (nonatomic) CGFloat lineHeight;
+@property (nonatomic, retain) NSString * fontName;
 @property (nonatomic, retain) NSString * text;
 @property (nonatomic) NSInteger pageCount;
 

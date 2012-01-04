@@ -13,26 +13,32 @@
 
 @interface CoreTextView : TextBaseView {
 @public
-    CFMutableAttributedStringRef cfAttrStringRef;
+    //manul control data
     CFRange visibleRange;
     CTFrameRef visibleFrameRef;
     CGRect visibleBounds;
     
+    //CoreText framework drawing
+    CFMutableAttributedStringRef cfAttrStringRef;
     CFArrayRef ctLinesArrayRef;
     CFIndex startGlyphIndex;
     CFIndex totalGlyphCount;
-    CGRect selectedRect;
+    CTFontRef ctFontRef;
     
+    //Text selection
+    CGRect selectedRect;
     CFIndex selectedStartIndex;
     CFIndex selectedEndIndex;
     CFIndex selectedStartLine;
     CFIndex selectedEndLine;
     
+    //CoreGraphic & CoreQuartz
     CGContextRef m_Context;
 	
 }
 
-
+- (void)initCoreTextParams;
 - (void)loadVisibleTextForCFRange:(CFRange)rang;
+- (void)reloadText;
 
 @end

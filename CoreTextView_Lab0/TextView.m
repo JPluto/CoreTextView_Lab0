@@ -15,10 +15,11 @@
 
 - (id)initWithFrame:(CGRect)frame
 {
+    OUT_FUNCTION_NAME();
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        fontSize = 12;
+        self.fontSize = 12;
         //self.font = [UIFont systemFontOfSize:fontSize];
     }
     return self;
@@ -26,18 +27,20 @@
 
 - (id)init
 {
+    OUT_FUNCTION_NAME();
     self = [super init];
     if (self) {
-        fontSize = 12;
+        self.fontSize = 12;
     }
     return self;
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
+    OUT_FUNCTION_NAME();
     self = [super initWithCoder:aDecoder];
     if (self) {
-        fontSize = 12;
+        self.fontSize = 12;
     }
     return self;
 }
@@ -52,9 +55,9 @@
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
+    OUT_FUNCTION_NAME();
     [super drawRect:rect];
     
-    NSLog(@"%@", DEBUG_FUNCTION_NAME);
     // Drawing code
     CGContextRef context = UIGraphicsGetCurrentContext();
     //CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));

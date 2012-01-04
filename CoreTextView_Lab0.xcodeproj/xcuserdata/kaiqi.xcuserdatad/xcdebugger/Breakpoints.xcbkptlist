@@ -9,12 +9,12 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "CoreTextView_Lab0/CoreTextView.m"
-         timestampString = "346753181.757962"
+         timestampString = "347352268.79484"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "34"
-         endingLineNumber = "34"
-         landmarkName = "-initWithCoder:"
+         startingLineNumber = "110"
+         endingLineNumber = "110"
+         landmarkName = "-loadText:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>
