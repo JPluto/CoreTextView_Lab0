@@ -11,7 +11,10 @@
 @protocol TextBaseDelegate <NSObject>
 
 @optional
+
 - (void)loadText:(NSString*)aString;
+- (void)refreshText:(NSString*)aString;
+- (void)asynLoadText:(NSString *)aString;
 
 @end
 

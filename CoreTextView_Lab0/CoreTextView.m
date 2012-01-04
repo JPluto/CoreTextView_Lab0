@@ -119,6 +119,7 @@
         { kCTParagraphStyleSpecifierMinimumLineHeight, sizeof(lineHeight), &lineHeight },
         { kCTParagraphStyleSpecifierMaximumLineHeight, sizeof(lineHeight), &lineHeight },
     };
+    
     CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(settings, sizeof(settings) / sizeof(settings[0]));
     //ctFontRef = CTFontCreateUIFontForLanguage(kCTFontSystemFontType, fontSize, NULL);
     ctFontRef = CTFontCreateWithName((CFStringRef)@"Helvetica", fontSize, NULL);
@@ -142,7 +143,19 @@
 
 - (void)reloadText
 {
-    [self loadText:self.text];
+    [self asynLoadText:self.text];
+}
+
+- (void)refreshText:(NSString *)aString
+{
+    [self loadText:aString];
+    [self setNeedsDisplay];
+    //[self performSelectorOnMainThread:@selector(setNeedsDisplay) withObject:nil waitUntilDone:NO];
+}
+
+- (void)asynLoadText:(NSString *)aString
+{
+    [self performSelectorInBackground:@selector(refreshText:) withObject:aString];
 }
 
 - (void)loadVisibleTextForCFRange:(CFRange)rang

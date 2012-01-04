@@ -20,6 +20,7 @@
 @synthesize scrollView;
 @synthesize segmentCtrl;
 @synthesize textViews;
+@synthesize labelFontSize;
 
 - (void)dealloc
 {
@@ -116,7 +117,9 @@
 
 - (void)onClick_Reload:(id)sender
 {
-    if ([self.currentTextView isKindOfClass:[TextView class]]) {
+    if ([self.currentTextView isKindOfClass:[TextBaseView class]]) {
+        id tv = self.currentTextView;
+        self.labelFontSize.text = [NSString stringWithFormat:@"%f", [tv fontSize]];
         [self.currentTextView setNeedsDisplay];
     }
 }
@@ -130,7 +133,7 @@
             if ([tv respondsToSelector:@selector(reloadText)]) {
                 [tv reloadText];
             }
-            [tv setNeedsDisplay];
+            self.labelFontSize.text = [NSString stringWithFormat:@"%f", [tv fontSize]];
         }
     }
 }
@@ -144,7 +147,7 @@
             if ([tv respondsToSelector:@selector(reloadText)]) {
                 [tv reloadText];
             }
-            [tv setNeedsDisplay];
+            self.labelFontSize.text = [NSString stringWithFormat:@"%f", [tv fontSize]];
         }
     }
 }

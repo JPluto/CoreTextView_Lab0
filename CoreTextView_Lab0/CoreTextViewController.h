@@ -16,6 +16,7 @@
 @property (nonatomic, retain) IBOutlet TextBaseView * currentTextView;
 @property (nonatomic, retain) IBOutlet TextScrollView * scrollView;
 @property (nonatomic, retain) IBOutlet UISegmentedControl * segmentCtrl;
+@property (nonatomic, retain) IBOutlet UILabel * labelFontSize;
 @property (nonatomic, retain) NSArray * textViews;
 
 - (IBAction)onClick_Reload:(id)sender;
