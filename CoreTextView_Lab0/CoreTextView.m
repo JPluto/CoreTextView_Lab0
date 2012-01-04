@@ -93,14 +93,21 @@
         CGRect ctlineBounds;
         CGRect ctLineSelectBounds;
         int j;
-		//for (lineIdx = 0, j = 0; lineIdx < CFArrayGetCount(ctLinesArrayRef); lineIdx++, j++) {
-        for (lineIdx = CFArrayGetCount(ctLinesArrayRef) - 1, j = 0; lineIdx >= 0; lineIdx--, j++) {
+
+
+		for (lineIdx = 0, j = 0; lineIdx < CFArrayGetCount(ctLinesArrayRef); lineIdx++, j++) {
+        //for (lineIdx = CFArrayGetCount(ctLinesArrayRef) - 1, j = 0; lineIdx >= 0; lineIdx--, j++) {
             ctLineSelectBounds = CGRectZero;
             bounds = CTLineGetTypographicBounds(CFArrayGetValueAtIndex(ctLinesArrayRef, lineIdx), &ascent, &descent, &leading);
-            //NSLog(@"bounds :%f, ascent :%f, descent :%f, leading :%f, lineSpace :%f", bounds, ascent, descent, leading, lineSpace);
+            NSLog(@"bounds :%f, ascent :%f, descent :%f, leading :%f, lineSpace :%f", bounds, ascent, descent, leading, lineSpace);
+            CTLineRef lineRef = CFArrayGetValueAtIndex(ctLinesArrayRef, lineIdx);
+            CFRange lineRange = CTLineGetStringRange(lineRef);
+            CGFloat locaY = /*visibleBounds.origin.y*/0 + (j + 1) * (fontSize  + lineSpace);
+            
+            NSLog(@"lineIdx :%lu;  %f;  %@  ", lineIdx, locaY, [text substringWithRange:NSMakeRange((NSUInteger)(lineRange.location), (NSUInteger)(lineRange.length))]);
             ctlineBounds = CTLineGetImageBounds(CFArrayGetValueAtIndex(ctLinesArrayRef, lineIdx), context);
-            CGContextSetTextPosition(context, visibleBounds.origin.x, visibleBounds.origin.y + (j + 1) * (fontSize  + lineSpace));
-            CTLineDraw(CFArrayGetValueAtIndex(ctLinesArrayRef, lineIdx), context);
+            CGContextSetTextPosition(context, 0/*visibleBounds.origin.x*/, self.bounds.size.height - locaY);
+            CTLineDraw(lineRef, context);
         }
 #endif   
     }else {
@@ -126,8 +133,8 @@
     };
     
     CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(settings, sizeof(settings) / sizeof(settings[0]));
-    //ctFontRef = CTFontCreateUIFontForLanguage(kCTFontSystemFontType, fontSize, NULL);
-    ctFontRef = CTFontCreateWithName((CFStringRef)@"DD", fontSize, NULL);
+    ctFontRef = CTFontCreateUIFontForLanguage(kCTFontSystemFontType, fontSize, NULL);
+    //ctFontRef = CTFontCreateWithName((CFStringRef)@"DD", fontSize, NULL);
     NSAssert(ctFontRef != NULL, @"ctFontRef 为 NULl");
     NSDictionary * attributes = [NSDictionary dictionaryWithObjectsAndKeys:(id)ctFontRef, kCTFontAttributeName, (id)paragraphStyle, kCTParagraphStyleAttributeName, nil];
     
