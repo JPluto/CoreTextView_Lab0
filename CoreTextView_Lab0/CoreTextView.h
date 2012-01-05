@@ -23,7 +23,7 @@
     
     //CoreText framework drawing
     CFMutableAttributedStringRef cfAttrStringRef;
-    CFArrayRef ctLinesArrayRef;
+    //CFArrayRef ctLinesArrayRef;
     CFIndex startGlyphIndex;
     CFIndex totalGlyphCount;
     CTFontRef ctFontRef;
@@ -38,6 +38,8 @@
     //CoreGraphic & CoreQuartz
     CGContextRef m_Context;
 	
+    CoreTextHelper * coreTextHelper;
+    CoreTextProcessor * coreTextProcessor;
 }
 
 @property (nonatomic, retain) CoreTextHelper * coreTextHelper;

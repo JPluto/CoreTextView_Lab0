@@ -14,7 +14,6 @@
 @implementation CoreTextProcessor
 
 @synthesize text;
-@synthesize fontName;
 @synthesize foregroundColor;
 @synthesize backgroundColor;
 @synthesize backgroundImage;
@@ -29,6 +28,7 @@
         //init process
         if (coreTextParams == nil) {
             coreTextParams = [CoreTextParams new];
+            [coreTextParams updateParams];
             coreTextHelper = [CoreTextHelper new];
         }
     }
@@ -43,7 +43,6 @@
     if (attributedStringRef != NULL) {
         CFRelease(attributedStringRef);
     }
-    [fontName release];
     [foregroundColor release];
     [backgroundColor release];
     [backgroundImage release];
@@ -63,8 +62,10 @@
 - (void)loadText:(NSString *)aString
 {
     OUT_FUNCTION_NAME();
-    
-    self.text = [aString stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"];
+    NSLog(@"%@ %@", DEBUG_FUNCTION_NAME, NSStringFromCGRect(coreTextView.frame));
+    if (aString.length > 0) {
+        self.text = [aString stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"];
+    }
     
     NSMutableAttributedString * attStr = nil;
 	//Helvetica Arial
@@ -81,7 +82,7 @@
     coreTextParams->settings = &settings;
     
     coreTextParams->paragraphStyle = CTParagraphStyleCreate(settings, sizeof(settings) / sizeof(settings[0]));
-    coreTextParams->fontRef = CTFontCreateWithName((CFStringRef)[self.coreTextHelper italicFontNameByString:fontName], coreTextParams->fontSize, NULL);
+    coreTextParams->fontRef = CTFontCreateWithName((CFStringRef)[self.coreTextHelper italicFontNameByString:coreTextParams.fontName], coreTextParams->fontSize, NULL);
     NSAssert(coreTextParams->fontRef != NULL, @"ctFontRef 为 NULl");
     
     NSDictionary * attributes = [NSDictionary dictionaryWithObjectsAndKeys:(id)coreTextParams->fontRef, kCTFontAttributeName, (id)coreTextParams->paragraphStyle, kCTParagraphStyleAttributeName, nil];
@@ -105,7 +106,8 @@
     
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)attributedStringRef);
     CGMutablePathRef path = CGPathCreateMutable();
-    coreTextParams->visibleBounds = CGRectMake(10.0, 10.0, coreTextView.frame.size.width - 20, coreTextView.frame.size.height - 20);
+    CGFloat offset_x = 0.0f, offset_y = 0.0f;
+    coreTextParams->visibleBounds = CGRectMake(offset_x, offset_y, coreTextView.frame.size.width - offset_x * 2, coreTextView.frame.size.height - offset_y * 2);
     CGPathAddRect(path, NULL, coreTextParams->visibleBounds);
     
     if (visibleFrameRef != NULL) {

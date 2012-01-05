@@ -39,4 +39,9 @@
     [super dealloc];
 }
 
+- (void)updateParams
+{
+    lineHeight = fontSize + lineSpace;
+}
+
 @end

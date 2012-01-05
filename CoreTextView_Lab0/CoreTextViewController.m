@@ -13,6 +13,9 @@
 #import "SimpleTextProcessor.h"
 #import "TextBaseView.h"
 #import "OpenGLES_TextView.h"
+#import "CoreTextProcessor.h"
+#import "CoreTextParams.h"
+#import "CoreTextHelper.h"
 
 @implementation CoreTextViewController
 
@@ -130,6 +133,13 @@
         id tv = self.currentTextView;
         if ([tv fontSize] > 5) {
             [tv setFontSize:[tv fontSize] - 1.0f];
+            
+            if ([currentTextView isKindOfClass:[CoreTextView class]]) {
+                CoreTextView * ctv = (CoreTextView*)currentTextView;
+                ctv.coreTextProcessor.coreTextParams->fontSize -= 1.0f;
+                [ctv.coreTextProcessor.coreTextParams updateParams];
+            }
+            
             if ([tv respondsToSelector:@selector(updateCoreTextParams)]) {
                 [tv updateCoreTextParams];
             }
@@ -147,6 +157,13 @@
         id tv = self.currentTextView;
         if ([tv fontSize] < 30) {
             [tv setFontSize:[tv fontSize] + 1.0f];
+            
+            if ([currentTextView isKindOfClass:[CoreTextView class]]) {
+                CoreTextView * ctv = (CoreTextView*)currentTextView;
+                ctv.coreTextProcessor.coreTextParams->fontSize += 1.0f;
+                [ctv.coreTextProcessor.coreTextParams updateParams];
+            }
+
             if ([tv respondsToSelector:@selector(updateCoreTextParams)]) {
                 [tv updateCoreTextParams];
             }
@@ -173,7 +190,7 @@
         [currentTextView setNeedsDisplay];
     }else if ([currentTextView isKindOfClass:[CoreTextView class]]) {
         NSString * contents = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"2" ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        currentTextView.text = contents;
+        currentTextView.text = [contents stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"];
         [currentTextView reloadText];
         [currentTextView setNeedsDisplay];
     }else if ([currentTextView isKindOfClass:[OpenGLES_TextView class]]) {

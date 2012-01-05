@@ -29,5 +29,6 @@
 @property (nonatomic, retain) UIColor *backgroundColor;
 @property (nonatomic, retain) UIImageView *backgroundImageView;
 
+- (void)updateParams;
 
 @end

@@ -9,6 +9,7 @@
 #import "CoreTextView.h"
 #import "CoreTextHelper.h"
 #import "CoreTextProcessor.h"
+#import "CoreTextParams.h"
 
 @implementation CoreTextView
 
@@ -62,9 +63,9 @@
 
 - (void)dealloc
 {
-    if (ctLinesArrayRef != NULL) {
-        CFRelease(ctLinesArrayRef);
-    }
+//    if (ctLinesArrayRef != NULL) {
+//        CFRelease(ctLinesArrayRef);
+//    }
     if (cfAttrStringRef != NULL) {
         CFRelease(cfAttrStringRef);
     }
@@ -93,7 +94,7 @@
     CGContextSetFillColorWithColor(context, [[UIColor colorWithRed:(200. / 255.0) green:0 / 255.0 blue:0 / 255.0 alpha:0.7] CGColor]);
     CGContextFillRect(context, selectedRect);
      */
-	
+	CFArrayRef ctLinesArrayRef = coreTextProcessor->visibleLines;
     if (ctLinesArrayRef != NULL) {
 #if !DRAW_TEXT_LINE_BY_LINE
         //draw text frame setter
@@ -118,7 +119,7 @@
             CGFloat localX = 0;
             CGFloat localY = (j + 1) * (fontSize  + lineSpace);
             
-            NSLog(@"lineIdx :%lu;  %f;  %@  ", lineIdx, localY, [text substringWithRange:NSMakeRange((NSUInteger)(lineRange.location), (NSUInteger)(lineRange.length))]);
+            NSLog(@"lineIdx :%lu;  %f;  %@  ", lineIdx, localY, [coreTextProcessor.text substringWithRange:NSMakeRange((NSUInteger)(lineRange.location), (NSUInteger)(lineRange.length))]);
             
             ctlineBounds = CTLineGetImageBounds(CFArrayGetValueAtIndex(ctLinesArrayRef, lineIdx), context);
             CGContextSetTextPosition(context, localX, self.bounds.size.height - localY);
@@ -133,82 +134,82 @@
 - (void)loadText:(NSString *)aString
 {
     OUT_FUNCTION_NAME();
-    
-    self.text = [aString stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"];
-    
-    NSMutableAttributedString * attStr = nil;
-	//Helvetica Arial
-    
-    //config attributes of AttributedString
-    CTLineBreakMode lineBreakMode = kCTLineBreakByCharWrapping;
-    CTParagraphStyleSetting settings[] = {
-        { kCTParagraphStyleSpecifierLineBreakMode, sizeof(lineBreakMode), &lineBreakMode },
-        { kCTParagraphStyleSpecifierMinimumLineHeight, sizeof(lineHeight), &lineHeight },
-        { kCTParagraphStyleSpecifierMaximumLineHeight, sizeof(lineHeight), &lineHeight },
-    };
-    
-    CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(settings, sizeof(settings) / sizeof(settings[0]));
-    //ctFontRef = CTFontCreateUIFontForLanguage(kCTFontSystemFontType, fontSize, NULL);
-    ctFontRef = CTFontCreateWithName((CFStringRef)[self.coreTextHelper italicFontNameByString:fontName], fontSize, NULL);
-    NSAssert(ctFontRef != NULL, @"ctFontRef 为 NULl");
-    
-    NSDictionary * attributes = [NSDictionary dictionaryWithObjectsAndKeys:(id)ctFontRef, kCTFontAttributeName, (id)paragraphStyle, kCTParagraphStyleAttributeName, nil];
-    
-    attStr = [[NSMutableAttributedString alloc] initWithString:self.text attributes:attributes];
-    [attStr addAttribute:(id)kCTForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(0, self.text.length)];
-    
-    if (cfAttrStringRef) {
-        CFRelease(cfAttrStringRef);
-        cfAttrStringRef = NULL;
-    }
-    
-    cfAttrStringRef = (CFMutableAttributedStringRef)attStr;
-    
-    startGlyphIndex = 0;
-    totalGlyphCount = 0;
-	[self loadVisibleTextForCFRange:CFRangeMake(0, 0)];
+//    
+//    self.text = [aString stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"];
+//    
+//    NSMutableAttributedString * attStr = nil;
+//	//Helvetica Arial
+//    
+//    //config attributes of AttributedString
+//    CTLineBreakMode lineBreakMode = kCTLineBreakByCharWrapping;
+//    CTParagraphStyleSetting settings[] = {
+//        { kCTParagraphStyleSpecifierLineBreakMode, sizeof(lineBreakMode), &lineBreakMode },
+//        { kCTParagraphStyleSpecifierMinimumLineHeight, sizeof(lineHeight), &lineHeight },
+//        { kCTParagraphStyleSpecifierMaximumLineHeight, sizeof(lineHeight), &lineHeight },
+//    };
+//    
+//    CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(settings, sizeof(settings) / sizeof(settings[0]));
+//    //ctFontRef = CTFontCreateUIFontForLanguage(kCTFontSystemFontType, fontSize, NULL);
+//    ctFontRef = CTFontCreateWithName((CFStringRef)[self.coreTextHelper italicFontNameByString:fontName], fontSize, NULL);
+//    NSAssert(ctFontRef != NULL, @"ctFontRef 为 NULl");
+//    
+//    NSDictionary * attributes = [NSDictionary dictionaryWithObjectsAndKeys:(id)ctFontRef, kCTFontAttributeName, (id)paragraphStyle, kCTParagraphStyleAttributeName, nil];
+//    
+//    attStr = [[NSMutableAttributedString alloc] initWithString:self.text attributes:attributes];
+//    [attStr addAttribute:(id)kCTForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(0, self.text.length)];
+//    
+//    if (cfAttrStringRef) {
+//        CFRelease(cfAttrStringRef);
+//        cfAttrStringRef = NULL;
+//    }
+//    
+//    cfAttrStringRef = (CFMutableAttributedStringRef)attStr;
+//    
+//    startGlyphIndex = 0;
+//    totalGlyphCount = 0;
+//	[self loadVisibleTextForCFRange:CFRangeMake(0, 0)];
 }
 
 - (void)loadVisibleTextForCFRange:(CFRange)rang
 {
     OUT_FUNCTION_NAME();
-    NSAutoreleasePool * pool = [NSAutoreleasePool new];
-    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)cfAttrStringRef);
-    CGMutablePathRef path = CGPathCreateMutable();
-    visibleBounds = CGRectMake(10.0, 10.0, self.frame.size.width - 20, self.frame.size.height - 20);
-    CGPathAddRect(path, NULL, visibleBounds);
-    
-    if (visibleFrameRef != NULL) {
-        CFRelease(visibleFrameRef);
-        visibleFrameRef = NULL;
-    }
-    visibleFrameRef = CTFramesetterCreateFrame(framesetter, rang, path, NULL);
-    
-    visibleRange = CTFrameGetVisibleStringRange(visibleFrameRef);
-    
-    if (ctLinesArrayRef != NULL) {
-        CFRelease(ctLinesArrayRef);
-        ctLinesArrayRef = NULL;
-    }
-    
-    if (ctLinesArrayRef == NULL && visibleFrameRef != NULL) {
-        ctLinesArrayRef = CFRetain(CTFrameGetLines(visibleFrameRef));
-    }
-    
-    CFIndex _total = 0;
-    if (ctLinesArrayRef != NULL) {
-        for (int i = 0; i < CFArrayGetCount(ctLinesArrayRef); i++) {
-            CTLineRef ctLine = CFArrayGetValueAtIndex(ctLinesArrayRef, i);
-            _total += CTLineGetGlyphCount(ctLine);
-        }
-    }
-    startGlyphIndex += totalGlyphCount;
-    totalGlyphCount = _total;
-    
-    //release CF object
-    CFRelease(framesetter);
-    CFRelease(path);
-    [pool drain];
+//    NSAutoreleasePool * pool = [NSAutoreleasePool new];
+//    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)cfAttrStringRef);
+//    CGMutablePathRef path = CGPathCreateMutable();
+//    visibleBounds = CGRectMake(10.0, 10.0, self.frame.size.width - 20, self.frame.size.height - 20);
+//    CGPathAddRect(path, NULL, visibleBounds);
+//    
+//    if (visibleFrameRef != NULL) {
+//        CFRelease(visibleFrameRef);
+//        visibleFrameRef = NULL;
+//    }
+//    visibleFrameRef = CTFramesetterCreateFrame(framesetter, rang, path, NULL);
+//    
+//    visibleRange = CTFrameGetVisibleStringRange(visibleFrameRef);
+//    CFArrayRef ctLinesArrayRef = coreTextProcessor->visibleLines;
+//    if (ctLinesArrayRef != NULL) {
+//        CFRelease(ctLinesArrayRef);
+//        ctLinesArrayRef = NULL;
+//    }
+//    
+//    if (ctLinesArrayRef == NULL && visibleFrameRef != NULL) {
+//        ctLinesArrayRef = CFRetain(CTFrameGetLines(visibleFrameRef));
+//    }
+//    
+//    CFIndex _total = 0;
+//    if (ctLinesArrayRef != NULL) {
+//        for (int i = 0; i < CFArrayGetCount(ctLinesArrayRef); i++) {
+//            CTLineRef ctLine = CFArrayGetValueAtIndex(ctLinesArrayRef, i);
+//            _total += CTLineGetGlyphCount(ctLine);
+//        }
+//    }
+//    startGlyphIndex += totalGlyphCount;
+//    totalGlyphCount = _total;
+//    
+//    //release CF object
+//    CFRelease(framesetter);
+//    CFRelease(path);
+//    [pool drain];
 }
 
 - (void)reloadText
@@ -224,11 +225,10 @@
 - (void)refreshText:(NSString *)aString
 {
     NSAutoreleasePool * pool = [NSAutoreleasePool new];
-    @synchronized((NSArray*)ctLinesArrayRef) {
+    @synchronized(coreTextProcessor) {
         [coreTextProcessor loadText:aString];
         [coreTextProcessor loadVisibleTextForCFRange:CFRangeMake(startGlyphIndex, totalGlyphCount)];
         //[self loadText:aString];
-        
         [self performSelectorOnMainThread:@selector(setNeedsDisplay) withObject:nil waitUntilDone:NO];
     }
     [pool drain];
@@ -242,19 +242,19 @@
     selectedStartLine = -1;
     selectedEndLine = -1;
     
-    if (ctLinesArrayRef != NULL) {
-        for (int i = 0; i < CFArrayGetCount(ctLinesArrayRef); i++) {
-            CTLineRef ctLine = CFArrayGetValueAtIndex(ctLinesArrayRef, i);
-            selectedStartIndex = CTLineGetStringIndexForPosition(ctLine, [tap locationInView:self]);
-            CGFloat secondaryOff;
-            CGFloat offset = CTLineGetOffsetForStringIndex(ctLine, selectedStartIndex, &secondaryOff);
-            NSLog(@"cfindex :%lu;  offset :%f,  2ndOff :%f", selectedStartIndex, offset, secondaryOff);
-            if (selectedRect.origin.y < visibleBounds.origin.y + fontSize * (i + 1) && selectedRect.origin.y > visibleBounds.origin.y + fontSize * i) {
-                selectedStartLine = i;
-                selectedEndLine = i;
-            }
-        }
-    }
+//    if (ctLinesArrayRef != NULL) {
+//        for (int i = 0; i < CFArrayGetCount(ctLinesArrayRef); i++) {
+//            CTLineRef ctLine = CFArrayGetValueAtIndex(ctLinesArrayRef, i);
+//            selectedStartIndex = CTLineGetStringIndexForPosition(ctLine, [tap locationInView:self]);
+//            CGFloat secondaryOff;
+//            CGFloat offset = CTLineGetOffsetForStringIndex(ctLine, selectedStartIndex, &secondaryOff);
+//            NSLog(@"cfindex :%lu;  offset :%f,  2ndOff :%f", selectedStartIndex, offset, secondaryOff);
+//            if (selectedRect.origin.y < visibleBounds.origin.y + fontSize * (i + 1) && selectedRect.origin.y > visibleBounds.origin.y + fontSize * i) {
+//                selectedStartLine = i;
+//                selectedEndLine = i;
+//            }
+//        }
+//    }
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
@@ -263,16 +263,16 @@
     
     CGFloat secondaryOff;
     CGFloat offset;
-    if (ctLinesArrayRef != NULL) {
-        for (int i = 0; i < CFArrayGetCount(ctLinesArrayRef); i++) {
-            CTLineRef ctLine = CFArrayGetValueAtIndex(ctLinesArrayRef, i);
-            selectedEndIndex = CTLineGetStringIndexForPosition(ctLine, [tap locationInView:self]);
-            offset = CTLineGetOffsetForStringIndex(ctLine, selectedEndIndex, &secondaryOff);
-            if (selectedRect.origin.y < fontSize * (i + 1) && selectedRect.origin.y > fontSize * i) {
-                selectedEndIndex = i;
-            }
-        }
-    }
+//    if (ctLinesArrayRef != NULL) {
+//        for (int i = 0; i < CFArrayGetCount(ctLinesArrayRef); i++) {
+//            CTLineRef ctLine = CFArrayGetValueAtIndex(ctLinesArrayRef, i);
+//            selectedEndIndex = CTLineGetStringIndexForPosition(ctLine, [tap locationInView:self]);
+//            offset = CTLineGetOffsetForStringIndex(ctLine, selectedEndIndex, &secondaryOff);
+//            if (selectedRect.origin.y < fontSize * (i + 1) && selectedRect.origin.y > fontSize * i) {
+//                selectedEndIndex = i;
+//            }
+//        }
+//    }
 
     selectedRect.size.width = ([tap locationInView:self].x - selectedRect.origin.x);
     selectedRect.size.height = ([tap locationInView:self].y - selectedRect.origin.y);
@@ -287,20 +287,20 @@
     CGPoint tapPoint = [tap locationInView:self];
     tapPoint.x -= 10;
     //selected charactor
-    for (int i = 0; i < CFArrayGetCount(ctLinesArrayRef); i++) {
-        CTLineRef ctLine = CFArrayGetValueAtIndex(ctLinesArrayRef, i);
-        CFIndex cfIndex = CTLineGetStringIndexForPosition(ctLine, tapPoint);
-        CGFloat secondaryOff;
-        CGFloat offset = CTLineGetOffsetForStringIndex(ctLine, cfIndex, &secondaryOff);
-        NSLog(@"%@  cfindex :%lu;  offset :%f,  2ndOff :%f", [(NSString *)CFAttributedStringGetString(self->cfAttrStringRef) substringWithRange:NSMakeRange(cfIndex, 1)], cfIndex, offset, secondaryOff);
-    }
+//    for (int i = 0; i < CFArrayGetCount(ctLinesArrayRef); i++) {
+//        CTLineRef ctLine = CFArrayGetValueAtIndex(ctLinesArrayRef, i);
+//        CFIndex cfIndex = CTLineGetStringIndexForPosition(ctLine, tapPoint);
+//        CGFloat secondaryOff;
+//        CGFloat offset = CTLineGetOffsetForStringIndex(ctLine, cfIndex, &secondaryOff);
+//        NSLog(@"%@  cfindex :%lu;  offset :%f,  2ndOff :%f", [(NSString *)CFAttributedStringGetString(self->cfAttrStringRef) substringWithRange:NSMakeRange(cfIndex, 1)], cfIndex, offset, secondaryOff);
+//    }
     
     //selectedRect.size = CGSizeZero;
     
     //NSLog(@"x :%f;  y :%f", [tap locationInView:self].x, [tap locationInView:self].y);
     
     //if ([tap locationInView:self].x < 10 || [tap locationInView:self].x > self.frame.size.width - 20) {
-        tapPoint = [tap locationInView:self];
+/*        tapPoint = [tap locationInView:self];
         CGFloat left = self.frame.size.width / 4;
         if (tapPoint.x <= left) {
             //NSLog(@"Turn previous");
@@ -319,7 +319,7 @@
             CFRelease(ctLinesArrayRef);
             ctLinesArrayRef = NULL;
             [self loadVisibleTextForCFRange:CFRangeMake(startGlyphIndex + totalGlyphCount, 0)];
-        }
+        }*/
     //}
     
     [self setNeedsDisplay];

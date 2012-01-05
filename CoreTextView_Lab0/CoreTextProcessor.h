@@ -13,6 +13,7 @@
 @class CoreTextView;
 
 @interface CoreTextProcessor : NSObject {
+@public
     CTFrameRef visibleFrameRef;//可见区域
     CTFramesetterRef framesetterRef;//framesetter
     CFAttributedStringRef attributedStringRef;//属性化文本
@@ -23,7 +24,6 @@
 }
 
 @property (nonatomic, retain) NSString *text;
-@property (nonatomic, retain) NSString *fontName;
 @property (nonatomic, retain) UIColor *foregroundColor;
 @property (nonatomic, retain) UIColor *backgroundColor;
 @property (nonatomic, retain) UIImage *backgroundImage;
