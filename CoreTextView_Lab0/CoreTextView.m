@@ -7,9 +7,13 @@
 //
 
 #import "CoreTextView.h"
+#import "CoreTextHelper.h"
+#import "CoreTextProcessor.h"
 
 @implementation CoreTextView
 
+@synthesize coreTextHelper;
+@synthesize coreTextProcessor;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -41,6 +45,14 @@
     selectedStartIndex = -1;
     selectedEndIndex = -1;
     [self updateCoreTextParams];
+    //避免重新加载
+    if (coreTextHelper == nil) {
+        coreTextHelper = [CoreTextHelper new];
+    }
+    if (coreTextProcessor == nil) {
+        coreTextProcessor = [CoreTextProcessor new];
+        coreTextProcessor.coreTextView = self;
+    }
 }
 
 - (void)updateCoreTextParams
@@ -56,6 +68,8 @@
     if (cfAttrStringRef != NULL) {
         CFRelease(cfAttrStringRef);
     }
+    [coreTextHelper release];
+    [coreTextProcessor release];
     [super dealloc];
 }
 
@@ -76,7 +90,6 @@
     CGContextScaleCTM(context, 1.0f, -1.0f);
     
     /*
-     
     CGContextSetFillColorWithColor(context, [[UIColor colorWithRed:(200. / 255.0) green:0 / 255.0 blue:0 / 255.0 alpha:0.7] CGColor]);
     CGContextFillRect(context, selectedRect);
      */
@@ -102,11 +115,13 @@
             NSLog(@"bounds :%f, ascent :%f, descent :%f, leading :%f, lineSpace :%f", bounds, ascent, descent, leading, lineSpace);
             CTLineRef lineRef = CFArrayGetValueAtIndex(ctLinesArrayRef, lineIdx);
             CFRange lineRange = CTLineGetStringRange(lineRef);
-            CGFloat locaY = /*visibleBounds.origin.y*/0 + (j + 1) * (fontSize  + lineSpace);
+            CGFloat localX = 0;
+            CGFloat localY = (j + 1) * (fontSize  + lineSpace);
             
-            NSLog(@"lineIdx :%lu;  %f;  %@  ", lineIdx, locaY, [text substringWithRange:NSMakeRange((NSUInteger)(lineRange.location), (NSUInteger)(lineRange.length))]);
+            NSLog(@"lineIdx :%lu;  %f;  %@  ", lineIdx, localY, [text substringWithRange:NSMakeRange((NSUInteger)(lineRange.location), (NSUInteger)(lineRange.length))]);
+            
             ctlineBounds = CTLineGetImageBounds(CFArrayGetValueAtIndex(ctLinesArrayRef, lineIdx), context);
-            CGContextSetTextPosition(context, 0/*visibleBounds.origin.x*/, self.bounds.size.height - locaY);
+            CGContextSetTextPosition(context, localX, self.bounds.size.height - localY);
             CTLineDraw(lineRef, context);
         }
 #endif   
@@ -123,19 +138,20 @@
     
     NSMutableAttributedString * attStr = nil;
 	//Helvetica Arial
-    //UIFont * font = [UIFont fontWithName:@"Helvetica" size:self.fontSize];
-    //UIFont * font = [UIFont systemFontOfSize:self.fontSize];
     
     //config attributes of AttributedString
+    CTLineBreakMode lineBreakMode = kCTLineBreakByCharWrapping;
     CTParagraphStyleSetting settings[] = {
+        { kCTParagraphStyleSpecifierLineBreakMode, sizeof(lineBreakMode), &lineBreakMode },
         { kCTParagraphStyleSpecifierMinimumLineHeight, sizeof(lineHeight), &lineHeight },
         { kCTParagraphStyleSpecifierMaximumLineHeight, sizeof(lineHeight), &lineHeight },
     };
     
     CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(settings, sizeof(settings) / sizeof(settings[0]));
-    ctFontRef = CTFontCreateUIFontForLanguage(kCTFontSystemFontType, fontSize, NULL);
-    //ctFontRef = CTFontCreateWithName((CFStringRef)@"DD", fontSize, NULL);
+    //ctFontRef = CTFontCreateUIFontForLanguage(kCTFontSystemFontType, fontSize, NULL);
+    ctFontRef = CTFontCreateWithName((CFStringRef)[self.coreTextHelper italicFontNameByString:fontName], fontSize, NULL);
     NSAssert(ctFontRef != NULL, @"ctFontRef 为 NULl");
+    
     NSDictionary * attributes = [NSDictionary dictionaryWithObjectsAndKeys:(id)ctFontRef, kCTFontAttributeName, (id)paragraphStyle, kCTParagraphStyleAttributeName, nil];
     
     attStr = [[NSMutableAttributedString alloc] initWithString:self.text attributes:attributes];
@@ -151,26 +167,6 @@
     startGlyphIndex = 0;
     totalGlyphCount = 0;
 	[self loadVisibleTextForCFRange:CFRangeMake(0, 0)];
-}
-
-- (void)reloadText
-{
-    [self asynLoadText:self.text];
-}
-
-- (void)refreshText:(NSString *)aString
-{
-    NSAutoreleasePool * pool = [NSAutoreleasePool new];
-    @synchronized((NSArray*)ctLinesArrayRef) {
-        [self loadText:aString];
-        [self performSelectorOnMainThread:@selector(setNeedsDisplay) withObject:nil waitUntilDone:NO];
-    }
-    [pool drain];
-}
-
-- (void)asynLoadText:(NSString *)aString
-{
-    [self performSelectorInBackground:@selector(refreshText:) withObject:aString];
 }
 
 - (void)loadVisibleTextForCFRange:(CFRange)rang
@@ -212,6 +208,29 @@
     //release CF object
     CFRelease(framesetter);
     CFRelease(path);
+    [pool drain];
+}
+
+- (void)reloadText
+{
+    [self asynLoadText:self.text];
+}
+
+- (void)asynLoadText:(NSString *)aString
+{
+    [self performSelectorInBackground:@selector(refreshText:) withObject:aString];
+}
+
+- (void)refreshText:(NSString *)aString
+{
+    NSAutoreleasePool * pool = [NSAutoreleasePool new];
+    @synchronized((NSArray*)ctLinesArrayRef) {
+        [coreTextProcessor loadText:aString];
+        [coreTextProcessor loadVisibleTextForCFRange:CFRangeMake(startGlyphIndex, totalGlyphCount)];
+        //[self loadText:aString];
+        
+        [self performSelectorOnMainThread:@selector(setNeedsDisplay) withObject:nil waitUntilDone:NO];
+    }
     [pool drain];
 }
 

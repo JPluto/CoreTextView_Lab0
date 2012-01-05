@@ -22,13 +22,12 @@
 
 - (NSArray *)textLinesFromString:(NSString *)theString inRect:(CGRect)theRect usingFont:(UIFont *)theFont lineBreakMode:(UILineBreakMode)breakMode
 {
-    NSDate * startDate = [NSDate date];
-    NSMutableArray * tmp = [NSMutableArray new];
+    NSMutableArray * tmp = [[NSMutableArray new] autorelease];
     NSMutableString * mutableString = nil;
     CGSize tmpSize;
     
+    NSDate * startDate = [NSDate date];
     int  i, count = [theString length];
-//    NSLog(@"string count :%u", [theString length]);
     NSAutoreleasePool * __pool = [NSAutoreleasePool new];
     for (i = 0; i < count; i++) {
         if (mutableString == nil) {
@@ -36,7 +35,6 @@
         }
         
         [mutableString appendFormat:@"%@", [theString substringWithRange:NSMakeRange(i, 1)]];
-//        NSLog(@"->%@", mutableString);
         
         //tmpSize = [mutableString sizeWithFont:theFont forWidth:theRect.size.width lineBreakMode:breakMode];
         tmpSize = [mutableString sizeWithFont:theFont constrainedToSize:theRect.size lineBreakMode:breakMode];
@@ -44,7 +42,6 @@
 //        NSLog(@"tmpSize :%@; theRect:%@", NSStringFromCGSize(tmpSize), NSStringFromCGRect(theRect));
 //        NSLog(@"lineHeight :%f", theFont.lineHeight);
         if (tmpSize.height > theFont.lineHeight) {//遍历回溯
-            
             [tmp addObject:[mutableString substringToIndex:mutableString.length - 1]];
             mutableString = [NSMutableString new];
             if (i >= count - 1) {

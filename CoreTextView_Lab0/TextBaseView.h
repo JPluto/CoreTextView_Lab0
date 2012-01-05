@@ -12,6 +12,7 @@
 
 @optional
 
+- (void)reloadText;
 - (void)loadText:(NSString*)aString;
 - (void)refreshText:(NSString*)aString;
 - (void)asynLoadText:(NSString *)aString;
@@ -34,5 +35,9 @@
 @property (nonatomic, retain) NSString * fontName;
 @property (nonatomic, retain) NSString * text;
 @property (nonatomic) NSInteger pageCount;
+
+- (CTFontRef)CreateItalicCTFont;
+- (CTFontRef)CreateBoldCTFont;
+- (CTFontRef)CreateNormalCTFont;
 
 @end

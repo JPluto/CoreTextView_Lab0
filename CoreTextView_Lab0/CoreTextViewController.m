@@ -167,12 +167,24 @@
     currentTextView = [textViews objectAtIndex:segmentCtrl.selectedSegmentIndex];
     [scrollView addSubview:currentTextView];
     
-    if ([currentTextView respondsToSelector:@selector(loadText:)]) {
+    if ([currentTextView isKindOfClass:[TextView class]] && [currentTextView respondsToSelector:@selector(loadText:)]) {
         NSString * contents = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"2" ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        
         [currentTextView loadText:contents];
         [currentTextView setNeedsDisplay];
+    }else if ([currentTextView isKindOfClass:[CoreTextView class]]) {
+        NSString * contents = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"2" ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        currentTextView.text = contents;
+        [currentTextView reloadText];
+        [currentTextView setNeedsDisplay];
+    }else if ([currentTextView isKindOfClass:[OpenGLES_TextView class]]) {
+        
     }
+//    if ([currentTextView respondsToSelector:@selector(reloadText)]) {
+//        NSString * contents = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"2" ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+//        currentTextView.text = contents;
+//        [currentTextView reloadText];
+//        [currentTextView setNeedsDisplay];
+//    }
 
 }
 

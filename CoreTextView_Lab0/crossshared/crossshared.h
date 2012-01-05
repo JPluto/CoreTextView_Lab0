@@ -54,8 +54,8 @@
 #define MAKE_MEMORY_POOL   [NSAutoreleasePool new]
 
 //add macro RELEASE_VERSION INTO preprocessor MACROS
-#ifdef DISTRIB_VERSION
-#define NSLog(...)  
+#ifndef DEBUG
+    #define NSLog(...)
 #endif
 
 

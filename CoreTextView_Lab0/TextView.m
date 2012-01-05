@@ -73,12 +73,12 @@
     SimpleTextProcessor * processor = [SimpleTextProcessor new];
     NSArray * strings = [processor textLinesFromString:self.text inRect:textFrame usingFont:self.font lineBreakMode:UILineBreakModeCharacterWrap];
     
-    NSInteger times = 50;
+    //NSInteger times = 50;
     NSDate * date = [NSDate date];
     //++++++++
 //    CGContextSetFillColorWithColor(context, [[UIColor grayColor] CGColor]);
 //    CGContextFillRect(context, textFrame);    
-    CGContextSetFillColorWithColor(context, [[UIColor blackColor] CGColor]);
+    CGContextSetFillColorWithColor(context, [[UIColor redColor] CGColor]);
     
     NSInteger avaibleLines = textFrame.size.height / font.lineHeight;
     
@@ -98,7 +98,7 @@
     //----------
     textFrame.origin.y = 0;
     textFrame.origin.x = 100;
-    [[NSString stringWithFormat:@"%d次 耗时:%f", times, (double)(([[NSDate date] timeIntervalSince1970] - [date timeIntervalSince1970]))] drawInRect:textFrame withFont:[UIFont systemFontOfSize:12]];
+    [[NSString stringWithFormat:@" 耗时:%f", /*times,*/ (double)(([[NSDate date] timeIntervalSince1970] - [date timeIntervalSince1970]))] drawInRect:textFrame withFont:[UIFont systemFontOfSize:12]];
     
 }
 

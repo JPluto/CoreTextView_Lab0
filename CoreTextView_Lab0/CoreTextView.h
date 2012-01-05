@@ -11,6 +11,9 @@
 
 #define DRAW_TEXT_LINE_BY_LINE	1
 
+@class CoreTextHelper;
+@class CoreTextProcessor;
+
 @interface CoreTextView : TextBaseView {
 @public
     //manul control data
@@ -37,9 +40,16 @@
 	
 }
 
+@property (nonatomic, retain) CoreTextHelper * coreTextHelper;
+@property (nonatomic, retain) CoreTextProcessor * coreTextProcessor;
+
+//初始化 coretext 参数
 - (void)initCoreTextParams;
+//更新并应用 coretext 参数
 - (void)updateCoreTextParams;
+//加载可视区域文本行数
 - (void)loadVisibleTextForCFRange:(CFRange)rang;
+//重新加载文本
 - (void)reloadText;
 
 @end

@@ -42,6 +42,36 @@
     return self;
 }
 
+- (CTFontRef)CreateItalicCTFont
+{
+    CTFontRef fontRef = CTFontCreateWithName((CFStringRef)[NSString stringWithFormat:@"%@-Italic", fontName], fontSize, NULL);
+    if (fontRef == NULL) {
+        fontRef = CTFontCreateWithName((CFStringRef)fontName, fontSize, NULL);
+    }
+    
+    return fontRef;
+}
+
+- (CTFontRef)CreateBoldCTFont
+{
+    CTFontRef fontRef = CTFontCreateWithName((CFStringRef)[NSString stringWithFormat:@"%@-Bold", fontName], fontSize, NULL);
+    if (fontRef == NULL) {
+        fontRef = CTFontCreateWithName((CFStringRef)fontName, fontSize, NULL);
+    }
+    
+    return fontRef;
+}
+
+- (CTFontRef)CreateNormalCTFont
+{
+    CTFontRef fontRef = CTFontCreateWithName((CFStringRef)[NSString stringWithFormat:@"%@", fontName], fontSize, NULL);
+    if (fontRef == NULL) {
+        fontRef = CTFontCreateWithName((CFStringRef)fontName, fontSize, NULL);
+    }
+    
+    return fontRef;
+}
+
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
