@@ -70,11 +70,11 @@
     textFrame.size.width = self.frame.size.width - 20;
     textFrame.size.height = self.frame.size.height - 20;
     
+    NSDate * date = [NSDate date];
     SimpleTextProcessor * processor = [SimpleTextProcessor new];
     NSArray * strings = [processor textLinesFromString:self.text inRect:textFrame usingFont:self.font lineBreakMode:UILineBreakModeCharacterWrap];
     
     //NSInteger times = 50;
-    NSDate * date = [NSDate date];
     //++++++++
 //    CGContextSetFillColorWithColor(context, [[UIColor grayColor] CGColor]);
 //    CGContextFillRect(context, textFrame);    

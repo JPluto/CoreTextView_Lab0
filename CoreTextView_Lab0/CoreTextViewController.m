@@ -24,6 +24,10 @@
 @synthesize segmentCtrl;
 @synthesize textViews;
 @synthesize labelFontSize;
+@synthesize filePath;
+@synthesize timeTest;
+@synthesize scrollViews;
+
 
 - (void)dealloc
 {
@@ -38,6 +42,9 @@
     }
     if (textViews) {
         [textViews release];
+    }
+    if (scrollViews) {
+        [scrollViews release];
     }
     [super dealloc];
 }
@@ -85,6 +92,8 @@
         }
         segmentCtrl.selectedSegmentIndex = 1;
     }
+    
+    scrollView.scrollEnabled = YES;
 
 }
 
@@ -107,7 +116,7 @@
 {
     NSLog(@"%@  :%@", DEBUG_FUNCTION_NAME, [self.currentTextView classForCoder]);
     if ([self.currentTextView respondsToSelector:@selector(loadText:)]) {
-        NSString * fileContent = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"2" ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        NSString * fileContent = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"1" ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         [self.currentTextView loadText:fileContent];
     }
 }
@@ -123,6 +132,7 @@
     if ([self.currentTextView isKindOfClass:[TextBaseView class]]) {
         id tv = self.currentTextView;
         self.labelFontSize.text = [NSString stringWithFormat:@"%f", [tv fontSize]];
+        
         [self.currentTextView setNeedsDisplay];
     }
 }
@@ -147,6 +157,9 @@
                 [tv reloadText];
             }
             self.labelFontSize.text = [NSString stringWithFormat:@"%f", [tv fontSize]];
+            if ([currentTextView isKindOfClass:[TextView class]]) {
+                [tv setNeedsDisplay];                
+            }
         }
     }
 }
@@ -171,8 +184,25 @@
                 [tv reloadText];
             }
             self.labelFontSize.text = [NSString stringWithFormat:@"%f", [tv fontSize]];
+            if ([currentTextView isKindOfClass:[TextView class]]) {
+                [tv setNeedsDisplay];                
+            }
         }
     }
+}
+
+- (void)onclick_Previous:(id)sender
+{
+    CoreTextProcessor * processor = [(CoreTextView*)self.currentTextView coreTextProcessor];
+    [processor loadPage:processor.currentPage - 1];
+    [currentTextView setNeedsDisplay];
+}
+
+- (void)onClick_Next:(id)sender
+{
+    CoreTextProcessor * processor = [(CoreTextView*)self.currentTextView coreTextProcessor];
+    [processor loadPage:processor.currentPage + 1];
+    [currentTextView setNeedsDisplay];
 }
 
 - (void)segmentControlValueChanged:(id)sender
@@ -189,6 +219,8 @@
         [currentTextView loadText:contents];
         [currentTextView setNeedsDisplay];
     }else if ([currentTextView isKindOfClass:[CoreTextView class]]) {
+        [scrollView setScrollEnabled:YES];
+
         NSString * contents = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"2" ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         currentTextView.text = [contents stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"];
         [currentTextView reloadText];
@@ -203,6 +235,17 @@
 //        [currentTextView setNeedsDisplay];
 //    }
 
+}
+
+#pragma UIScrollView delegate methods
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    NSLog(@"耗时 :%f", ([[NSDate date] timeIntervalSince1970] - timeTest.timeIntervalSince1970));
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    self.timeTest = [NSDate date];
 }
 
 @end

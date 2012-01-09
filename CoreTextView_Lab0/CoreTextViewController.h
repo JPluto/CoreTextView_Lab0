@@ -13,15 +13,22 @@
 
 @interface CoreTextViewController : UIViewController <UIScrollViewDelegate>
 
+@property (nonatomic, retain) NSDate * timeTest;
 @property (nonatomic, retain) IBOutlet TextBaseView * currentTextView;
 @property (nonatomic, retain) IBOutlet TextScrollView * scrollView;
 @property (nonatomic, retain) IBOutlet UISegmentedControl * segmentCtrl;
 @property (nonatomic, retain) IBOutlet UILabel * labelFontSize;
+
 @property (nonatomic, retain) NSArray * textViews;
+@property (nonatomic, retain) NSString * filePath;
+@property (nonatomic, retain) NSArray * scrollViews;
 
 - (IBAction)onClick_Reload:(id)sender;
 - (IBAction)onClick_DecreaseFontSize:(id)sender;
 - (IBAction)onclick_IncreaseFontSize:(id)sender;
+- (IBAction)onclick_Previous:(id)sender;
+- (IBAction)onClick_Next:(id)sender;
+
 - (void)segmentControlValueChanged:(id)sender;
 
 

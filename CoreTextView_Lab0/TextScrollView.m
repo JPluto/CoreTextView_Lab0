@@ -34,7 +34,7 @@
         for (int i  = 0; i < 2; i++) {
             [tmp addObject:[[UIView new] autorelease]];
         }
-        self.views = [NSArray arrayWithArray:tmp];
+        self.views = [NSArray arrayWithArray:tmp];        
         [pool drain];
         [tmp release];
     }

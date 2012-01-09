@@ -20,6 +20,9 @@
 @synthesize coreTextParams;
 @synthesize coreTextHelper;
 @synthesize coreTextView;
+@synthesize pagesInfo;
+@synthesize currentPage;
+
 
 - (id)init
 {
@@ -30,6 +33,9 @@
             coreTextParams = [CoreTextParams new];
             [coreTextParams updateParams];
             coreTextHelper = [CoreTextHelper new];
+        }
+        if (pagesInfo == nil) {
+            pagesInfo = [NSMutableArray new];
         }
     }
     return self;
@@ -43,6 +49,7 @@
     if (attributedStringRef != NULL) {
         CFRelease(attributedStringRef);
     }
+    [pagesInfo release];
     [foregroundColor release];
     [backgroundColor release];
     [backgroundImage release];
@@ -96,6 +103,7 @@
     }
     
     attributedStringRef = (CFMutableAttributedStringRef)attStr;
+    currentPage = 0;
 }
 
 - (void)loadVisibleTextForCFRange:(CFRange)rang
@@ -103,8 +111,11 @@
     OUT_FUNCTION_NAME();
     NSAutoreleasePool * pool = [NSAutoreleasePool new];
     CFArrayRef ctLinesArrayRef = NULL;
+        
+    if (framesetterRef == NULL) {
+        framesetterRef = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)attributedStringRef);
+    }
     
-    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)attributedStringRef);
     CGMutablePathRef path = CGPathCreateMutable();
     CGFloat offset_x = 0.0f, offset_y = 0.0f;
     coreTextParams->visibleBounds = CGRectMake(offset_x, offset_y, coreTextView.frame.size.width - offset_x * 2, coreTextView.frame.size.height - offset_y * 2);
@@ -114,7 +125,7 @@
         CFRelease(visibleFrameRef);
         visibleFrameRef = NULL;
     }
-    visibleFrameRef = CTFramesetterCreateFrame(framesetter, rang, path, NULL);
+    visibleFrameRef = CTFramesetterCreateFrame(framesetterRef, rang, path, NULL);
     
     visibleRange = CTFrameGetVisibleStringRange(visibleFrameRef);
     
@@ -127,23 +138,77 @@
         ctLinesArrayRef = CFRetain(CTFrameGetLines(visibleFrameRef));
     }
     //计算当前页字数
-    CFIndex _total = 0;
-    if (ctLinesArrayRef != NULL) {
-        for (int i = 0; i < CFArrayGetCount(ctLinesArrayRef); i++) {
-            CTLineRef ctLine = CFArrayGetValueAtIndex(ctLinesArrayRef, i);
-            _total += CTLineGetGlyphCount(ctLine);
-        }
-    }
     startGlyphIndex += totalGlyphCount;
-    totalGlyphCount = _total;
+    totalGlyphCount = visibleRange.length;
+    NSLog(@"range length:%ld", visibleRange.length);
     
+    if (visibleLines != NULL) {
+        CFRelease(visibleLines);
+    }
     visibleLines = ctLinesArrayRef;
     
     //release CF object
-    CFRelease(framesetter);
     CFRelease(path);
     [pool drain];
 }
 
+- (void)loadAllPages
+{
+    OUT_FUNCTION_NAME();
+    
+    currentPage = 0;
+    startGlyphIndex = 0;
+    totalGlyphCount = 0;
+    CFRange range = CFRangeMake(0, 0);
+    NSRange nsRange = NSMakeRange(0, 0);
+    self.pagesInfo = [NSMutableArray array];
+    if (framesetterRef != NULL) {
+        CFRelease(framesetterRef);
+        framesetterRef = NULL;
+    }
+
+    NSValue * rangeValue = nil;
+    [self loadVisibleTextForCFRange:range];
+    if (framesetterRef != NULL) {
+        nsRange.length = totalGlyphCount;
+        rangeValue = [NSValue valueWithRange:nsRange];
+    }
+    NSDate * date = [NSDate date];
+    while (framesetterRef != NULL && text.length > startGlyphIndex + totalGlyphCount) {
+        [pagesInfo addObject:rangeValue];
+        range = CFRangeMake(startGlyphIndex, 0);
+        [self loadVisibleTextForCFRange:range];
+        if (framesetterRef == NULL) {
+            break;
+        }
+        nsRange = NSMakeRange(startGlyphIndex, totalGlyphCount);
+        rangeValue = [NSValue valueWithRange:nsRange];
+    }
+    NSDate * endDate = [NSDate date];
+    NSLog(@"总共耗时 %f 毫秒； 共 %u 页", ([endDate timeIntervalSince1970] - [date timeIntervalSince1970]), [pagesInfo count]);
+    [self loadCurrentPage];
+    [coreTextView setNeedsDisplay];
+}
+
+- (void)loadPage:(NSUInteger)page
+{
+    if (page >= NSNotFound) {
+        return;
+    }
+    if (page >= [pagesInfo count]) {
+        return;
+    }
+    
+    self.currentPage = page;
+    NSLog(@"goto page :%u", page);
+    NSRange range = [[pagesInfo objectAtIndex:currentPage] rangeValue];
+    NSLog(@"ragne :%@", NSStringFromRange(range));
+    [self loadVisibleTextForCFRange:CFRangeMake(range.location, range.length)];
+}
+
+- (void)loadCurrentPage
+{
+    [self loadPage:currentPage];
+}
 
 @end

@@ -78,7 +78,7 @@
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
-    OUT_FUNCTION_NAME();
+    //OUT_FUNCTION_NAME();
     [super drawRect:rect];
     // Drawing code
     CGContextRef context = UIGraphicsGetCurrentContext();
@@ -95,6 +95,18 @@
     CGContextFillRect(context, selectedRect);
      */
 	CFArrayRef ctLinesArrayRef = coreTextProcessor->visibleLines;
+    CGContextSetFillColorWithColor(context, [UIColor yellowColor].CGColor);
+    CGContextFillRect(context, self.bounds);
+    
+    CGContextSetFillColorWithColor(context, [UIColor blackColor].CGColor);
+//    if (ctLinesArrayRef != NULL) {
+//        CFRelease(ctLinesArrayRef);
+//        ctLinesArrayRef = NULL;
+//    }    
+//    if (ctLinesArrayRef == NULL) {
+//
+//    }
+    
     if (ctLinesArrayRef != NULL) {
 #if !DRAW_TEXT_LINE_BY_LINE
         //draw text frame setter
@@ -113,13 +125,13 @@
         //for (lineIdx = CFArrayGetCount(ctLinesArrayRef) - 1, j = 0; lineIdx >= 0; lineIdx--, j++) {
             ctLineSelectBounds = CGRectZero;
             bounds = CTLineGetTypographicBounds(CFArrayGetValueAtIndex(ctLinesArrayRef, lineIdx), &ascent, &descent, &leading);
-            NSLog(@"bounds :%f, ascent :%f, descent :%f, leading :%f, lineSpace :%f", bounds, ascent, descent, leading, lineSpace);
+            //NSLog(@"bounds :%f, ascent :%f, descent :%f, leading :%f, lineSpace :%f", bounds, ascent, descent, leading, lineSpace);
             CTLineRef lineRef = CFArrayGetValueAtIndex(ctLinesArrayRef, lineIdx);
             CFRange lineRange = CTLineGetStringRange(lineRef);
             CGFloat localX = 0;
             CGFloat localY = (j + 1) * (fontSize  + lineSpace);
             
-            NSLog(@"lineIdx :%lu;  %f;  %@  ", lineIdx, localY, [coreTextProcessor.text substringWithRange:NSMakeRange((NSUInteger)(lineRange.location), (NSUInteger)(lineRange.length))]);
+            //NSLog(@"lineIdx :%lu;  %f;  %@  ", lineIdx, localY, [coreTextProcessor.text substringWithRange:NSMakeRange((NSUInteger)(lineRange.location), (NSUInteger)(lineRange.length))]);
             
             ctlineBounds = CTLineGetImageBounds(CFArrayGetValueAtIndex(ctLinesArrayRef, lineIdx), context);
             CGContextSetTextPosition(context, localX, self.bounds.size.height - localY);
@@ -227,7 +239,8 @@
     NSAutoreleasePool * pool = [NSAutoreleasePool new];
     @synchronized(coreTextProcessor) {
         [coreTextProcessor loadText:aString];
-        [coreTextProcessor loadVisibleTextForCFRange:CFRangeMake(startGlyphIndex, totalGlyphCount)];
+        //[coreTextProcessor loadVisibleTextForCFRange:CFRangeMake(startGlyphIndex + totalGlyphCount, 0)];
+        [coreTextProcessor loadAllPages];
         //[self loadText:aString];
         [self performSelectorOnMainThread:@selector(setNeedsDisplay) withObject:nil waitUntilDone:NO];
     }
