@@ -11,6 +11,7 @@
 @implementation TextScrollView
 
 @synthesize views;
+@synthesize viewsBufferCount;
 
 - (id)init
 {
@@ -18,6 +19,9 @@
     if (self) {
         // Initialization code here.
         NSLog(@"%@", DEBUG_FUNCTION_NAME);
+        views = [NSMutableArray new];
+        viewsBufferCount = 3;
+        [self updateViewsBuffer];
     }
     
     return self;
@@ -29,17 +33,80 @@
     if (self) {
         // Initialization code here.
         NSLog(@"%@", DEBUG_FUNCTION_NAME);
+        viewsBufferCount = 3;
         NSMutableArray * tmp = [NSMutableArray new];
         NSAutoreleasePool * pool = [NSAutoreleasePool new];
-        for (int i  = 0; i < 2; i++) {
-            [tmp addObject:[[UIView new] autorelease]];
-        }
-        self.views = [NSArray arrayWithArray:tmp];        
+        [self updateViewsBuffer];
         [pool drain];
         [tmp release];
     }
     
     return self;
+}
+
+- (void)updateViewsBuffer
+{
+    @synchronized(views) {
+        if (viewsBufferCount == [views count]) {
+            //Don't need update views buffer!
+            return;
+        }
+        NSArray * tmp = self.views;
+        NSMutableArray * newViews = [NSMutableArray array];
+        if (viewsBufferCount < [views count]) {
+            for (int i = 0; i < viewsBufferCount; i++) {
+                [newViews addObject:[tmp objectAtIndex:i]];
+            }
+        }else {
+            int  i = 0;
+            //
+            for (i = 0; i < [tmp count]; i++) {
+                [newViews addObject:[tmp objectAtIndex:i]];
+            }
+            //fill the clear view to extended space
+            for ( ; i < viewsBufferCount; i++) {
+                [newViews addObject:[[UIView new] autorelease]];
+            }
+        }
+        self.views = newViews;
+    }
+}
+
+- (void)loadViewsBufferAtPage:(NSUInteger)page ofBook:(NSString *)bookContent
+{
+    
+}
+
+//switch views from right to left
+- (void)switchViewBufferToLeft:(UIView *)view
+{
+    if (views.count <= 1) {
+        return;
+    }
+    int i = 0;
+    UIView * tmp = [[views objectAtIndex:i] retain];
+    i++;
+    for (; i < views.count; i++) {
+        [(NSMutableArray*)views replaceObjectAtIndex:i - 1 withObject:[views objectAtIndex:i]];
+    }
+    [(NSMutableArray*)views replaceObjectAtIndex:i withObject:tmp];
+    [tmp release];
+}
+
+//switch views from left to right
+- (void)switchViewBufferToRight:(UIView *)view
+{
+    if (views.count <= 1) {
+        return;
+    }
+    int i = views.count - 1;
+    UIView * tmp = [[views objectAtIndex:i] retain];
+    i--;
+    for (; i >= 0; i--) {
+        [(NSMutableArray*)views replaceObjectAtIndex:i + 1 withObject:[views objectAtIndex:i]];
+    }
+    [(NSMutableArray*)views replaceObjectAtIndex:i withObject:tmp];
+    [tmp release];
 }
 
 

@@ -15,19 +15,7 @@
 @class CoreTextProcessor;
 
 @interface CoreTextView : TextBaseView {
-@public
-    //manul control data
-    CFRange visibleRange;
-    CTFrameRef visibleFrameRef;
-    CGRect visibleBounds;
-    
-    //CoreText framework drawing
-    CFMutableAttributedStringRef cfAttrStringRef;
-    //CFArrayRef ctLinesArrayRef;
-    CFIndex startGlyphIndex;
-    CFIndex totalGlyphCount;
-    CTFontRef ctFontRef;
-    
+@public    
     //Text selection
     CGRect selectedRect;
     CFIndex selectedStartIndex;
@@ -49,8 +37,6 @@
 - (void)initCoreTextParams;
 //更新并应用 coretext 参数
 - (void)updateCoreTextParams;
-//加载可视区域文本行数
-- (void)loadVisibleTextForCFRange:(CFRange)rang;
 //重新加载文本
 - (void)reloadText;
 

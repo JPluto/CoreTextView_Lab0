@@ -9,7 +9,16 @@
 #import <UIKit/UIKit.h>
 
 @interface TextScrollView : UIScrollView
+{
+    NSUInteger viewsBufferCount;
+}
 
 @property (nonatomic, retain) NSArray * views;
+@property (nonatomic) NSUInteger viewsBufferCount;
+
+- (void)updateViewsBuffer;
+- (void)loadViewsBufferAtPage:(NSUInteger) page ofBook:(NSString*)bookContent;
+- (void)switchViewBufferToLeft:(UIView*) view;
+- (void)switchViewBufferToRight:(UIView*) view;
 
 @end

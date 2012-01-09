@@ -21,7 +21,7 @@
     
     CTParagraphStyleSetting * settings;
     CTLineBreakMode lineBreakMode;
-    CTParagraphStyleRef paragraphStyle;
+    CTParagraphStyleRef paragraphStyleRef;
 }
 
 @property (nonatomic, retain) NSString *fontName;

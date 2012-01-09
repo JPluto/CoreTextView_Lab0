@@ -21,7 +21,7 @@
     if (self) {
         fontSize = 18.0f;
         lineSpace = 0.0f;
-        lineHeight = fontSize + lineSpace;
+        [self updateParams];
         fontName = @"Arial";
     }
     return self;
@@ -32,6 +32,9 @@
     if (fontRef != NULL) {
         CFRelease(fontRef);
     }
+    if (paragraphStyleRef != NULL) {
+        CFRelease(paragraphStyleRef);
+    }
     [fontName release];
     [foregroundColor release];
     [backgroundColor release];
@@ -41,7 +44,7 @@
 
 - (void)updateParams
 {
-    lineHeight = fontSize + lineSpace;
+    lineHeight = fontSize + lineSpace + 2.0f;
 }
 
 @end

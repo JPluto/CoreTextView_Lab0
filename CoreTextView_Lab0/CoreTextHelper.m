@@ -9,6 +9,25 @@
 #import "CoreTextHelper.h"
 
 @implementation CoreTextHelper
+static CoreTextHelper * __instance = nil;
+
++ (CoreTextHelper *)sharedInstance
+{
+    if (__instance == nil) {
+        __instance = [[CoreTextHelper alloc] init];
+    }
+    return __instance;
+}
+
+- (id)autorelease
+{
+    return __instance;
+}
+
+- (void)dealloc
+{
+    [super dealloc];
+}
 
 - (NSString *)italicFontNameByString:(NSString *)theFontName
 {

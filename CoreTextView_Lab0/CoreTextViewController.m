@@ -27,7 +27,7 @@
 @synthesize filePath;
 @synthesize timeTest;
 @synthesize scrollViews;
-
+@synthesize coreTextProcessor;
 
 - (void)dealloc
 {
@@ -54,6 +54,9 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        if (coreTextProcessor == nil) {
+            coreTextProcessor = [CoreTextProcessor new];
+        }
     }
     return self;
 }
@@ -97,7 +100,6 @@
 
 }
 
-
 - (void)viewDidUnload
 {
     [super viewDidUnload];
@@ -117,7 +119,11 @@
     NSLog(@"%@  :%@", DEBUG_FUNCTION_NAME, [self.currentTextView classForCoder]);
     if ([self.currentTextView respondsToSelector:@selector(loadText:)]) {
         NSString * fileContent = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"1" ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        [self.currentTextView loadText:fileContent];
+        if ([self.currentTextView isKindOfClass:[CoreTextView class]]) {
+            [(CoreTextView*)currentTextView loadText:fileContent];
+        }else {
+            [self.currentTextView loadText:fileContent];
+        }
     }
 }
 
@@ -194,14 +200,14 @@
 - (void)onclick_Previous:(id)sender
 {
     CoreTextProcessor * processor = [(CoreTextView*)self.currentTextView coreTextProcessor];
-    [processor loadPage:processor.currentPage - 1];
+    [processor loadPage:processor.currentPage - 1 InFrame:self.view.frame];
     [currentTextView setNeedsDisplay];
 }
 
 - (void)onClick_Next:(id)sender
 {
     CoreTextProcessor * processor = [(CoreTextView*)self.currentTextView coreTextProcessor];
-    [processor loadPage:processor.currentPage + 1];
+    [processor loadPage:processor.currentPage + 1 InFrame:self.view.frame];
     [currentTextView setNeedsDisplay];
 }
 

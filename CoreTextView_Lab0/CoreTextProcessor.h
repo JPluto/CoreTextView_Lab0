@@ -35,14 +35,15 @@
 @property (nonatomic, retain) NSMutableArray * pagesInfo;
 @property (nonatomic, assign) NSUInteger currentPage;
 
++ (CoreTextProcessor*) sharedInstance;
 - (void)initCoreTextParams;
 
 - (void)loadFile:(NSString*)filePath;
 - (void)loadText:(NSString*)aString;
-- (void)loadVisibleTextForCFRange:(CFRange)rang;
-- (void)loadAllPages;
-- (void)loadPage:(NSUInteger)page;
-- (void)loadCurrentPage;
+- (void)loadVisibleTextForCFRange:(CFRange)rang InFrame:(CGRect)theRect;
+- (void)loadAllPagesInFrame:(CGRect)theRect;
+- (void)loadPage:(NSUInteger)page InFrame:(CGRect)theRect;
+- (void)loadCurrentPageInFrame:(CGRect)theRect;
 
 
 @end

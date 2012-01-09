@@ -13,15 +13,16 @@
 @implementation CoreTextView_Lab0AppDelegate
 
 @synthesize window = _window;
+@synthesize ctvc;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    _window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     
-    CoreTextViewController * ctvc = [[CoreTextViewController alloc] initWithNibName:@"TestForm" bundle:nil];
+    ctvc = [[CoreTextViewController alloc] initWithNibName:@"TestForm" bundle:nil];
     [self.window addSubview:ctvc.view];
         
     return YES;

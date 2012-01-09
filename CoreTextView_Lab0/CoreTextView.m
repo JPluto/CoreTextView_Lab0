@@ -48,7 +48,7 @@
     [self updateCoreTextParams];
     //避免重新加载
     if (coreTextHelper == nil) {
-        coreTextHelper = [CoreTextHelper new];
+        coreTextHelper = [CoreTextHelper sharedInstance];
     }
     if (coreTextProcessor == nil) {
         coreTextProcessor = [CoreTextProcessor new];
@@ -63,12 +63,6 @@
 
 - (void)dealloc
 {
-//    if (ctLinesArrayRef != NULL) {
-//        CFRelease(ctLinesArrayRef);
-//    }
-    if (cfAttrStringRef != NULL) {
-        CFRelease(cfAttrStringRef);
-    }
     [coreTextHelper release];
     [coreTextProcessor release];
     [super dealloc];
@@ -110,30 +104,23 @@
     if (ctLinesArrayRef != NULL) {
 #if !DRAW_TEXT_LINE_BY_LINE
         //draw text frame setter
-        CTFrameDraw(visibleFrameRef, context);
+        CTFrameDraw(coreTextProcessor->visibleFrameRef, context);
 #else
         //draw text line by line
         CFIndex lineIdx = 0;
-        CGFloat ascent, descent, leading;
-        double bounds;
-        CGRect ctlineBounds;
-        CGRect ctLineSelectBounds;
+//        CGFloat ascent, descent, leading;
+//        double bounds;
+//        CGRect ctlineBounds;
+//        CGRect ctLineSelectBounds;
         int j;
-
-
+        
 		for (lineIdx = 0, j = 0; lineIdx < CFArrayGetCount(ctLinesArrayRef); lineIdx++, j++) {
-        //for (lineIdx = CFArrayGetCount(ctLinesArrayRef) - 1, j = 0; lineIdx >= 0; lineIdx--, j++) {
-            ctLineSelectBounds = CGRectZero;
-            bounds = CTLineGetTypographicBounds(CFArrayGetValueAtIndex(ctLinesArrayRef, lineIdx), &ascent, &descent, &leading);
-            //NSLog(@"bounds :%f, ascent :%f, descent :%f, leading :%f, lineSpace :%f", bounds, ascent, descent, leading, lineSpace);
+            //ctLineSelectBounds = CGRectZero;
+            //bounds = CTLineGetTypographicBounds(CFArrayGetValueAtIndex(ctLinesArrayRef, lineIdx), &ascent, &descent, &leading);
             CTLineRef lineRef = CFArrayGetValueAtIndex(ctLinesArrayRef, lineIdx);
-            CFRange lineRange = CTLineGetStringRange(lineRef);
             CGFloat localX = 0;
-            CGFloat localY = (j + 1) * (fontSize  + lineSpace);
-            
-            //NSLog(@"lineIdx :%lu;  %f;  %@  ", lineIdx, localY, [coreTextProcessor.text substringWithRange:NSMakeRange((NSUInteger)(lineRange.location), (NSUInteger)(lineRange.length))]);
-            
-            ctlineBounds = CTLineGetImageBounds(CFArrayGetValueAtIndex(ctLinesArrayRef, lineIdx), context);
+            CGFloat localY = (j + 1) * coreTextProcessor.coreTextParams->lineHeight;
+            //ctlineBounds = CTLineGetImageBounds(CFArrayGetValueAtIndex(ctLinesArrayRef, lineIdx), context);
             CGContextSetTextPosition(context, localX, self.bounds.size.height - localY);
             CTLineDraw(lineRef, context);
         }
@@ -141,87 +128,6 @@
     }else {
         NSLog(@"ctLinesArrayRef :%u", (NSUInteger)ctLinesArrayRef);
     }
-}
-
-- (void)loadText:(NSString *)aString
-{
-    OUT_FUNCTION_NAME();
-//    
-//    self.text = [aString stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"];
-//    
-//    NSMutableAttributedString * attStr = nil;
-//	//Helvetica Arial
-//    
-//    //config attributes of AttributedString
-//    CTLineBreakMode lineBreakMode = kCTLineBreakByCharWrapping;
-//    CTParagraphStyleSetting settings[] = {
-//        { kCTParagraphStyleSpecifierLineBreakMode, sizeof(lineBreakMode), &lineBreakMode },
-//        { kCTParagraphStyleSpecifierMinimumLineHeight, sizeof(lineHeight), &lineHeight },
-//        { kCTParagraphStyleSpecifierMaximumLineHeight, sizeof(lineHeight), &lineHeight },
-//    };
-//    
-//    CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(settings, sizeof(settings) / sizeof(settings[0]));
-//    //ctFontRef = CTFontCreateUIFontForLanguage(kCTFontSystemFontType, fontSize, NULL);
-//    ctFontRef = CTFontCreateWithName((CFStringRef)[self.coreTextHelper italicFontNameByString:fontName], fontSize, NULL);
-//    NSAssert(ctFontRef != NULL, @"ctFontRef 为 NULl");
-//    
-//    NSDictionary * attributes = [NSDictionary dictionaryWithObjectsAndKeys:(id)ctFontRef, kCTFontAttributeName, (id)paragraphStyle, kCTParagraphStyleAttributeName, nil];
-//    
-//    attStr = [[NSMutableAttributedString alloc] initWithString:self.text attributes:attributes];
-//    [attStr addAttribute:(id)kCTForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(0, self.text.length)];
-//    
-//    if (cfAttrStringRef) {
-//        CFRelease(cfAttrStringRef);
-//        cfAttrStringRef = NULL;
-//    }
-//    
-//    cfAttrStringRef = (CFMutableAttributedStringRef)attStr;
-//    
-//    startGlyphIndex = 0;
-//    totalGlyphCount = 0;
-//	[self loadVisibleTextForCFRange:CFRangeMake(0, 0)];
-}
-
-- (void)loadVisibleTextForCFRange:(CFRange)rang
-{
-    OUT_FUNCTION_NAME();
-//    NSAutoreleasePool * pool = [NSAutoreleasePool new];
-//    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)cfAttrStringRef);
-//    CGMutablePathRef path = CGPathCreateMutable();
-//    visibleBounds = CGRectMake(10.0, 10.0, self.frame.size.width - 20, self.frame.size.height - 20);
-//    CGPathAddRect(path, NULL, visibleBounds);
-//    
-//    if (visibleFrameRef != NULL) {
-//        CFRelease(visibleFrameRef);
-//        visibleFrameRef = NULL;
-//    }
-//    visibleFrameRef = CTFramesetterCreateFrame(framesetter, rang, path, NULL);
-//    
-//    visibleRange = CTFrameGetVisibleStringRange(visibleFrameRef);
-//    CFArrayRef ctLinesArrayRef = coreTextProcessor->visibleLines;
-//    if (ctLinesArrayRef != NULL) {
-//        CFRelease(ctLinesArrayRef);
-//        ctLinesArrayRef = NULL;
-//    }
-//    
-//    if (ctLinesArrayRef == NULL && visibleFrameRef != NULL) {
-//        ctLinesArrayRef = CFRetain(CTFrameGetLines(visibleFrameRef));
-//    }
-//    
-//    CFIndex _total = 0;
-//    if (ctLinesArrayRef != NULL) {
-//        for (int i = 0; i < CFArrayGetCount(ctLinesArrayRef); i++) {
-//            CTLineRef ctLine = CFArrayGetValueAtIndex(ctLinesArrayRef, i);
-//            _total += CTLineGetGlyphCount(ctLine);
-//        }
-//    }
-//    startGlyphIndex += totalGlyphCount;
-//    totalGlyphCount = _total;
-//    
-//    //release CF object
-//    CFRelease(framesetter);
-//    CFRelease(path);
-//    [pool drain];
 }
 
 - (void)reloadText
@@ -239,9 +145,7 @@
     NSAutoreleasePool * pool = [NSAutoreleasePool new];
     @synchronized(coreTextProcessor) {
         [coreTextProcessor loadText:aString];
-        //[coreTextProcessor loadVisibleTextForCFRange:CFRangeMake(startGlyphIndex + totalGlyphCount, 0)];
-        [coreTextProcessor loadAllPages];
-        //[self loadText:aString];
+        [coreTextProcessor loadAllPagesInFrame:self.frame];
         [self performSelectorOnMainThread:@selector(setNeedsDisplay) withObject:nil waitUntilDone:NO];
     }
     [pool drain];
@@ -274,8 +178,8 @@
 {
     UITouch * tap = [touches anyObject];
     
-    CGFloat secondaryOff;
-    CGFloat offset;
+//    CGFloat secondaryOff;
+//    CGFloat offset;
 //    if (ctLinesArrayRef != NULL) {
 //        for (int i = 0; i < CFArrayGetCount(ctLinesArrayRef); i++) {
 //            CTLineRef ctLine = CFArrayGetValueAtIndex(ctLinesArrayRef, i);
@@ -337,5 +241,6 @@
     
     [self setNeedsDisplay];
 }
+
 
 @end

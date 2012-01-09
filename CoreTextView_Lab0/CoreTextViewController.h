@@ -10,6 +10,7 @@
 
 @class TextScrollView;
 @class TextBaseView;
+@class CoreTextProcessor;
 
 @interface CoreTextViewController : UIViewController <UIScrollViewDelegate>
 
@@ -22,6 +23,7 @@
 @property (nonatomic, retain) NSArray * textViews;
 @property (nonatomic, retain) NSString * filePath;
 @property (nonatomic, retain) NSArray * scrollViews;
+@property (nonatomic, retain) CoreTextProcessor * coreTextProcessor;
 
 - (IBAction)onClick_Reload:(id)sender;
 - (IBAction)onClick_DecreaseFontSize:(id)sender;

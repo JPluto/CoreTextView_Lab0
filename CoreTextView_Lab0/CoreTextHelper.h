@@ -10,7 +10,7 @@
 
 @interface CoreTextHelper : NSObject
 
-
++ (CoreTextHelper*)sharedInstance;
 //- (CTFontRef)CreateItalicCTFontByName:(CFStringRef)theFontName;
 //- (CTFontRef)CreateBoldCTFontByName:(CFStringRef)theFontName;
 //- (CTFontRef)CreateNormalCTFontByName:(CFStringRef)theFontName;
