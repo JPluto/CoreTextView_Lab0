@@ -13,12 +13,20 @@
 @public
     CGFloat lineSpace;
     CGFloat lineHeight;
+    CGFloat charSpace;
+    CGRect visibleBounds;
     CGFloat fontSize;
     UIFont * uiFont;
+    NSMutableArray * pagesInfo;
+    NSUInteger startGlphyIndex;
+    NSUInteger glphyCounts;
 }
 
 @property (nonatomic, retain) UIFont * uiFont;
+@property (nonatomic, retain) NSMutableArray * pagesInfo;
 
+- (void)initSimpleTextParams;
 - (NSArray *) textLinesFromString:(NSString*)theString inRect:(CGRect)theRect usingFont:(UIFont*)theFont lineBreakMode:(UILineBreakMode) breakMode;
+
 
 @end

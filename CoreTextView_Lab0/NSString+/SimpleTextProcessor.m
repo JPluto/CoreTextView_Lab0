@@ -11,15 +11,35 @@
 @implementation SimpleTextProcessor
 
 @synthesize uiFont;
+@synthesize pagesInfo;
+
 
 - (id)init
 {
     self = [super init];
     if (self) {
         // Initialization code here.
+        
+        if (uiFont == nil) {
+            uiFont = [UIFont systemFontOfSize:fontSize];
+        }
+        if (pagesInfo == nil) {
+            pagesInfo = [NSMutableArray new];
+        }
     }
     
     return self;
+}
+
+- (void)dealloc
+{
+    [super dealloc];
+}
+
+- (void)initSimpleTextParams
+{
+    fontSize = 15.0f;
+    lineSpace = 0.0f;
 }
 
 - (NSArray *)textLinesFromString:(NSString *)theString inRect:(CGRect)theRect usingFont:(UIFont *)theFont lineBreakMode:(UILineBreakMode)breakMode
@@ -43,9 +63,14 @@
         
 //        NSLog(@"tmpSize :%@; theRect:%@", NSStringFromCGSize(tmpSize), NSStringFromCGRect(theRect));
 //        NSLog(@"lineHeight :%f", theFont.lineHeight);
-        if (tmpSize.height > theFont.lineHeight) {//遍历回溯
+        if (tmpSize.height > theFont.lineHeight) {//遍历回溯，出现折返行
             [tmp addObject:[mutableString substringToIndex:mutableString.length - 1]];
             mutableString = [NSMutableString new];
+            
+            if ([tmp count] * theFont.lineHeight > theRect.size.height) {
+                [tmp removeLastObject];
+                break;
+            }
             if (i >= count - 1) {
                 break;
             }else {

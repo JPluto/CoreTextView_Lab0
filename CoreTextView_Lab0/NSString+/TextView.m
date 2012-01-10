@@ -73,7 +73,7 @@
     NSDate * date = [NSDate date];
     SimpleTextProcessor * processor = [SimpleTextProcessor new];
     NSArray * strings = [processor textLinesFromString:self.text inRect:textFrame usingFont:self.font lineBreakMode:UILineBreakModeCharacterWrap];
-    
+    NSLog(@"string lines :%u", [strings count]);
     //NSInteger times = 50;
     //++++++++
 //    CGContextSetFillColorWithColor(context, [[UIColor grayColor] CGColor]);
@@ -98,7 +98,7 @@
     //----------
     textFrame.origin.y = 0;
     textFrame.origin.x = 100;
-    [[NSString stringWithFormat:@" 耗时:%f", /*times,*/ (double)(([[NSDate date] timeIntervalSince1970] - [date timeIntervalSince1970]))] drawInRect:textFrame withFont:[UIFont systemFontOfSize:12]];
+    [[NSString stringWithFormat:@"总行数:%u 耗时:%f", [strings count], (double)(([[NSDate date] timeIntervalSince1970] - [date timeIntervalSince1970]))] drawInRect:textFrame withFont:[UIFont systemFontOfSize:12]];
     
 }
 
