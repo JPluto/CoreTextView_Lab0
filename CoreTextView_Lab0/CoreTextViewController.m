@@ -211,13 +211,29 @@
     [currentTextView setNeedsDisplay];
 }
 
+- (void)onClick_IncreaseLineSpace:(id)sender
+{
+    CoreTextProcessor * processor = [(CoreTextView*)self.currentTextView coreTextProcessor];
+    processor.coreTextParams->lineSpace += 1.0f;
+    [processor.coreTextParams updateParams];
+}
+
+- (void)onClick_DecreaseLineSpace:(id)sender
+{
+    CoreTextProcessor * processor = [(CoreTextView*)self.currentTextView coreTextProcessor];
+    if (processor.coreTextParams->lineSpace - 1.0f > 0) {
+        processor.coreTextParams->lineSpace -= 1.0f;
+        [processor.coreTextParams updateParams];
+    }
+}
+
 - (void)segmentControlValueChanged:(id)sender
 {
     NSLog(@"%@,  %u", DEBUG_FUNCTION_NAME, segmentCtrl.selectedSegmentIndex);
     
     ((UIView*)[textViews objectAtIndex:segmentCtrl.selectedSegmentIndex]).frame = self.currentTextView.frame;
     [currentTextView removeFromSuperview];
-    currentTextView = [textViews objectAtIndex:segmentCtrl.selectedSegmentIndex];
+    self.currentTextView = [textViews objectAtIndex:segmentCtrl.selectedSegmentIndex];
     [scrollView addSubview:currentTextView];
     
     if ([currentTextView isKindOfClass:[TextView class]] && [currentTextView respondsToSelector:@selector(loadText:)]) {
@@ -226,7 +242,7 @@
         [currentTextView setNeedsDisplay];
     }else if ([currentTextView isKindOfClass:[CoreTextView class]]) {
         [scrollView setScrollEnabled:YES];
-
+        
         NSString * contents = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"2" ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         currentTextView.text = [contents stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"];
         [currentTextView reloadText];

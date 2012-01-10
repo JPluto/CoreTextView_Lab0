@@ -30,6 +30,8 @@
 - (IBAction)onclick_IncreaseFontSize:(id)sender;
 - (IBAction)onclick_Previous:(id)sender;
 - (IBAction)onClick_Next:(id)sender;
+- (IBAction)onClick_IncreaseLineSpace:(id)sender;
+- (IBAction)onClick_DecreaseLineSpace:(id)sender;
 
 - (void)segmentControlValueChanged:(id)sender;
 

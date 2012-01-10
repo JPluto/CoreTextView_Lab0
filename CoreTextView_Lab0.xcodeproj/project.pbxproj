@@ -7,12 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A2649AA314B5532600019B5D /* CoreTextHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = A2649AA214B5532600019B5D /* CoreTextHelper.m */; };
-		A2649AA614B56A2100019B5D /* CoreTextProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = A2649AA514B56A2100019B5D /* CoreTextProcessor.m */; };
+		A202E54F14BC331300497757 /* TextView.m in Sources */ = {isa = PBXBuildFile; fileRef = A202E54E14BC331300497757 /* TextView.m */; };
+		A202E55714BC342D00497757 /* OpenGLES_TextView.m in Sources */ = {isa = PBXBuildFile; fileRef = A202E55614BC342D00497757 /* OpenGLES_TextView.m */; };
+		A202E55A14BC343C00497757 /* SimpleTextProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = A202E55914BC343C00497757 /* SimpleTextProcessor.m */; };
+		A202E56314BC345B00497757 /* CoreTextHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = A202E55F14BC345B00497757 /* CoreTextHelper.m */; };
+		A202E56414BC345B00497757 /* CoreTextParams.m in Sources */ = {isa = PBXBuildFile; fileRef = A202E56014BC345B00497757 /* CoreTextParams.m */; };
+		A202E56514BC345B00497757 /* CoreTextProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = A202E56114BC345B00497757 /* CoreTextProcessor.m */; };
+		A202E56614BC345B00497757 /* CoreTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = A202E56214BC345B00497757 /* CoreTextView.m */; };
 		A269D87914A9578A005D1327 /* TextBaseView.m in Sources */ = {isa = PBXBuildFile; fileRef = A269D87814A9578A005D1327 /* TextBaseView.m */; };
-		A269D8B414A9725C005D1327 /* OpenGLES_TextView.m in Sources */ = {isa = PBXBuildFile; fileRef = A269D8B314A9725C005D1327 /* OpenGLES_TextView.m */; };
 		A284C5A01499D794005A6BF3 /* TextScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = A284C59F1499D793005A6BF3 /* TextScrollView.m */; };
-		A284C5A41499E06D005A6BF3 /* SimpleTextProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = A284C5A31499E06D005A6BF3 /* SimpleTextProcessor.m */; };
 		A28EDB46146D073800B88AEB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A28EDB45146D073800B88AEB /* UIKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		A28EDB48146D073800B88AEB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A28EDB47146D073800B88AEB /* Foundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		A28EDB4A146D073800B88AEB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A28EDB49146D073800B88AEB /* CoreGraphics.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -21,7 +24,6 @@
 		A28EDB56146D073800B88AEB /* CoreTextView_Lab0AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A28EDB55146D073800B88AEB /* CoreTextView_Lab0AppDelegate.m */; };
 		A28EDB5D146D079600B88AEB /* TestForm.xib in Resources */ = {isa = PBXBuildFile; fileRef = A28EDB5C146D079600B88AEB /* TestForm.xib */; };
 		A28EDB60146D07E000B88AEB /* CoreTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A28EDB5F146D07DF00B88AEB /* CoreTextViewController.m */; };
-		A28EDB63146D087300B88AEB /* CoreTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = A28EDB62146D087300B88AEB /* CoreTextView.m */; };
 		A28EDB75146D0C7600B88AEB /* 1 in Resources */ = {isa = PBXBuildFile; fileRef = A28EDB66146D0C7600B88AEB /* 1 */; };
 		A28EDB76146D0C7600B88AEB /* 10 in Resources */ = {isa = PBXBuildFile; fileRef = A28EDB67146D0C7600B88AEB /* 10 */; };
 		A28EDB77146D0C7600B88AEB /* 11 in Resources */ = {isa = PBXBuildFile; fileRef = A28EDB68146D0C7600B88AEB /* 11 */; };
@@ -47,23 +49,27 @@
 		A2AA831E147DF57100311B92 /* XWebImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = A2AA8317147DF57100311B92 /* XWebImageView.m */; };
 		A2AA8323147DF5AD00311B92 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = A2AA8322147DF5AD00311B92 /* RegexKitLite.m */; };
 		A2AA8325147DF5BC00311B92 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A2AA8324147DF5BC00311B92 /* libicucore.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
-		A2E3815D1498710A002C3FAA /* TextView.m in Sources */ = {isa = PBXBuildFile; fileRef = A2E3815C1498710A002C3FAA /* TextView.m */; };
-		A2FB483914B580FE008A69EC /* CoreTextParams.m in Sources */ = {isa = PBXBuildFile; fileRef = A2FB483814B580FD008A69EC /* CoreTextParams.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		A2649AA114B5532600019B5D /* CoreTextHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreTextHelper.h; sourceTree = "<group>"; };
-		A2649AA214B5532600019B5D /* CoreTextHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreTextHelper.m; sourceTree = "<group>"; };
-		A2649AA414B56A2000019B5D /* CoreTextProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreTextProcessor.h; sourceTree = "<group>"; };
-		A2649AA514B56A2100019B5D /* CoreTextProcessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreTextProcessor.m; sourceTree = "<group>"; };
+		A202E54D14BC331300497757 /* TextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextView.h; sourceTree = "<group>"; };
+		A202E54E14BC331300497757 /* TextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextView.m; sourceTree = "<group>"; };
+		A202E55514BC342D00497757 /* OpenGLES_TextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLES_TextView.h; sourceTree = "<group>"; };
+		A202E55614BC342D00497757 /* OpenGLES_TextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenGLES_TextView.m; sourceTree = "<group>"; };
+		A202E55814BC343C00497757 /* SimpleTextProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleTextProcessor.h; sourceTree = "<group>"; };
+		A202E55914BC343C00497757 /* SimpleTextProcessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleTextProcessor.m; sourceTree = "<group>"; };
+		A202E55B14BC345B00497757 /* CoreTextHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreTextHelper.h; sourceTree = "<group>"; };
+		A202E55C14BC345B00497757 /* CoreTextParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreTextParams.h; sourceTree = "<group>"; };
+		A202E55D14BC345B00497757 /* CoreTextProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreTextProcessor.h; sourceTree = "<group>"; };
+		A202E55E14BC345B00497757 /* CoreTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreTextView.h; sourceTree = "<group>"; };
+		A202E55F14BC345B00497757 /* CoreTextHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreTextHelper.m; sourceTree = "<group>"; };
+		A202E56014BC345B00497757 /* CoreTextParams.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreTextParams.m; sourceTree = "<group>"; };
+		A202E56114BC345B00497757 /* CoreTextProcessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreTextProcessor.m; sourceTree = "<group>"; };
+		A202E56214BC345B00497757 /* CoreTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreTextView.m; sourceTree = "<group>"; };
 		A269D87714A9578A005D1327 /* TextBaseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextBaseView.h; sourceTree = "<group>"; };
 		A269D87814A9578A005D1327 /* TextBaseView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextBaseView.m; sourceTree = "<group>"; };
-		A269D8B214A9725C005D1327 /* OpenGLES_TextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLES_TextView.h; sourceTree = "<group>"; };
-		A269D8B314A9725C005D1327 /* OpenGLES_TextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenGLES_TextView.m; sourceTree = "<group>"; };
 		A284C59E1499D793005A6BF3 /* TextScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextScrollView.h; sourceTree = "<group>"; };
 		A284C59F1499D793005A6BF3 /* TextScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextScrollView.m; sourceTree = "<group>"; };
-		A284C5A21499E06C005A6BF3 /* SimpleTextProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleTextProcessor.h; sourceTree = "<group>"; };
-		A284C5A31499E06D005A6BF3 /* SimpleTextProcessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleTextProcessor.m; sourceTree = "<group>"; };
 		A28EDB41146D073800B88AEB /* CoreTextView_Lab0.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CoreTextView_Lab0.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A28EDB45146D073800B88AEB /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		A28EDB47146D073800B88AEB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -77,8 +83,6 @@
 		A28EDB5C146D079600B88AEB /* TestForm.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestForm.xib; sourceTree = "<group>"; };
 		A28EDB5E146D07DF00B88AEB /* CoreTextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreTextViewController.h; sourceTree = "<group>"; };
 		A28EDB5F146D07DF00B88AEB /* CoreTextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreTextViewController.m; sourceTree = "<group>"; };
-		A28EDB61146D087300B88AEB /* CoreTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreTextView.h; sourceTree = "<group>"; };
-		A28EDB62146D087300B88AEB /* CoreTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreTextView.m; sourceTree = "<group>"; };
 		A28EDB66146D0C7600B88AEB /* 1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 1; sourceTree = "<group>"; };
 		A28EDB67146D0C7600B88AEB /* 10 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 10; sourceTree = "<group>"; };
 		A28EDB68146D0C7600B88AEB /* 11 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 11; sourceTree = "<group>"; };
@@ -113,10 +117,6 @@
 		A2AA8322147DF5AD00311B92 /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
 		A2AA8324147DF5BC00311B92 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/usr/lib/libicucore.dylib; sourceTree = DEVELOPER_DIR; };
 		A2AA8327147DF6C600311B92 /* crossshared.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crossshared.h; sourceTree = "<group>"; };
-		A2E3815B1498710A002C3FAA /* TextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextView.h; sourceTree = "<group>"; };
-		A2E3815C1498710A002C3FAA /* TextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextView.m; sourceTree = "<group>"; };
-		A2FB483714B580FD008A69EC /* CoreTextParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreTextParams.h; sourceTree = "<group>"; };
-		A2FB483814B580FD008A69EC /* CoreTextParams.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreTextParams.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,6 +135,41 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A202E54914BC268000497757 /* CoreText */ = {
+			isa = PBXGroup;
+			children = (
+				A202E55B14BC345B00497757 /* CoreTextHelper.h */,
+				A202E55C14BC345B00497757 /* CoreTextParams.h */,
+				A202E55D14BC345B00497757 /* CoreTextProcessor.h */,
+				A202E55E14BC345B00497757 /* CoreTextView.h */,
+				A202E55F14BC345B00497757 /* CoreTextHelper.m */,
+				A202E56014BC345B00497757 /* CoreTextParams.m */,
+				A202E56114BC345B00497757 /* CoreTextProcessor.m */,
+				A202E56214BC345B00497757 /* CoreTextView.m */,
+			);
+			path = CoreText;
+			sourceTree = "<group>";
+		};
+		A202E54A14BC268200497757 /* NSString+ */ = {
+			isa = PBXGroup;
+			children = (
+				A202E55814BC343C00497757 /* SimpleTextProcessor.h */,
+				A202E55914BC343C00497757 /* SimpleTextProcessor.m */,
+				A202E54D14BC331300497757 /* TextView.h */,
+				A202E54E14BC331300497757 /* TextView.m */,
+			);
+			path = "NSString+";
+			sourceTree = "<group>";
+		};
+		A202E54B14BC268300497757 /* OpenGLES */ = {
+			isa = PBXGroup;
+			children = (
+				A202E55514BC342D00497757 /* OpenGLES_TextView.h */,
+				A202E55614BC342D00497757 /* OpenGLES_TextView.m */,
+			);
+			path = OpenGLES;
+			sourceTree = "<group>";
+		};
 		A28EDB36146D073800B88AEB = {
 			isa = PBXGroup;
 			children = (
@@ -167,6 +202,9 @@
 		A28EDB4B146D073800B88AEB /* CoreTextView_Lab0 */ = {
 			isa = PBXGroup;
 			children = (
+				A202E54914BC268000497757 /* CoreText */,
+				A202E54A14BC268200497757 /* NSString+ */,
+				A202E54B14BC268300497757 /* OpenGLES */,
 				A2AA8326147DF6C600311B92 /* crossshared */,
 				A28EDB64146D0C7600B88AEB /* Res */,
 				A28EDB54146D073800B88AEB /* CoreTextView_Lab0AppDelegate.h */,
@@ -175,22 +213,8 @@
 				A28EDB5C146D079600B88AEB /* TestForm.xib */,
 				A28EDB5E146D07DF00B88AEB /* CoreTextViewController.h */,
 				A28EDB5F146D07DF00B88AEB /* CoreTextViewController.m */,
-				A28EDB61146D087300B88AEB /* CoreTextView.h */,
-				A28EDB62146D087300B88AEB /* CoreTextView.m */,
-				A2649AA414B56A2000019B5D /* CoreTextProcessor.h */,
-				A2649AA514B56A2100019B5D /* CoreTextProcessor.m */,
-				A2FB483714B580FD008A69EC /* CoreTextParams.h */,
-				A2FB483814B580FD008A69EC /* CoreTextParams.m */,
-				A2649AA114B5532600019B5D /* CoreTextHelper.h */,
-				A2649AA214B5532600019B5D /* CoreTextHelper.m */,
 				A284C59E1499D793005A6BF3 /* TextScrollView.h */,
 				A284C59F1499D793005A6BF3 /* TextScrollView.m */,
-				A2E3815B1498710A002C3FAA /* TextView.h */,
-				A2E3815C1498710A002C3FAA /* TextView.m */,
-				A269D8B214A9725C005D1327 /* OpenGLES_TextView.h */,
-				A269D8B314A9725C005D1327 /* OpenGLES_TextView.m */,
-				A284C5A21499E06C005A6BF3 /* SimpleTextProcessor.h */,
-				A284C5A31499E06D005A6BF3 /* SimpleTextProcessor.m */,
 				A269D87714A9578A005D1327 /* TextBaseView.h */,
 				A269D87814A9578A005D1327 /* TextBaseView.m */,
 			);
@@ -359,7 +383,6 @@
 				A28EDB52146D073800B88AEB /* main.m in Sources */,
 				A28EDB56146D073800B88AEB /* CoreTextView_Lab0AppDelegate.m in Sources */,
 				A28EDB60146D07E000B88AEB /* CoreTextViewController.m in Sources */,
-				A28EDB63146D087300B88AEB /* CoreTextView.m in Sources */,
 				A2AA8318147DF57100311B92 /* NSString+Utils.m in Sources */,
 				A2AA8319147DF57100311B92 /* TDSystemUtil.m in Sources */,
 				A2AA831A147DF57100311B92 /* UIButton+Utils.m in Sources */,
@@ -368,14 +391,15 @@
 				A2AA831D147DF57100311B92 /* XUtils.m in Sources */,
 				A2AA831E147DF57100311B92 /* XWebImageView.m in Sources */,
 				A2AA8323147DF5AD00311B92 /* RegexKitLite.m in Sources */,
-				A2E3815D1498710A002C3FAA /* TextView.m in Sources */,
 				A284C5A01499D794005A6BF3 /* TextScrollView.m in Sources */,
-				A284C5A41499E06D005A6BF3 /* SimpleTextProcessor.m in Sources */,
 				A269D87914A9578A005D1327 /* TextBaseView.m in Sources */,
-				A269D8B414A9725C005D1327 /* OpenGLES_TextView.m in Sources */,
-				A2649AA314B5532600019B5D /* CoreTextHelper.m in Sources */,
-				A2649AA614B56A2100019B5D /* CoreTextProcessor.m in Sources */,
-				A2FB483914B580FE008A69EC /* CoreTextParams.m in Sources */,
+				A202E54F14BC331300497757 /* TextView.m in Sources */,
+				A202E55714BC342D00497757 /* OpenGLES_TextView.m in Sources */,
+				A202E55A14BC343C00497757 /* SimpleTextProcessor.m in Sources */,
+				A202E56314BC345B00497757 /* CoreTextHelper.m in Sources */,
+				A202E56414BC345B00497757 /* CoreTextParams.m in Sources */,
+				A202E56514BC345B00497757 /* CoreTextProcessor.m in Sources */,
+				A202E56614BC345B00497757 /* CoreTextView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
