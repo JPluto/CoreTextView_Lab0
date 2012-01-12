@@ -86,7 +86,7 @@ CoreTextProcessor * __instance = nil;
 - (void)loadText:(NSString *)aString
 {
     OUT_FUNCTION_NAME();
-    NSLog(@"%@", DEBUG_FUNCTION_NAME);
+
     if (aString.length > 0) {
         self.text = [aString stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"];
     }else {

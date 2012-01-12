@@ -25,7 +25,7 @@
     CGFloat lineSpace;
     CGFloat lineHeight;
     NSString * fontName;
-    NSString * text;
+//    NSString * text;
     NSInteger pageCount;
 }
 
@@ -33,7 +33,7 @@
 @property (nonatomic) CGFloat lineSpace;
 @property (nonatomic) CGFloat lineHeight;
 @property (nonatomic, retain) NSString * fontName;
-@property (nonatomic, retain) NSString * text;
+//@property (nonatomic, retain) NSString * text;
 @property (nonatomic) NSInteger pageCount;
 
 - (CTFontRef)CreateItalicCTFont;

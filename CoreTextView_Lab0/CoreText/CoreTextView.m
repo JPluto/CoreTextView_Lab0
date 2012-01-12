@@ -119,8 +119,8 @@
             bounds = CTLineGetTypographicBounds(CFArrayGetValueAtIndex(ctLinesArrayRef, lineIdx), &ascent, &descent, &leading);
             CTLineRef lineRef = CFArrayGetValueAtIndex(ctLinesArrayRef, lineIdx);
             CGFloat localX = 0;
-            NSLog(@"lineHeight = %f; fontSize = %f; lineSpace = %f", coreTextProcessor.coreTextParams->lineHeight, coreTextProcessor.coreTextParams->fontSize, coreTextProcessor.coreTextParams->lineSpace);
-            NSLog(@"bounds = %f; ascent = %f, descent = %f, leading = %f", bounds, ascent, descent, leading);
+            //NSLog(@"lineHeight = %f; fontSize = %f; lineSpace = %f", coreTextProcessor.coreTextParams->lineHeight, coreTextProcessor.coreTextParams->fontSize, coreTextProcessor.coreTextParams->lineSpace);
+            //NSLog(@"bounds = %f; ascent = %f, descent = %f, leading = %f", bounds, ascent, descent, leading);
             CGFloat localY = (j + 1) * coreTextProcessor.coreTextParams->lineHeight;
             //ctlineBounds = CTLineGetImageBounds(CFArrayGetValueAtIndex(ctLinesArrayRef, lineIdx), context);
             CGContextSetTextPosition(context, localX, self.bounds.size.height - localY);
@@ -128,13 +128,18 @@
         }
 #endif   
     }else {
-        NSLog(@"ctLinesArrayRef :%u", (NSUInteger)ctLinesArrayRef);
+        //NSLog(@"ctLinesArrayRef :%u", (NSUInteger)ctLinesArrayRef);
     }
+}
+
+- (void)loadText:(NSString *)aString
+{
+    [coreTextProcessor loadText:aString];
 }
 
 - (void)reloadText
 {
-    [self asynLoadText:self.text];
+    [self asynLoadText:coreTextProcessor.text];
 }
 
 - (void)asynLoadText:(NSString *)aString

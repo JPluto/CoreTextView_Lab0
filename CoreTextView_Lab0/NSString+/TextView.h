@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "TextBaseView.h"
 
+@class SimpleTextProcessor;
+
 @interface TextView : TextBaseView
 {
 @public
@@ -17,5 +19,6 @@
 }
 
 @property (nonatomic, retain) UIFont * font;
+@property (nonatomic, retain) SimpleTextProcessor * txtProcessor;
 
 @end

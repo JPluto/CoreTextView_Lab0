@@ -12,6 +12,7 @@
 @implementation TextView
 
 @synthesize font;
+@synthesize txtProcessor;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -21,6 +22,7 @@
         // Initialization code
         self.fontSize = 12;
         //self.font = [UIFont systemFontOfSize:fontSize];
+        txtProcessor = [SimpleTextProcessor new];        
     }
     return self;
 }
@@ -31,6 +33,7 @@
     self = [super init];
     if (self) {
         self.fontSize = 12;
+        txtProcessor = [SimpleTextProcessor new];
     }
     return self;
 }
@@ -48,7 +51,7 @@
 - (void)loadText:(NSString *)aString
 {
     OUT_FUNCTION_NAME();
-    self.text = [aString stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"];
+    [txtProcessor loadText:aString];
 }
 
 // Only override drawRect: if you perform custom drawing.
@@ -71,13 +74,9 @@
     textFrame.size.height = self.frame.size.height - 20;
     
     NSDate * date = [NSDate date];
-    SimpleTextProcessor * processor = [SimpleTextProcessor new];
-    NSArray * strings = [processor textLinesFromString:self.text inRect:textFrame usingFont:self.font lineBreakMode:UILineBreakModeCharacterWrap];
-    NSLog(@"string lines :%u", [strings count]);
-    //NSInteger times = 50;
+    NSArray * strings = [txtProcessor textLinesFromRange:NSMakeRange(0, txtProcessor.text.length) OfString:txtProcessor.text inRect:textFrame UsingFont:self.font LineBreakMode:UILineBreakModeCharacterWrap IsForward:NO];
+    
     //++++++++
-//    CGContextSetFillColorWithColor(context, [[UIColor grayColor] CGColor]);
-//    CGContextFillRect(context, textFrame);    
     CGContextSetFillColorWithColor(context, [[UIColor redColor] CGColor]);
     
     NSInteger avaibleLines = textFrame.size.height / font.lineHeight;
@@ -94,7 +93,6 @@
         [[strings objectAtIndex:i] drawInRect:lineRect withFont:self.font];
     }
     
-    [processor release];
     //----------
     textFrame.origin.y = 0;
     textFrame.origin.x = 100;
@@ -102,5 +100,16 @@
     
 }
 
+- (void)refreshText:(NSString *)aString
+{
+    NSAutoreleasePool * pool = [NSAutoreleasePool new];
+    @synchronized(txtProcessor) {
+        [self loadText:aString];
+        [txtProcessor loadAllPagesInFrame:self.frame];
+        [self performSelectorOnMainThread:@selector(setNeedsDisplay) withObject:nil waitUntilDone:NO];
+    }
+    [pool drain];
+
+}
 
 @end

@@ -94,6 +94,12 @@
             [segmentCtrl addTarget:self action:@selector(segmentControlValueChanged:) forControlEvents:UIControlEventValueChanged];
         }
         segmentCtrl.selectedSegmentIndex = 1;
+//        NSString * contents = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"2" ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+//        if ([currentTextView isKindOfClass:[TextView class]] && [currentTextView respondsToSelector:@selector(loadText:)]) {
+//            [currentTextView loadText:contents];
+//            [currentTextView setNeedsDisplay];
+//        }
+
     }
     
     scrollView.scrollEnabled = YES;
@@ -118,11 +124,13 @@
 {
     NSLog(@"%@  :%@", DEBUG_FUNCTION_NAME, [self.currentTextView classForCoder]);
     if ([self.currentTextView respondsToSelector:@selector(loadText:)]) {
-        NSString * fileContent = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"1" ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        NSString * fileContent = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"2" ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        fileContent = [fileContent stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"];
         if ([self.currentTextView isKindOfClass:[CoreTextView class]]) {
             [(CoreTextView*)currentTextView loadText:fileContent];
         }else {
             [self.currentTextView loadText:fileContent];
+            [currentTextView setNeedsDisplay];
         }
     }
 }
@@ -199,31 +207,39 @@
 
 - (void)onclick_Previous:(id)sender
 {
-    CoreTextProcessor * processor = [(CoreTextView*)self.currentTextView coreTextProcessor];
-    [processor loadPage:processor.currentPage - 1 InFrame:self.view.frame];
-    [currentTextView setNeedsDisplay];
+    if ([self.currentTextView isKindOfClass:[CoreTextView class]]) {
+        CoreTextProcessor * processor = [(CoreTextView*)self.currentTextView coreTextProcessor];
+        [processor loadPage:processor.currentPage - 1 InFrame:self.view.frame];
+        [currentTextView setNeedsDisplay];
+    }
 }
 
 - (void)onClick_Next:(id)sender
 {
-    CoreTextProcessor * processor = [(CoreTextView*)self.currentTextView coreTextProcessor];
-    [processor loadPage:processor.currentPage + 1 InFrame:self.view.frame];
-    [currentTextView setNeedsDisplay];
+    if ([self.currentTextView isKindOfClass:[CoreTextView class]]) {
+        CoreTextProcessor * processor = [(CoreTextView*)self.currentTextView coreTextProcessor];
+        [processor loadPage:processor.currentPage + 1 InFrame:self.view.frame];
+        [currentTextView setNeedsDisplay];
+    }
 }
 
 - (void)onClick_IncreaseLineSpace:(id)sender
 {
-    CoreTextProcessor * processor = [(CoreTextView*)self.currentTextView coreTextProcessor];
-    processor.coreTextParams->lineSpace += 1.0f;
-    [processor.coreTextParams updateParams];
+    if ([self.currentTextView isKindOfClass:[CoreTextView class]]) {
+        CoreTextProcessor * processor = [(CoreTextView*)self.currentTextView coreTextProcessor];
+        processor.coreTextParams->lineSpace += 1.0f;
+        [processor.coreTextParams updateParams];
+    }
 }
 
 - (void)onClick_DecreaseLineSpace:(id)sender
 {
-    CoreTextProcessor * processor = [(CoreTextView*)self.currentTextView coreTextProcessor];
-    if (processor.coreTextParams->lineSpace - 1.0f > 0) {
-        processor.coreTextParams->lineSpace -= 1.0f;
-        [processor.coreTextParams updateParams];
+    if ([self.currentTextView isKindOfClass:[CoreTextView class]]) {
+        CoreTextProcessor * processor = [(CoreTextView*)self.currentTextView coreTextProcessor];
+        if (processor.coreTextParams->lineSpace - 1.0f > 0) {
+            processor.coreTextParams->lineSpace -= 1.0f;
+            [processor.coreTextParams updateParams];
+        }
     }
 }
 
@@ -236,27 +252,19 @@
     self.currentTextView = [textViews objectAtIndex:segmentCtrl.selectedSegmentIndex];
     [scrollView addSubview:currentTextView];
     
-    if ([currentTextView isKindOfClass:[TextView class]] && [currentTextView respondsToSelector:@selector(loadText:)]) {
-        NSString * contents = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"2" ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        [currentTextView loadText:contents];
+    NSString * fileContent = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"2" ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    fileContent = [fileContent stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"];
+    if ([currentTextView isKindOfClass:[TextView class]]) {
+        [currentTextView loadText:fileContent];
         [currentTextView setNeedsDisplay];
     }else if ([currentTextView isKindOfClass:[CoreTextView class]]) {
         [scrollView setScrollEnabled:YES];
-        
-        NSString * contents = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"2" ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        currentTextView.text = [contents stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"];
+        [currentTextView loadText:fileContent];
         [currentTextView reloadText];
         [currentTextView setNeedsDisplay];
     }else if ([currentTextView isKindOfClass:[OpenGLES_TextView class]]) {
         
     }
-//    if ([currentTextView respondsToSelector:@selector(reloadText)]) {
-//        NSString * contents = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"2" ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-//        currentTextView.text = contents;
-//        [currentTextView reloadText];
-//        [currentTextView setNeedsDisplay];
-//    }
-
 }
 
 #pragma UIScrollView delegate methods

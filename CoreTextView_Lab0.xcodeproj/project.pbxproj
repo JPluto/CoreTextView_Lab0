@@ -142,12 +142,12 @@
 			isa = PBXGroup;
 			children = (
 				A202E55B14BC345B00497757 /* CoreTextHelper.h */,
-				A202E55C14BC345B00497757 /* CoreTextParams.h */,
-				A202E55D14BC345B00497757 /* CoreTextProcessor.h */,
-				A202E55E14BC345B00497757 /* CoreTextView.h */,
 				A202E55F14BC345B00497757 /* CoreTextHelper.m */,
+				A202E55C14BC345B00497757 /* CoreTextParams.h */,
 				A202E56014BC345B00497757 /* CoreTextParams.m */,
+				A202E55D14BC345B00497757 /* CoreTextProcessor.h */,
 				A202E56114BC345B00497757 /* CoreTextProcessor.m */,
+				A202E55E14BC345B00497757 /* CoreTextView.h */,
 				A202E56214BC345B00497757 /* CoreTextView.m */,
 			);
 			path = CoreText;

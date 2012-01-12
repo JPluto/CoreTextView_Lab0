@@ -14,12 +14,12 @@
 @synthesize lineHeight;
 @synthesize lineSpace;
 @synthesize fontName;
-@synthesize text;
+//@synthesize text;
 @synthesize pageCount;
 
 - (void)dealloc
 {
-    [text release];
+//    [text release];
     [fontName release];
     [super dealloc];
 }
