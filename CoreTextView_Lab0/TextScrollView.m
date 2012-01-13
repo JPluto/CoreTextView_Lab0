@@ -18,7 +18,6 @@
     self = [super init];
     if (self) {
         // Initialization code here.
-        NSLog(@"%@", DEBUG_FUNCTION_NAME);
         views = [NSMutableArray new];
         viewsBufferCount = 3;
         [self updateViewsBuffer];
@@ -32,7 +31,6 @@
     self = [super initWithCoder:aDecoder];
     if (self) {
         // Initialization code here.
-        NSLog(@"%@", DEBUG_FUNCTION_NAME);
         viewsBufferCount = 3;
         NSMutableArray * tmp = [NSMutableArray new];
         NSAutoreleasePool * pool = [NSAutoreleasePool new];

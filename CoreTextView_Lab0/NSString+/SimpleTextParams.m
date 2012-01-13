@@ -10,4 +10,20 @@
 
 @implementation SimpleTextParams
 
+@synthesize foregroundColor;
+
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        foregroundColor = [UIColor blackColor];
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+    [foregroundColor release];
+    [super dealloc];
+}
 @end

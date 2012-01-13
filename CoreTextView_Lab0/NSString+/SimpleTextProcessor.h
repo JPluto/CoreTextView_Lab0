@@ -11,6 +11,7 @@
 #define DEBUG_SHOW_TIME_ELAPSE   0
 
 @class TextView;
+@class SimpleTextParams;
 
 @interface SimpleTextProcessor : NSObject
 {
@@ -39,6 +40,8 @@
     NSUInteger currentPage;
     //当前处理的文本
     NSString * text;
+    //文本参数存储
+    SimpleTextParams * params;
 }
 
 @property (nonatomic, retain) NSString * text;
@@ -47,8 +50,11 @@
 @property (nonatomic, retain) NSMutableArray * visibleLines;
 @property (nonatomic, assign) TextView * textView;
 @property (nonatomic) NSUInteger currentPage;
+@property (nonatomic, retain) SimpleTextParams * params;
 
 - (void)initSimpleTextParams;
+- (void)updateParams;
+
 - (NSArray *)textLinesFromRange:(NSRange)aRange OfString:(NSString*)theString inRect:(CGRect)theRect UsingFont:(UIFont*)theFont LineBreakMode:(UILineBreakMode)lineBreakMode IsForward:(BOOL)isForward;
 
 - (NSArray *) textLinesFromString:(NSString*)theString inRect:(CGRect)theRect usingFont:(UIFont*)theFont lineBreakMode:(UILineBreakMode) breakMode;

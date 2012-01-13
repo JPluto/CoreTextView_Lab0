@@ -36,7 +36,7 @@
 //初始化 coretext 参数
 - (void)initCoreTextParams;
 //更新并应用 coretext 参数
-- (void)updateCoreTextParams;
+- (void)updateTextParams;
 //重新加载文本
 - (void)reloadText;
 

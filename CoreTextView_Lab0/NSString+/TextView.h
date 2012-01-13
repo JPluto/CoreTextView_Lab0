@@ -18,7 +18,8 @@
     
 }
 
-@property (nonatomic, retain) UIFont * font;
 @property (nonatomic, retain) SimpleTextProcessor * txtProcessor;
+
+- (void)updateTextParams;
 
 @end

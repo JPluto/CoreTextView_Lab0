@@ -93,7 +93,8 @@
         if (![[segmentCtrl allTargets] containsObject:self]) {
             [segmentCtrl addTarget:self action:@selector(segmentControlValueChanged:) forControlEvents:UIControlEventValueChanged];
         }
-        segmentCtrl.selectedSegmentIndex = 1;
+        segmentCtrl.selectedSegmentIndex = 0;
+        [self segmentControlValueChanged:segmentCtrl];
 //        NSString * contents = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"2" ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 //        if ([currentTextView isKindOfClass:[TextView class]] && [currentTextView respondsToSelector:@selector(loadText:)]) {
 //            [currentTextView loadText:contents];
@@ -162,15 +163,20 @@
                 CoreTextView * ctv = (CoreTextView*)currentTextView;
                 ctv.coreTextProcessor.coreTextParams->fontSize -= 1.0f;
                 [ctv.coreTextProcessor.coreTextParams updateParams];
+            }else if ([currentTextView isKindOfClass:[TextView class]]) {
+                [((TextView*)tv).txtProcessor updateParams];
             }
             
-            if ([tv respondsToSelector:@selector(updateCoreTextParams)]) {
-                [tv updateCoreTextParams];
+            if ([tv respondsToSelector:@selector(updateTextParams)]) {
+                [tv updateTextParams];
             }
+            
             if ([tv respondsToSelector:@selector(reloadText)]) {
                 [tv reloadText];
             }
+            
             self.labelFontSize.text = [NSString stringWithFormat:@"%f", [tv fontSize]];
+            
             if ([currentTextView isKindOfClass:[TextView class]]) {
                 [tv setNeedsDisplay];                
             }
@@ -184,20 +190,22 @@
         id tv = self.currentTextView;
         if ([tv fontSize] < 30) {
             [tv setFontSize:[tv fontSize] + 1.0f];
-            
             if ([currentTextView isKindOfClass:[CoreTextView class]]) {
                 CoreTextView * ctv = (CoreTextView*)currentTextView;
                 ctv.coreTextProcessor.coreTextParams->fontSize += 1.0f;
                 [ctv.coreTextProcessor.coreTextParams updateParams];
+            }else if ([currentTextView isKindOfClass:[TextView class]]) {
+                [((TextView*)tv).txtProcessor updateParams];
             }
 
-            if ([tv respondsToSelector:@selector(updateCoreTextParams)]) {
-                [tv updateCoreTextParams];
+            if ([tv respondsToSelector:@selector(updateTextParams)]) {
+                [tv updateTextParams];
             }
             if ([tv respondsToSelector:@selector(reloadText)]) {
                 [tv reloadText];
             }
             self.labelFontSize.text = [NSString stringWithFormat:@"%f", [tv fontSize]];
+            
             if ([currentTextView isKindOfClass:[TextView class]]) {
                 [tv setNeedsDisplay];                
             }

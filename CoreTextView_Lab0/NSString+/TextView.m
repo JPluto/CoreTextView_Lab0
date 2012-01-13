@@ -8,10 +8,10 @@
 
 #import "TextView.h"
 #import "SimpleTextProcessor.h"
+#import "SimpleTextParams.h"
 
 @implementation TextView
 
-@synthesize font;
 @synthesize txtProcessor;
 
 - (id)initWithFrame:(CGRect)frame
@@ -20,37 +20,43 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        self.fontSize = 12;
-        //self.font = [UIFont systemFontOfSize:fontSize];
-        txtProcessor = [SimpleTextProcessor new];        
+        if (txtProcessor == nil) {
+            txtProcessor = [SimpleTextProcessor new];
+            self.fontSize = txtProcessor->fontSize;
+        }
     }
     return self;
 }
 
 - (id)init
 {
-    OUT_FUNCTION_NAME();
+    //OUT_FUNCTION_NAME();
     self = [super init];
     if (self) {
-        self.fontSize = 12;
-        txtProcessor = [SimpleTextProcessor new];
+        if (txtProcessor == nil) {
+            txtProcessor = [SimpleTextProcessor new];
+            self.fontSize = txtProcessor->fontSize;
+        }
     }
     return self;
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-    OUT_FUNCTION_NAME();
+    //OUT_FUNCTION_NAME();
     self = [super initWithCoder:aDecoder];
     if (self) {
-        self.fontSize = 12;
+        if (txtProcessor == nil) {
+            txtProcessor = [SimpleTextProcessor new];
+            self.fontSize = txtProcessor->fontSize;
+        }
     }
     return self;
 }
 
 - (void)loadText:(NSString *)aString
 {
-    OUT_FUNCTION_NAME();
+    //OUT_FUNCTION_NAME();
     [txtProcessor loadText:aString];
 }
 
@@ -58,28 +64,29 @@
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
-    OUT_FUNCTION_NAME();
+    //OUT_FUNCTION_NAME();
     [super drawRect:rect];
     
     // Drawing code
     CGContextRef context = UIGraphicsGetCurrentContext();
     //CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
     
-    self.font = [UIFont systemFontOfSize:fontSize];
-    
     CGRect textFrame = CGRectZero;
     textFrame.origin.x = 10;
     textFrame.origin.y = 10;
-    textFrame.size.width = self.frame.size.width - 20;
-    textFrame.size.height = self.frame.size.height - 20;
+    textFrame.size.width = self.frame.size.width - textFrame.origin.x * 2.0f;
+    textFrame.size.height = self.frame.size.height - textFrame.origin.y * 2.0f;
     
     NSDate * date = [NSDate date];
-    NSArray * strings = [txtProcessor textLinesFromRange:NSMakeRange(0, txtProcessor.text.length) OfString:txtProcessor.text inRect:textFrame UsingFont:self.font LineBreakMode:UILineBreakModeCharacterWrap IsForward:NO];
+    NSArray * strings = [txtProcessor textLinesFromRange:NSMakeRange(0, txtProcessor.text.length) OfString:txtProcessor.text inRect:textFrame UsingFont:txtProcessor.uiFont LineBreakMode:UILineBreakModeClip IsForward:YES];
+    
+    CGContextSetFillColorWithColor(context, [UIColor orangeColor].CGColor);
+    CGContextFillRect(context, textFrame);
     
     //++++++++
-    CGContextSetFillColorWithColor(context, [[UIColor redColor] CGColor]);
+    CGContextSetFillColorWithColor(context, txtProcessor.params.foregroundColor.CGColor);
     
-    NSInteger avaibleLines = textFrame.size.height / font.lineHeight;
+    NSInteger avaibleLines = textFrame.size.height / txtProcessor.uiFont.lineHeight;
     
     CGRect lineRect = CGRectZero;
     for (int i = 0, _counter = 0; i < [strings count]; i++) {
@@ -89,8 +96,17 @@
         }
         lineRect.size = textFrame.size;
         lineRect.origin.x = 10;
-        lineRect.origin.y = 10 + i * (font.lineHeight + 0);
-        [[strings objectAtIndex:i] drawInRect:lineRect withFont:self.font];
+        lineRect.origin.y = 10 + i * (txtProcessor.uiFont.lineHeight);
+        
+        //填充行背景色
+        CGContextSetFillColorWithColor(context, [UIColor purpleColor].CGColor);
+        NSString * _drawedStr = [strings objectAtIndex:i];
+        CGSize _lineSize = [_drawedStr sizeWithFont:txtProcessor.uiFont];
+        NSLog(@"%d %@  %@", i, NSStringFromCGSize(_lineSize), _drawedStr);
+        CGContextFillRect(context, CGRectMake(lineRect.origin.x, lineRect.origin.y, _lineSize.width, _lineSize.height));
+        //画文字
+        CGContextSetFillColorWithColor(context, txtProcessor.params.foregroundColor.CGColor);
+        [_drawedStr drawInRect:lineRect withFont:txtProcessor.uiFont];
     }
     
     //----------
@@ -110,6 +126,12 @@
     }
     [pool drain];
 
+}
+
+- (void)updateTextParams
+{
+    txtProcessor->fontSize = self.fontSize;
+    [txtProcessor updateParams];
 }
 
 @end

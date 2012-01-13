@@ -7,6 +7,7 @@
 //
 
 #import "SimpleTextProcessor.h"
+#import "SimpleTextParams.h"
 #import "TextView.h"
 
 @implementation SimpleTextProcessor
@@ -17,19 +18,14 @@
 @synthesize textView;
 @synthesize currentPage;
 @synthesize text;
+@synthesize params;
 
 - (id)init
 {
     self = [super init];
     if (self) {
         // Initialization code here.
-        
-        if (uiFont == nil) {
-            self.uiFont = [UIFont systemFontOfSize:fontSize];
-        }
-        if (pagesInfo == nil) {
-            self.pagesInfo = [NSMutableArray array];
-        }
+        [self initSimpleTextParams];
     }
     
     return self;
@@ -41,14 +37,31 @@
     [textView release];
     [pagesInfo release];
     [uiFont release];
+    [params release];
     [super dealloc];
 }
 
 - (void)initSimpleTextParams
 {
-    fontSize = 15.0f;
+    
+    fontSize = 11.0f;
     lineSpace = 0.0f;
     lineHeight = fontSize + lineSpace;
+    
+    if (pagesInfo == nil) {
+        self.pagesInfo = [NSMutableArray array];
+    }
+    if (params == nil) {
+        params = [SimpleTextParams new];
+    }
+
+    self.uiFont = [UIFont systemFontOfSize:fontSize];
+}
+
+- (void)updateParams
+{
+    lineHeight = fontSize + lineSpace;
+    self.uiFont = [UIFont systemFontOfSize:fontSize];
 }
 
 - (NSArray *)textLinesFromRange:(NSRange)aRange OfString:(NSString *)theString inRect:(CGRect)theRect UsingFont:(UIFont *)theFont LineBreakMode:(UILineBreakMode)lineBreakMode IsForward:(BOOL)isForward
@@ -61,29 +74,29 @@
     }else {
         startGlyphIndex = 0;
         tmpLines = [self textLinesFromReverseString:tmpStr inRect:theRect usingFont:theFont lineBreakMode:lineBreakMode];
-        startGlyphIndex = text.length - totalGlyphCount;
+        startGlyphIndex = text.length - totalGlyphCount + 1;
 
         int len = 0;
         for (NSString * tmps in tmpLines) {
             len += [tmps length];
         }
         
-        NSLog(@"len :%u", len);
-        NSLog(@"string total length :%u;  length :%u", theString.length, text.length);
-        NSLog(@"startGlyphIndex :%u; totalGlyphCount :%u;  [%@]", startGlyphIndex, totalGlyphCount, [text substringFromIndex:startGlyphIndex + 1]);
+//        NSLog(@"len :%u", len);
+//        NSLog(@"string total length :%u;  length :%u", theString.length, text.length);
+//        NSLog(@"startGlyphIndex :%u; totalGlyphCount :%u;  [%@]", startGlyphIndex, totalGlyphCount, [text substringFromIndex:startGlyphIndex]);
 
 
-        NSLog(@"startGlyphIndex :%u; %@", startGlyphIndex, [text substringWithRange:NSMakeRange(startGlyphIndex, 1)]);
+//        NSLog(@"startGlyphIndex :%u; %@", startGlyphIndex, [text substringWithRange:NSMakeRange(startGlyphIndex, 1)]);
         tmpStr = [text substringFromIndex:startGlyphIndex];
         tmpLines = [self textLinesFromString:tmpStr inRect:theRect usingFont:theFont lineBreakMode:lineBreakMode];
-        NSLog(@"totalGlyphCount :%u, %@", totalGlyphCount, [text substringWithRange:NSMakeRange(startGlyphIndex, 1)]);
+//        NSLog(@"totalGlyphCount :%u, %@", totalGlyphCount, [text substringWithRange:NSMakeRange(startGlyphIndex, 1)]);
     }
     return tmpLines;
 }
 
 - (NSArray *)textLinesFromString:(NSString *)theString inRect:(CGRect)theRect usingFont:(UIFont *)theFont lineBreakMode:(UILineBreakMode)breakMode
 {
-    OUT_FUNCTION_NAME();
+    //OUT_FUNCTION_NAME();
     NSMutableArray * tmp = [NSMutableArray new];
     CGSize tmpSize;
     
@@ -101,19 +114,23 @@
         
         [mutableString appendString: [theString substringWithRange:NSMakeRange(i, 1)]];
         
+        //tmpSize = [mutableString sizeWithFont:theFont forWidth:theRect.size.width lineBreakMode:breakMode];
         tmpSize = [mutableString sizeWithFont:theFont constrainedToSize:theRect.size lineBreakMode:breakMode];
         
+        NSString * _subStr = nil;
         if (tmpSize.height > _lineHeight) {//遍历回溯，出现折行
-            [tmp addObject:[mutableString substringToIndex:mutableString.length - 1]];
+            _subStr = [mutableString substringToIndex:mutableString.length - 1];
+            //NSLog(@"回溯  %@  %@  %f    \n%@\n%@", NSStringFromCGSize(tmpSize), NSStringFromCGSize([_subStr sizeWithFont:theFont constrainedToSize:theRect.size lineBreakMode:breakMode]), _lineHeight, _subStr, mutableString);
+
+            [tmp addObject:_subStr];
             mutableString = [NSMutableString string];
+            i--;//回溯            
             
-            if ([tmp count] * _lineHeight > theRect.size.height) {//整体高度超出显示区域
-                i -= [[tmp lastObject] length];
+            if (tmp.count * _lineHeight > theRect.size.height) {//整体高度超出显示区域
+                i -= ((NSString*)tmp.lastObject).length;
                 [tmp removeLastObject];
                 break;
             }
-            
-            i--;//回溯            
         }else {
             if (i >= count - 1) {//遍历到结尾
                 [tmp addObject:mutableString];
@@ -127,7 +144,7 @@
     totalGlyphCount = i + 1;
     [__pool drain];
 
-    NSLog(@"count :%d;  totalGlyphCount :%u; i :%d", count, totalGlyphCount, i);
+    //NSLog(@"count :%d;  totalGlyphCount :%u; i :%d", count, totalGlyphCount, i);
 
 #if DEBUG_SHOW_TIME_ELAPSE
     NSDate * endDate = [NSDate date];
@@ -139,7 +156,7 @@
 
 - (NSArray *)textLinesFromReverseString:(NSString *)theString inRect:(CGRect)theRect usingFont:(UIFont *)theFont lineBreakMode:(UILineBreakMode)breakMode
 {
-    OUT_FUNCTION_NAME();
+    //OUT_FUNCTION_NAME();
     NSMutableArray * tmp = [NSMutableArray new];
     CGSize tmpSize;
     
@@ -233,7 +250,7 @@
 
 -(void)loadText:(NSString *)theString
 {
-    OUT_FUNCTION_NAME();
+    //OUT_FUNCTION_NAME();
     if (theString.length > 0) {
         self.text = [theString stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"];
     }else {

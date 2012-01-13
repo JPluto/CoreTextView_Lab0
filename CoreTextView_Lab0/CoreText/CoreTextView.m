@@ -21,7 +21,6 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        OUT_FUNCTION_NAME();
         [self initCoreTextParams];
     }
     return self;
@@ -31,7 +30,6 @@
 {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        OUT_FUNCTION_NAME();
         [self initCoreTextParams];
     }
     return self;
@@ -42,10 +40,10 @@
     selectedRect = CGRectZero;
     self.lineSpace = 0.0f;
     self.fontSize = 16.0f;
-    NSLog(@"fontSize :%f, lineSpace :%f", self.fontSize, self.lineSpace);
+    //NSLog(@"fontSize :%f, lineSpace :%f", self.fontSize, self.lineSpace);
     selectedStartIndex = -1;
     selectedEndIndex = -1;
-    [self updateCoreTextParams];
+    [self updateTextParams];
     //避免重新加载
     if (coreTextHelper == nil) {
         coreTextHelper = [CoreTextHelper sharedInstance];
@@ -56,7 +54,7 @@
     }
 }
 
-- (void)updateCoreTextParams
+- (void)updateTextParams
 {
     self.lineHeight = fontSize + lineSpace;
 }

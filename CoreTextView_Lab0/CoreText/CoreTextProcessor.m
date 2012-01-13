@@ -85,7 +85,7 @@ CoreTextProcessor * __instance = nil;
 
 - (void)loadText:(NSString *)aString
 {
-    OUT_FUNCTION_NAME();
+    //OUT_FUNCTION_NAME();
 
     if (aString.length > 0) {
         self.text = [aString stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"];
@@ -127,7 +127,7 @@ CoreTextProcessor * __instance = nil;
 
 - (void)loadVisibleTextForCFRange:(CFRange)rang InFrame:(CGRect)theRect
 {
-    OUT_FUNCTION_NAME();
+    //OUT_FUNCTION_NAME();
     NSAutoreleasePool * pool = [NSAutoreleasePool new];
     CFArrayRef ctLinesArrayRef = NULL;
         
@@ -172,7 +172,7 @@ CoreTextProcessor * __instance = nil;
 
 - (void)loadAllPagesInFrame:(CGRect)theRect
 {
-    OUT_FUNCTION_NAME();
+    //OUT_FUNCTION_NAME();
     
     currentPage = 0;
     startGlyphIndex = 0;
@@ -191,7 +191,11 @@ CoreTextProcessor * __instance = nil;
         nsRange.length = totalGlyphCount;
         rangeValue = [NSValue valueWithRange:nsRange];
     }
+    
+#if DEBUG_SHOW_TIME_ELAPSE_CT
     NSDate * date = [NSDate date];
+#endif
+    
     while (framesetterRef != NULL && text.length > startGlyphIndex + totalGlyphCount) {
         [pagesInfo addObject:rangeValue];
         range = CFRangeMake(startGlyphIndex, 0);
@@ -202,8 +206,12 @@ CoreTextProcessor * __instance = nil;
         nsRange = NSMakeRange(startGlyphIndex, totalGlyphCount);
         rangeValue = [NSValue valueWithRange:nsRange];
     }
+    
+#if DEBUG_SHOW_TIME_ELAPSE_CT
     NSDate * endDate = [NSDate date];
     NSLog(@"总共耗时 %f 毫秒； 共 %u 页", ([endDate timeIntervalSince1970] - [date timeIntervalSince1970]), [pagesInfo count]);
+#endif
+    
     [self loadCurrentPageInFrame:theRect];
 }
 
@@ -217,9 +225,9 @@ CoreTextProcessor * __instance = nil;
     }
     
     self.currentPage = page;
-    NSLog(@"goto page :%u", page);
+    //NSLog(@"goto page :%u", page);
     NSRange range = [[pagesInfo objectAtIndex:currentPage] rangeValue];
-    NSLog(@"ragne :%@", NSStringFromRange(range));
+    //NSLog(@"ragne :%@", NSStringFromRange(range));
     [self loadVisibleTextForCFRange:CFRangeMake(range.location, range.length) InFrame:theRect];
 }
 

@@ -12,6 +12,8 @@
 @class CoreTextHelper;
 @class CoreTextView;
 
+#define DEBUG_SHOW_TIME_ELAPSE_CT  1
+
 @interface CoreTextProcessor : NSObject {
 @public
     CTFrameRef visibleFrameRef;//可见区域

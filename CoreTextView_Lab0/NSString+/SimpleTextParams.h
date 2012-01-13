@@ -9,5 +9,11 @@
 #import <Foundation/Foundation.h>
 
 @interface SimpleTextParams : NSObject
+{
+@public
+    UIColor * foregroundColor;
+}
+
+@property (nonatomic, retain) UIColor * foregroundColor;
 
 @end
