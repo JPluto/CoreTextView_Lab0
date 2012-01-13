@@ -110,8 +110,9 @@
         
         NSString * _getChar = [theString substringWithRange:NSMakeRange(i, 1)];
         
+        NSLog(@"getChar %@ :%@", _getChar, NSStringFromCGSize([_getChar sizeWithFont:theFont]));
         if ([_getChar isEqualToString:@"\n"]) {
-            if (i == 0) {
+            if (i == 0) {//屏蔽行首的回车
                 continue;
             }
         }else if ([_getChar isEqualToString:@"\t"]) {
@@ -125,13 +126,13 @@
         NSString * _subStr = nil;
         if (tmpSize.width > theRect.size.width) {
             _subStr = [mutableString substringToIndex:mutableString.length - 1];
-            NSLog(@"回溯  %@  %@  lineHeight :%f    \n_subStr :%@\nmutableString :%@", NSStringFromCGSize(tmpSize), NSStringFromCGSize([_subStr sizeWithFont:theFont]), _lineHeight, _subStr, mutableString);
+            //NSLog(@"回溯  %@  %@  lineHeight :%f    \n_subStr :%@\nmutableString :%@", NSStringFromCGSize(tmpSize), NSStringFromCGSize([_subStr sizeWithFont:theFont]), _lineHeight, _subStr, mutableString);
             [tmp addObject:_subStr];
             mutableString = [NSMutableString string];
             i--;//回溯
             
             if (tmp.count * _lineHeight > theRect.size.height) {//整体高度超出显示区域
-                NSLog(@"超出高度 :%@", [tmp lastObject]);
+                //NSLog(@"超出高度 :%@", [tmp lastObject]);
                 i -= ((NSString*)tmp.lastObject).length;
                 [tmp removeLastObject];
                 break;
@@ -140,26 +141,28 @@
             [tmp addObject:mutableString];
             mutableString = [NSMutableString string];
             if (tmp.count * _lineHeight > theRect.size.height) {//整体高度超出显示区域
+                //NSLog(@"超出高度 :%@", [tmp lastObject]);
+                i -= ((NSString*)tmp.lastObject).length;
+                [tmp removeLastObject];
+                break;
+            }
+        }
+        
+        if (i >= count - 1) {//遍历到结尾
+            [tmp addObject:mutableString];
+            if (tmp.count * _lineHeight > theRect.size.height) {//整体高度超出显示区域
                 NSLog(@"超出高度 :%@", [tmp lastObject]);
                 i -= ((NSString*)tmp.lastObject).length;
                 [tmp removeLastObject];
                 break;
             }
 
-            if (i >= count - 1) {
-                mutableString = nil;
-                break;
-            }
-        }else {
-            if (i >= count - 1) {//遍历到结尾
-                [tmp addObject:mutableString];
-                mutableString = nil;
-                break;
-            }
+            mutableString = nil;
+            break;
         }
+        
     }
     
-    //startGlyphIndex += totalGlyphCount;
     totalGlyphCount = i + 1;
     [__pool drain];
 
