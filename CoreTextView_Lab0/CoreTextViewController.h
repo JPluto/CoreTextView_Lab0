@@ -24,6 +24,7 @@
 @property (nonatomic, retain) NSString * filePath;
 @property (nonatomic, retain) NSArray * scrollViews;
 @property (nonatomic, retain) CoreTextProcessor * coreTextProcessor;
+@property (nonatomic, retain) NSString * fileName;
 
 - (IBAction)onClick_Reload:(id)sender;
 - (IBAction)onClick_DecreaseFontSize:(id)sender;

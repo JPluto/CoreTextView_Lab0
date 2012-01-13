@@ -78,7 +78,7 @@
     textFrame.size.height = self.frame.size.height - textFrame.origin.y * 2.0f;
     
     NSDate * date = [NSDate date];
-    NSArray * strings = [txtProcessor textLinesFromRange:NSMakeRange(0, txtProcessor.text.length) OfString:txtProcessor.text inRect:textFrame UsingFont:txtProcessor.uiFont LineBreakMode:UILineBreakModeClip IsForward:YES];
+    NSArray * strings = [txtProcessor textLinesFromRange:NSMakeRange(0, txtProcessor.text.length) OfString:txtProcessor.text inRect:textFrame UsingFont:txtProcessor.uiFont LineBreakMode:UILineBreakModeClip IsForward:NO];
     
     CGContextSetFillColorWithColor(context, [UIColor orangeColor].CGColor);
     CGContextFillRect(context, textFrame);
@@ -103,9 +103,10 @@
         NSString * _drawedStr = [strings objectAtIndex:i];
         CGSize _lineSize = [_drawedStr sizeWithFont:txtProcessor.uiFont];
         NSLog(@"%d %@  %@", i, NSStringFromCGSize(_lineSize), _drawedStr);
-        CGContextFillRect(context, CGRectMake(lineRect.origin.x, lineRect.origin.y, _lineSize.width, _lineSize.height));
+        //CGContextFillRect(context, CGRectMake(lineRect.origin.x, lineRect.origin.y, _lineSize.width, _lineSize.height));
         //画文字
         CGContextSetFillColorWithColor(context, txtProcessor.params.foregroundColor.CGColor);
+        lineRect.size = _lineSize;
         [_drawedStr drawInRect:lineRect withFont:txtProcessor.uiFont];
     }
     

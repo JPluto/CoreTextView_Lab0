@@ -28,6 +28,7 @@
 @synthesize timeTest;
 @synthesize scrollViews;
 @synthesize coreTextProcessor;
+@synthesize fileName;
 
 - (void)dealloc
 {
@@ -57,6 +58,7 @@
         if (coreTextProcessor == nil) {
             coreTextProcessor = [CoreTextProcessor new];
         }
+        fileName = @"2";
     }
     return self;
 }
@@ -95,7 +97,7 @@
         }
         segmentCtrl.selectedSegmentIndex = 0;
         [self segmentControlValueChanged:segmentCtrl];
-//        NSString * contents = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"2" ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+//        NSString * contents = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:fileName ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 //        if ([currentTextView isKindOfClass:[TextView class]] && [currentTextView respondsToSelector:@selector(loadText:)]) {
 //            [currentTextView loadText:contents];
 //            [currentTextView setNeedsDisplay];
@@ -125,7 +127,7 @@
 {
     NSLog(@"%@  :%@", DEBUG_FUNCTION_NAME, [self.currentTextView classForCoder]);
     if ([self.currentTextView respondsToSelector:@selector(loadText:)]) {
-        NSString * fileContent = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"2" ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        NSString * fileContent = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:fileName ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         fileContent = [fileContent stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"];
         if ([self.currentTextView isKindOfClass:[CoreTextView class]]) {
             [(CoreTextView*)currentTextView loadText:fileContent];
@@ -260,7 +262,7 @@
     self.currentTextView = [textViews objectAtIndex:segmentCtrl.selectedSegmentIndex];
     [scrollView addSubview:currentTextView];
     
-    NSString * fileContent = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"2" ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSString * fileContent = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:fileName ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     fileContent = [fileContent stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"];
     if ([currentTextView isKindOfClass:[TextView class]]) {
         [currentTextView loadText:fileContent];
