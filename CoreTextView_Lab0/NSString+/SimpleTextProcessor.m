@@ -80,26 +80,22 @@
 //        for (NSString * tmps in tmpLines) {
 //            len += [tmps length];
 //        }
-
 //        NSLog(@"len :%u", len);
+        
+        tmpStr = [text substringFromIndex:startGlyphIndex];
 //        NSLog(@"string total length :%u;  length :%u", theString.length, text.length);
-//        NSLog(@"startGlyphIndex :%u; totalGlyphCount :%u;  [%@]", startGlyphIndex, totalGlyphCount, [text substringFromIndex:startGlyphIndex]);
-
-
-//        NSLog(@"startGlyphIndex :%u; %@", startGlyphIndex, [text substringWithRange:NSMakeRange(startGlyphIndex, 1)]);
-//        tmpStr = [text substringFromIndex:startGlyphIndex];
-//        tmpLines = [self textLinesFromString:tmpStr inRect:theRect usingFont:theFont lineBreakMode:lineBreakMode];
-//        NSLog(@"totalGlyphCount :%u, %@", totalGlyphCount, [text substringWithRange:NSMakeRange(startGlyphIndex, 1)]);
+//        NSLog(@"startGlyphIndex :%u; totalGlyphCount :%u;  [%@]", startGlyphIndex, totalGlyphCount, tmpStr);
+        tmpLines = [self textLinesFromString:tmpStr inRect:theRect usingFont:theFont lineBreakMode:lineBreakMode];
     }
     return tmpLines;
 }
 
 - (NSArray *)textLinesFromString:(NSString *)theString inRect:(CGRect)theRect usingFont:(UIFont *)theFont lineBreakMode:(UILineBreakMode)breakMode
 {
-    //OUT_FUNCTION_NAME();
+    OUT_FUNCTION_NAME();
     NSMutableArray * tmp = [NSMutableArray new];
     CGSize tmpSize;
-    
+    NSLog(@"theString :%u", theString.length);
 #if DEBUG_SHOW_TIME_ELAPSE
     NSDate * startDate = [NSDate date];
 #endif
@@ -115,9 +111,10 @@
         NSString * _getChar = [theString substringWithRange:NSMakeRange(i, 1)];
         
         if ([_getChar isEqualToString:@"\n"]) {
-            
-        }
-        if ([_getChar isEqualToString:@"\t"]) {
+            if (i == 0) {
+                continue;
+            }
+        }else if ([_getChar isEqualToString:@"\t"]) {
             [mutableString appendString:@" "];
         }else {
             [mutableString appendString: _getChar];
@@ -134,6 +131,7 @@
             i--;//回溯
             
             if (tmp.count * _lineHeight > theRect.size.height) {//整体高度超出显示区域
+                NSLog(@"超出高度 :%@", [tmp lastObject]);
                 i -= ((NSString*)tmp.lastObject).length;
                 [tmp removeLastObject];
                 break;
@@ -141,23 +139,18 @@
         }else if ([_getChar isEqualToString:@"\n"]) {
             [tmp addObject:mutableString];
             mutableString = [NSMutableString string];
-            if (i <= 0) {
-                mutableString = nil;
-                break;
-            }
-        }/*else if (tmpSize.height > _lineHeight) {//遍历回溯，出现折行
-            _subStr = [mutableString substringToIndex:mutableString.length - 1];
-            //NSLog(@"回溯  %@  %@  %f    \n%@\n%@", NSStringFromCGSize(tmpSize), NSStringFromCGSize([_subStr sizeWithFont:theFont constrainedToSize:theRect.size lineBreakMode:breakMode]), _lineHeight, _subStr, mutableString);
-            [tmp addObject:_subStr];
-            mutableString = [NSMutableString string];
-            i--;//回溯
-            
             if (tmp.count * _lineHeight > theRect.size.height) {//整体高度超出显示区域
+                NSLog(@"超出高度 :%@", [tmp lastObject]);
                 i -= ((NSString*)tmp.lastObject).length;
                 [tmp removeLastObject];
                 break;
             }
-        }*/else {
+
+            if (i >= count - 1) {
+                mutableString = nil;
+                break;
+            }
+        }else {
             if (i >= count - 1) {//遍历到结尾
                 [tmp addObject:mutableString];
                 mutableString = nil;
@@ -213,53 +206,51 @@
         //tmpSize = [mutableString sizeWithFont:theFont constrainedToSize:theRect.size lineBreakMode:breakMode];
         
         NSString * _subStr = nil;
-        if (tmpSize.width > theRect.size.width) {
-            _subStr = [mutableString substringFromIndex:1];
-            NSLog(@"回溯  %@  %@  %f    \n%@\n%@", NSStringFromCGSize(tmpSize), NSStringFromCGSize([_subStr sizeWithFont:theFont]), _lineHeight, _subStr, mutableString);
-            [tmp insertObject:_subStr atIndex:0];
+        if ([_getChar isEqualToString:@"\n"]) {
+            _subStr = mutableString;
+            [tmp insertObject:mutableString atIndex:0];
             mutableString = [NSMutableString string];
-            i--;//回溯
             
             if (tmp.count * _lineHeight > theRect.size.height) {//整体高度超出显示区域
+                //NSLog(@"超出高度 :%@", [tmp objectAtIndex:0]);
+                i += [[tmp objectAtIndex:0] length];
+                [tmp removeObjectAtIndex:0];
+                break;
+            }            
+        }else if (tmpSize.width > theRect.size.width) {
+            _subStr = [mutableString substringFromIndex:1];
+            //NSLog(@"回溯  %@  %@  %f    \n%@\n%@", NSStringFromCGSize(tmpSize), NSStringFromCGSize([_subStr sizeWithFont:theFont]), _lineHeight, _subStr, mutableString);
+            [tmp insertObject:_subStr atIndex:0];
+            mutableString = [NSMutableString string];
+            i++;//回溯
+            
+            if (tmp.count * _lineHeight > theRect.size.height) {//整体高度超出显示区域
+                //NSLog(@"超出高度 :%@", [tmp objectAtIndex:0]);
                 i += [[tmp objectAtIndex:0] length];
                 [tmp removeObjectAtIndex:0];
                 break;
             }
-        }else if ([_getChar isEqualToString:@"\n"]) {
-            [tmp insertObject:mutableString atIndex:0];
-            mutableString = [NSMutableString string];
-            
-            if (i <= 0) {
-                mutableString = nil;
-                break;
-            }
-        }
-        /*else if (tmpSize.height > _lineHeight) {//遍历回溯，出现折行
-            [mutableString deleteCharactersInRange:NSMakeRange(0, 1)];
-            [tmp insertObject:mutableString atIndex:0];
-            mutableString = [NSMutableString string];
-            
-            if ([tmp count] * _lineHeight > theRect.size.height) {
-                if ([tmp count] > 0) {
-                    i += [[tmp objectAtIndex:0] length];
-                    [tmp removeObjectAtIndex:0];
-                }
-                break;
-            }
-            
-            i++;            
-        }*/else {
-            if (i <= 0) {
-                [tmp insertObject:[mutableString substringFromIndex:1] atIndex:0];
-                mutableString = nil;
-                break;
-            }
+
         }
         
+        if (i <= 0) {
+            [tmp insertObject:[mutableString substringFromIndex:1] atIndex:0];
+            if (tmp.count * _lineHeight > theRect.size.height) {//整体高度超出显示区域
+                //NSLog(@"超出高度 :%@", [tmp objectAtIndex:0]);
+                i += [[tmp objectAtIndex:0] length];
+                [tmp removeObjectAtIndex:0];
+                break;
+            }
+            
+            mutableString = nil;
+            break;
+        }
+        
+
     }
     [__pool drain];
     totalGlyphCount = count - 1 - i + 1;
-    NSLog(@"count :%d;  totalGlyphCount :%u; i :%d", count, totalGlyphCount, i);
+    //NSLog(@"count :%d;  totalGlyphCount :%u; i :%d", count, totalGlyphCount, i);
     
 #if DEBUG_SHOW_TIME_ELAPSE
     NSDate * endDate = [NSDate date];
