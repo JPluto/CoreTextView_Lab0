@@ -11,12 +11,25 @@
 @implementation SimpleTextParams
 
 @synthesize foregroundColor;
+@synthesize backgroundColor;
+@synthesize uiFont;
+@synthesize fontName;
+@synthesize fontSize;
+@synthesize lineSpace;
+@synthesize lineHeight;
+@synthesize charSpace;
+@synthesize visibleBounds;
 
 - (id)init
 {
     self = [super init];
     if (self) {
         foregroundColor = [UIColor blackColor];
+        fontSize = 11.0;
+        lineSpace = 0.0;
+        fontName = @"Arial";
+        visibleBounds = CGRectZero;
+        [self update];
     }
     return self;
 }
@@ -26,4 +39,21 @@
     [foregroundColor release];
     [super dealloc];
 }
+
+- (void)update
+{
+    lineHeight = fontSize + lineSpace;
+    self.uiFont = [UIFont fontWithName:fontName size:fontSize];
+}
+
+- (UIFont *)fontWithSize:(CGFloat)size
+{
+    fontSize = size;
+    return [UIFont fontWithName:fontName size:fontSize];
+}
+- (UIFont *)font
+{
+    return [UIFont fontWithName:fontName size:fontSize];
+}
+
 @end

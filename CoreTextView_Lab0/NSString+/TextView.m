@@ -22,7 +22,7 @@
         // Initialization code
         if (txtProcessor == nil) {
             txtProcessor = [SimpleTextProcessor new];
-            self.fontSize = txtProcessor->fontSize;
+            self.fontSize = txtProcessor.params->fontSize;
         }
     }
     return self;
@@ -35,7 +35,7 @@
     if (self) {
         if (txtProcessor == nil) {
             txtProcessor = [SimpleTextProcessor new];
-            self.fontSize = txtProcessor->fontSize;
+            self.fontSize = txtProcessor.params->fontSize;
         }
     }
     return self;
@@ -48,7 +48,7 @@
     if (self) {
         if (txtProcessor == nil) {
             txtProcessor = [SimpleTextProcessor new];
-            self.fontSize = txtProcessor->fontSize;
+            self.fontSize = txtProcessor.params->fontSize;
         }
     }
     return self;
@@ -78,7 +78,8 @@
     textFrame.size.height = self.frame.size.height - textFrame.origin.y * 2.0f;
     
     NSDate * date = [NSDate date];
-    NSArray * strings = [txtProcessor textLinesFromRange:NSMakeRange(0, txtProcessor.text.length) OfString:txtProcessor.text inRect:textFrame UsingFont:txtProcessor.uiFont LineBreakMode:UILineBreakModeClip IsForward:YES];
+    NSArray * strings = [txtProcessor textLinesFromRange:NSMakeRange(0, txtProcessor.text.length) OfString:txtProcessor.text inRect:textFrame UsingFont:txtProcessor.params.uiFont LineBreakMode:UILineBreakModeClip IsForward:YES];
+    txtProcessor.visibleLines = [NSMutableArray arrayWithArray:strings];
     
     CGContextSetFillColorWithColor(context, [UIColor orangeColor].CGColor);
     CGContextFillRect(context, textFrame);
@@ -86,21 +87,21 @@
     //++++++++
     CGContextSetFillColorWithColor(context, txtProcessor.params.foregroundColor.CGColor);
     
-    NSInteger avaibleLines = textFrame.size.height / txtProcessor.uiFont.lineHeight;
+    NSInteger avaibleLines = textFrame.size.height / txtProcessor.params.uiFont.lineHeight;
     
     CGRect lineRect = CGRectZero;
-    for (int i = 0, _counter = 0; i < [strings count]; i++) {
+    for (int i = 0, _counter = 0; i < [txtProcessor.visibleLines count]; i++) {
         _counter ++;
         if (_counter > avaibleLines) {
             break;
         }
         lineRect.size = textFrame.size;
         lineRect.origin.x = 10;
-        lineRect.origin.y = 10 + i * (txtProcessor.uiFont.lineHeight);
+        lineRect.origin.y = 10 + i * (txtProcessor.params.uiFont.lineHeight);
         
         //填充行背景色
         CGContextSetFillColorWithColor(context, [UIColor purpleColor].CGColor);
-        NSString * _drawedStr = [strings objectAtIndex:i];
+        NSString * _drawedStr = [txtProcessor.visibleLines objectAtIndex:i];
         /*
         CGSize _lineSize = [_drawedStr sizeWithFont:txtProcessor.uiFont];
         NSLog(@"%d %@  %@", i, NSStringFromCGSize(_lineSize), _drawedStr);
@@ -109,13 +110,13 @@
         //画文字
         CGContextSetFillColorWithColor(context, txtProcessor.params.foregroundColor.CGColor);
         lineRect.size.width = self.bounds.size.width * 2;
-        [_drawedStr drawInRect:lineRect withFont:txtProcessor.uiFont];
+        [_drawedStr drawInRect:lineRect withFont:txtProcessor.params.uiFont];
     }
     
     //----------
     textFrame.origin.y = 0;
     textFrame.origin.x = 100;
-    [[NSString stringWithFormat:@"总行数:%u 耗时:%f", [strings count], (double)(([[NSDate date] timeIntervalSince1970] - [date timeIntervalSince1970]))] drawInRect:textFrame withFont:[UIFont systemFontOfSize:12]];
+    [[NSString stringWithFormat:@"总行数:%u 耗时:%f", [txtProcessor.visibleLines count], (double)(([[NSDate date] timeIntervalSince1970] - [date timeIntervalSince1970]))] drawInRect:textFrame withFont:[UIFont systemFontOfSize:12]];
     
 }
 
@@ -133,7 +134,7 @@
 
 - (void)updateTextParams
 {
-    txtProcessor->fontSize = self.fontSize;
+    txtProcessor.params->fontSize = self.fontSize;
     [txtProcessor updateParams];
 }
 

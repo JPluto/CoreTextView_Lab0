@@ -12,7 +12,7 @@
 
 @implementation SimpleTextProcessor
 
-@synthesize uiFont;
+//@synthesize uiFont;
 @synthesize pagesInfo;
 @synthesize visibleLines;
 @synthesize textView;
@@ -36,18 +36,16 @@
     [text release];
     [textView release];
     [pagesInfo release];
-    [uiFont release];
     [params release];
     [super dealloc];
 }
 
 - (void)initSimpleTextParams
-{
+{    
+    params.visibleBounds.origin.x = 10.0f;
+    params.visibleBounds.origin.y = 10.0f;
     
-    fontSize = 11.0f;
-    lineSpace = 0.0f;
-    lineHeight = fontSize + lineSpace;
-    
+    [params update];
     if (pagesInfo == nil) {
         self.pagesInfo = [NSMutableArray array];
     }
@@ -55,13 +53,11 @@
         params = [SimpleTextParams new];
     }
 
-    self.uiFont = [UIFont systemFontOfSize:fontSize];
 }
 
 - (void)updateParams
 {
-    lineHeight = fontSize + lineSpace;
-    self.uiFont = [UIFont systemFontOfSize:fontSize];
+    [params update];
 }
 
 - (NSArray *)textLinesFromRange:(NSRange)aRange OfString:(NSString *)theString inRect:(CGRect)theRect UsingFont:(UIFont *)theFont LineBreakMode:(UILineBreakMode)lineBreakMode IsForward:(BOOL)isForward
@@ -74,17 +70,9 @@
     }else {
         startGlyphIndex = 0;
         tmpLines = [self textLinesFromReverseString:tmpStr inRect:theRect usingFont:theFont lineBreakMode:lineBreakMode];
-        startGlyphIndex = text.length - totalGlyphCount + 1;
 
-//        int len = 0;
-//        for (NSString * tmps in tmpLines) {
-//            len += [tmps length];
-//        }
-//        NSLog(@"len :%u", len);
-        
+        startGlyphIndex = text.length - totalGlyphCount + 1;        
         tmpStr = [text substringFromIndex:startGlyphIndex];
-//        NSLog(@"string total length :%u;  length :%u", theString.length, text.length);
-//        NSLog(@"startGlyphIndex :%u; totalGlyphCount :%u;  [%@]", startGlyphIndex, totalGlyphCount, tmpStr);
         tmpLines = [self textLinesFromString:tmpStr inRect:theRect usingFont:theFont lineBreakMode:lineBreakMode];
     }
     return tmpLines;
@@ -274,7 +262,7 @@
     NSValue * rangeValue = nil;
     NSRange nsRange;
     //加载所有页面时，从第一个字符开始正向排版
-    lines = (NSMutableArray*)[self textLinesFromRange:NSMakeRange(0, text.length) OfString:text inRect:theRect UsingFont:uiFont LineBreakMode:UILineBreakModeCharacterWrap IsForward:YES];
+    lines = (NSMutableArray*)[self textLinesFromRange:NSMakeRange(0, text.length) OfString:text inRect:theRect UsingFont:params.uiFont LineBreakMode:UILineBreakModeCharacterWrap IsForward:YES];
     if (lines != nil) {
         nsRange = NSMakeRange(startGlyphIndex, totalGlyphCount);
         rangeValue = [NSValue valueWithRange:nsRange];
@@ -285,7 +273,7 @@
 #endif
     while (lines != nil && text.length > startGlyphIndex + totalGlyphCount) {
         [pagesInfo addObject:rangeValue];
-        lines = (NSMutableArray*)[self textLinesFromRange:NSMakeRange(startGlyphIndex + totalGlyphCount, text.length) OfString:text inRect:theRect UsingFont:uiFont LineBreakMode:UILineBreakModeCharacterWrap IsForward:YES]; 
+        lines = (NSMutableArray*)[self textLinesFromRange:NSMakeRange(startGlyphIndex + totalGlyphCount, text.length) OfString:text inRect:theRect UsingFont:params.uiFont LineBreakMode:UILineBreakModeCharacterWrap IsForward:YES]; 
         if (lines == nil) {
             break;
         }
@@ -323,7 +311,7 @@
     NSRange range = [(NSValue*)[pagesInfo objectAtIndex:currentPage] rangeValue];
     NSLog(@"ragne :%@", NSStringFromRange(range));
     //[self loadVisibleTextForCFRange:CFRangeMake(range.location, range.length) InFrame:theRect];
-    [self textLinesFromRange:range OfString:text inRect:theFrame UsingFont:self.uiFont LineBreakMode:UILineBreakModeCharacterWrap IsForward:YES];
+    [self textLinesFromRange:range OfString:text inRect:theFrame UsingFont:params.uiFont LineBreakMode:UILineBreakModeCharacterWrap IsForward:YES];
 }
 
 - (void)loadCurrentPageInFrame:(CGRect)theRect
