@@ -42,8 +42,8 @@
 
 - (void)initSimpleTextParams
 {    
-    params.visibleBounds.origin.x = 10.0f;
-    params.visibleBounds.origin.y = 10.0f;
+    params->visibleBounds.origin.x = 10.0f;
+    params->visibleBounds.origin.y = 10.0f;
     
     [params update];
     if (pagesInfo == nil) {

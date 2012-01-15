@@ -27,7 +27,7 @@
         foregroundColor = [UIColor blackColor];
         fontSize = 11.0;
         lineSpace = 0.0;
-        fontName = @"Arial";
+        fontName = @"Helvetica";//Helvetica Arial
         visibleBounds = CGRectZero;
         [self update];
     }
