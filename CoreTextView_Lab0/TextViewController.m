@@ -11,6 +11,7 @@
 #import "TextView.h"
 #import "TextScrollView.h"
 #import "SimpleTextProcessor.h"
+#import "SimpleTextParams.h"
 #import "TextBaseView.h"
 #import "OpenGLES_TextView.h"
 #import "CoreTextProcessor.h"
@@ -119,22 +120,34 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     NSLog(@"%@  :%@", DEBUG_FUNCTION_NAME, [self.currentTextView classForCoder]);
-    if ([self.currentTextView respondsToSelector:@selector(loadText:)]) {
-        NSString * fileContent = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:fileName ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        fileContent = [fileContent stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"];
-        if ([self.currentTextView isKindOfClass:[CoreTextView class]]) {
-            [(CoreTextView*)currentTextView loadText:fileContent];
-        }else {
-            [self.currentTextView loadText:fileContent];
-            [currentTextView setNeedsDisplay];
-        }
+    if ([currentTextView isKindOfClass:[TextView class]]) {
+        SimpleTextProcessor * processor = [(TextView*)currentTextView processor];
+        CGRect textFrame = CGRectZero;
+        textFrame.origin.x = 10;
+        textFrame.origin.y = 10;
+        textFrame.size.width = self.view.frame.size.width - textFrame.origin.x * 2.0f;
+        textFrame.size.height = self.view.frame.size.height - textFrame.origin.y * 2.0f;
+        processor.params.visibleBounds = textFrame;
+        
+        [processor textLinesFromRange:NSMakeRange(0, processor.text.length) OfString:processor.text inRect:textFrame UsingFont:processor.params.uiFont LineBreakMode:UILineBreakModeCharacterWrap IsForward:YES];
     }
+//    if ([self.currentTextView respondsToSelector:@selector(loadText:)]) {
+//        NSString * fileContent = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:fileName ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+//        fileContent = [fileContent stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"];
+//        if ([self.currentTextView isKindOfClass:[CoreTextView class]]) {
+//            [(CoreTextView*)currentTextView loadText:fileContent];
+//        }else {
+//            [self.currentTextView loadText:fileContent];
+//            [currentTextView setNeedsDisplay];
+//        }
+//    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    //return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return YES;
 }
 
 - (void)onClick_Reload:(id)sender
@@ -142,7 +155,6 @@
     if ([self.currentTextView isKindOfClass:[TextBaseView class]]) {
         id tv = self.currentTextView;
         self.labelFontSize.text = [NSString stringWithFormat:@"%f", [tv fontSize]];
-        
         [self.currentTextView setNeedsDisplay];
     }
 }
@@ -159,7 +171,7 @@
                 ctv.coreTextProcessor.coreTextParams->fontSize -= 1.0f;
                 [ctv.coreTextProcessor.coreTextParams updateParams];
             }else if ([currentTextView isKindOfClass:[TextView class]]) {
-                [((TextView*)tv).txtProcessor updateParams];
+                [((TextView*)tv).processor updateParams];
             }
             
             if ([tv respondsToSelector:@selector(updateTextParams)]) {
@@ -175,6 +187,12 @@
             if ([currentTextView isKindOfClass:[TextView class]]) {
                 [tv setNeedsDisplay];                
             }
+        }
+    }else if ([self.currentTextView isKindOfClass:[TextView class]]) {
+        TextView * txtView = (TextView*)self.currentTextView;
+        if (txtView.processor.params.fontSize > 5) {
+            txtView.processor.params.fontSize -= 1.0f;
+            [txtView setNeedsDisplay];
         }
     }
 }
@@ -190,7 +208,7 @@
                 ctv.coreTextProcessor.coreTextParams->fontSize += 1.0f;
                 [ctv.coreTextProcessor.coreTextParams updateParams];
             }else if ([currentTextView isKindOfClass:[TextView class]]) {
-                [((TextView*)tv).txtProcessor updateParams];
+                [((TextView*)tv).processor updateParams];
             }
 
             if ([tv respondsToSelector:@selector(updateTextParams)]) {
@@ -205,6 +223,12 @@
                 [tv setNeedsDisplay];                
             }
         }
+    }else if ([self.currentTextView isKindOfClass:[TextView class]]) {
+        TextView * txtView = (TextView*)self.currentTextView;
+        if (txtView.processor.params.fontSize < 30) {
+            txtView.processor.params.fontSize += 1.0f;
+            [txtView setNeedsDisplay];
+        }
     }
 }
 
@@ -214,6 +238,9 @@
         CoreTextProcessor * processor = [(CoreTextView*)self.currentTextView coreTextProcessor];
         [processor loadPage:processor.currentPage - 1 InFrame:self.view.frame];
         [currentTextView setNeedsDisplay];
+    }else if([currentTextView isKindOfClass:[TextView class]]) {
+        SimpleTextProcessor * processor = [(TextView*)currentTextView processor];
+        
     }
 }
 
@@ -223,7 +250,12 @@
         CoreTextProcessor * processor = [(CoreTextView*)self.currentTextView coreTextProcessor];
         [processor loadPage:processor.currentPage + 1 InFrame:self.view.frame];
         [currentTextView setNeedsDisplay];
+    }else if([currentTextView isKindOfClass:[TextView class]]) {
+        SimpleTextProcessor * processor = [(TextView*)currentTextView processor];
+        [processor loadNextPage];
+        [self.view setNeedsDisplay];
     }
+
 }
 
 - (void)onClick_IncreaseLineSpace:(id)sender

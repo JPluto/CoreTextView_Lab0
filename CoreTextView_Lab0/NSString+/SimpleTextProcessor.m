@@ -333,4 +333,16 @@
     [self loadPage:currentPage InFrame:theRect];
 }
 
+- (void)loadNextPage
+{
+    startGlyphIndex += totalGlyphCount;
+    [self textLinesFromRange:NSMakeRange(startGlyphIndex, self.text.length - startGlyphIndex) OfString:text inRect:params.visibleBounds UsingFont:params.uiFont LineBreakMode:UILineBreakModeCharacterWrap IsForward:YES];
+    [textView setNeedsDisplay];
+}
+
+- (void)loadPrevPage
+{
+    
+}
+
 @end

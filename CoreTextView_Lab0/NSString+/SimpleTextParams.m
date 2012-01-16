@@ -41,6 +41,36 @@
     [super dealloc];
 }
 
+- (void)setFontName:(NSString *)aFontName
+{
+    if ([fontName isEqualToString:aFontName]) {
+        return;
+    }
+    
+    [aFontName retain];
+    [fontName release];
+    fontName = aFontName;
+    [self update];
+}
+
+- (void)setFontSize:(CGFloat)aFontSize
+{
+    if (aFontSize == fontSize) {
+        return;
+    }
+    fontSize = aFontSize;
+    [self update];
+}
+
+- (void)setLineSpace:(CGFloat)aLineSpace
+{
+    if (aLineSpace == lineSpace) {
+        return;
+    }
+    lineSpace = aLineSpace;
+    lineHeight = fontSize + lineSpace;
+}
+
 - (void)update
 {
     lineHeight = fontSize + lineSpace;

@@ -54,7 +54,7 @@
 
 /* Begin PBXFileReference section */
 		A202E54D14BC331300497757 /* TextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextView.h; sourceTree = "<group>"; };
-		A202E54E14BC331300497757 /* TextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextView.m; sourceTree = "<group>"; };
+		A202E54E14BC331300497757 /* TextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = TextView.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		A202E55514BC342D00497757 /* OpenGLES_TextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLES_TextView.h; sourceTree = "<group>"; };
 		A202E55614BC342D00497757 /* OpenGLES_TextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenGLES_TextView.m; sourceTree = "<group>"; };
 		A202E55814BC343C00497757 /* SimpleTextProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleTextProcessor.h; sourceTree = "<group>"; };

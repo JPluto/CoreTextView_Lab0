@@ -14,18 +14,18 @@
 @class SimpleTextProcessor;
 @class SimpleTextParams;
 
-@interface TextView : TextBaseView
+@interface TextView : UIView
 {
 }
 
-@property (nonatomic, retain) SimpleTextProcessor * txtProcessor;
+@property (nonatomic, retain) SimpleTextProcessor * processor;
 
 + (SimpleTextParams*)uniqTextParams;
 - (void)updateTextParams;
 
-- (void)loadPage:(NSUInteger)page;//加载指定页面
-- (void)loadCurrentPage;//加载当前页面
-- (void)preLoadNextPage;//预加载后面的页面
-- (void)preLoadPrevPage;//预加载前面的页面
+//- (void)loadPage:(NSUInteger)page;//加载指定页面
+//- (void)loadCurrentPage;//加载当前页面
+//- (void)preLoadNextPage;//预加载后面的页面
+//- (void)preLoadPrevPage;//预加载前面的页面
 
 @end

@@ -61,5 +61,6 @@ typedef struct {
 - (void)loadPage:(NSUInteger) pageIndex InFrame:(CGRect)theFrame;
 //加载当前页面
 - (void)loadCurrentPageInFrame:(CGRect)theRect;
-
+- (void)loadNextPage;
+- (void)loadPrevPage;
 @end
