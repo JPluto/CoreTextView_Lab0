@@ -36,7 +36,7 @@
 @property (nonatomic) CGFloat lineSpace;
 @property (nonatomic) CGFloat lineHeight;
 @property (nonatomic) CGFloat charSpace;
-@property (nonatomic) CGRect visibleBounds;
+@property (nonatomic, assign) CGRect visibleBounds;
 @property (nonatomic) CGFloat fontSize;
 @property (nonatomic, retain) UIFont * uiFont;
 @property (nonatomic, retain) NSString * fontName;

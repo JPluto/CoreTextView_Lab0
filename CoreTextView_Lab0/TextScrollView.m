@@ -12,14 +12,16 @@
 
 @synthesize views;
 @synthesize viewsBufferCount;
+@synthesize preloadCount;
+@synthesize fixedPage;
+@synthesize currentView;
 
 - (id)init
 {
     self = [super init];
     if (self) {
         // Initialization code here.
-        views = [NSMutableArray new];
-        viewsBufferCount = 3;
+        self.preloadCount = 3;
         [self updateViewsBuffer];
     }
     
@@ -31,34 +33,54 @@
     self = [super initWithCoder:aDecoder];
     if (self) {
         // Initialization code here.
-        viewsBufferCount = 3;
-        NSMutableArray * tmp = [NSMutableArray new];
-        NSAutoreleasePool * pool = [NSAutoreleasePool new];
+        self.preloadCount = 3;
         [self updateViewsBuffer];
-        [pool drain];
-        [tmp release];
     }
     
     return self;
 }
 
+- (void)dealloc
+{
+    [currentView release];
+    [super dealloc];
+}
+
+- (void)setPreloadCount:(NSUInteger)aPreloadCount
+{
+    if (aPreloadCount >= NSNotFound) {
+        preloadCount = 1;
+    }else
+    if (aPreloadCount < 1) {
+        preloadCount = 1;
+    }else {
+        preloadCount = aPreloadCount;
+    }
+    
+    fixedPage = (preloadCount - 1) / 2;
+}
+
 - (void)updateViewsBuffer
 {
     @synchronized(views) {
-        if (viewsBufferCount == [views count]) {
-            //Don't need update views buffer!
-            return;
+        if (views == nil) {
+            views = [NSMutableArray array];
         }
+        
         NSArray * tmp = self.views;
-        NSMutableArray * newViews = [NSMutableArray array];
-        if (viewsBufferCount < [views count]) {
+        UIView * tmpView = nil;
+        
+        NSMutableArray * newViews = nil;
+        if (preloadCount < [views count]) {
+            newViews = [NSMutableArray array];
             for (int i = 0; i < viewsBufferCount; i++) {
                 [newViews addObject:[tmp objectAtIndex:i]];
             }
-        }else {
+        }else if (preloadCount > [views count]) {
+            newViews = [NSMutableArray array];
             int  i = 0;
-            //
             for (i = 0; i < [tmp count]; i++) {
+                
                 [newViews addObject:[tmp objectAtIndex:i]];
             }
             //fill the clear view to extended space
@@ -66,7 +88,17 @@
                 [newViews addObject:[[UIView new] autorelease]];
             }
         }
-        self.views = newViews;
+        
+        if (newViews != nil) {
+            self.views = newViews;
+        }
+        
+        for (int i = 0; i < [views count]; i++) {
+            tmpView = [views objectAtIndex:i];
+            tmpView.frame = self.bounds;
+            tmpView = nil;
+        }
+        
     }
 }
 
@@ -106,6 +138,7 @@
     [(NSMutableArray*)views replaceObjectAtIndex:i withObject:tmp];
     [tmp release];
 }
+
 
 
 @end

@@ -7,7 +7,7 @@
 //
 
 #import "CoreTextView_Lab0AppDelegate.h"
-#import "CoreTextViewController.h"
+#import "TextViewController.h"
 #import "CoreTextView.h"
 
 @implementation CoreTextView_Lab0AppDelegate
@@ -22,7 +22,7 @@
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     
-    ctvc = [[CoreTextViewController alloc] initWithNibName:@"TestForm" bundle:nil];
+    ctvc = [[TextViewController alloc] initWithNibName:@"TestForm" bundle:nil];
     [self.window addSubview:ctvc.view];
         
     return YES;

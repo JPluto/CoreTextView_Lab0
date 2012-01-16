@@ -6,7 +6,7 @@
 //  Copyright 2011年 北京易天新动网络科技有限公司. All rights reserved.
 //
 
-#import "CoreTextViewController.h"
+#import "TextViewController.h"
 #import "CoreTextView.h"
 #import "TextView.h"
 #import "TextScrollView.h"
@@ -17,7 +17,7 @@
 #import "CoreTextParams.h"
 #import "CoreTextHelper.h"
 
-@implementation CoreTextViewController
+@implementation TextViewController
 
 @synthesize currentTextView;
 @synthesize scrollView;
@@ -80,7 +80,6 @@
 }
 */
 
-
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
@@ -97,12 +96,6 @@
         }
         segmentCtrl.selectedSegmentIndex = 0;
         [self segmentControlValueChanged:segmentCtrl];
-//        NSString * contents = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:fileName ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-//        if ([currentTextView isKindOfClass:[TextView class]] && [currentTextView respondsToSelector:@selector(loadText:)]) {
-//            [currentTextView loadText:contents];
-//            [currentTextView setNeedsDisplay];
-//        }
-
     }
     
     scrollView.scrollEnabled = YES;

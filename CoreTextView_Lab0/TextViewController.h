@@ -12,7 +12,7 @@
 @class TextBaseView;
 @class CoreTextProcessor;
 
-@interface CoreTextViewController : UIViewController <UIScrollViewDelegate>
+@interface TextViewController : UIViewController <UIScrollViewDelegate>
 
 @property (nonatomic, retain) NSDate * timeTest;
 @property (nonatomic, retain) IBOutlet TextBaseView * currentTextView;

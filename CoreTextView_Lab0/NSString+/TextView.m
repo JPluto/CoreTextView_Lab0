@@ -14,6 +14,16 @@
 
 @synthesize txtProcessor;
 
+static SimpleTextParams * _globalTextParams;
++ (SimpleTextParams *)uniqTextParams
+{
+    if (_globalTextParams == nil) {
+        _globalTextParams = [SimpleTextParams new];
+    }
+    //NSAssert(_globalTextParams != nil, @"_globalTextParams 创建错误！");
+    return _globalTextParams;
+}
+
 - (id)initWithFrame:(CGRect)frame
 {
     OUT_FUNCTION_NAME();
@@ -21,8 +31,10 @@
     if (self) {
         // Initialization code
         if (txtProcessor == nil) {
-            txtProcessor = [SimpleTextProcessor new];
-            self.fontSize = txtProcessor.params->fontSize;
+            self.txtProcessor = [SimpleTextProcessor processorWithParams:[TextView uniqTextParams]];
+            self.txtProcessor.params.foregroundColor = [UIColor blackColor];
+            self.txtProcessor.params.backgroundColor = [UIColor clearColor];
+            self.fontSize = txtProcessor.params.fontSize;
         }
     }
     return self;
@@ -30,11 +42,13 @@
 
 - (id)init
 {
-    //OUT_FUNCTION_NAME();
+    OUT_FUNCTION_NAME();
     self = [super init];
     if (self) {
         if (txtProcessor == nil) {
-            txtProcessor = [SimpleTextProcessor new];
+            self.txtProcessor = [SimpleTextProcessor processorWithParams:[TextView uniqTextParams]];
+            self.txtProcessor.params.foregroundColor = [UIColor blackColor];
+            self.txtProcessor.params.backgroundColor = [UIColor clearColor];
             self.fontSize = txtProcessor.params->fontSize;
         }
     }
@@ -43,11 +57,11 @@
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-    //OUT_FUNCTION_NAME();
+    OUT_FUNCTION_NAME();
     self = [super initWithCoder:aDecoder];
     if (self) {
         if (txtProcessor == nil) {
-            txtProcessor = [SimpleTextProcessor new];
+            self.txtProcessor = [SimpleTextProcessor processorWithParams:[TextView uniqTextParams]];
             self.fontSize = txtProcessor.params->fontSize;
         }
     }
@@ -69,40 +83,43 @@
     
     // Drawing code
     CGContextRef context = UIGraphicsGetCurrentContext();
-    //CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
     
     CGRect textFrame = CGRectZero;
     textFrame.origin.x = 10;
     textFrame.origin.y = 10;
     textFrame.size.width = self.frame.size.width - textFrame.origin.x * 2.0f;
     textFrame.size.height = self.frame.size.height - textFrame.origin.y * 2.0f;
+    txtProcessor.params.visibleBounds = textFrame;
     
     NSDate * date = [NSDate date];
-    NSArray * strings = [txtProcessor textLinesFromRange:NSMakeRange(0, txtProcessor.text.length) OfString:txtProcessor.text inRect:textFrame UsingFont:txtProcessor.params.uiFont LineBreakMode:UILineBreakModeClip IsForward:YES];
-    txtProcessor.visibleLines = [NSMutableArray arrayWithArray:strings];
+    //加载文本
+    [txtProcessor textLinesFromRange:NSMakeRange(0, txtProcessor.text.length) OfString:txtProcessor.text inRect:textFrame UsingFont:txtProcessor.params.uiFont LineBreakMode:UILineBreakModeClip IsForward:NO];
     
-    CGContextSetFillColorWithColor(context, [UIColor orangeColor].CGColor);
-    CGContextFillRect(context, textFrame);
+    //填充测试背景色
+    CGContextSetFillColorWithColor(context, txtProcessor.params.backgroundColor.CGColor);
+    CGContextFillRect(context, self.bounds);
     
-    //++++++++
-    CGContextSetFillColorWithColor(context, txtProcessor.params.foregroundColor.CGColor);
+    CGContextSetFillColorWithColor(context, txtProcessor.params.foregroundColor.CGColor);    
     
-    NSInteger avaibleLines = textFrame.size.height / txtProcessor.params.uiFont.lineHeight;
+    /*
+    NSInteger avaibleLines = txtProcessor.params.visibleBounds.size.height / txtProcessor.params.uiFont.lineHeight;
+    NSLog(@"avaibleLines :%u; strings :%u", avaibleLines, [txtProcessor.visibleLines count]);
+    NSLog(@"start :%u, total :%u", txtProcessor->startGlyphIndex, txtProcessor->totalGlyphCount);
+    NSLog(@"[%@]", [txtProcessor.text substringWithRange:NSMakeRange(txtProcessor->startGlyphIndex, txtProcessor->totalGlyphCount)]);
+    */
     
     CGRect lineRect = CGRectZero;
     for (int i = 0, _counter = 0; i < [txtProcessor.visibleLines count]; i++) {
         _counter ++;
-        if (_counter > avaibleLines) {
-            break;
-        }
-        lineRect.size = textFrame.size;
+
+        lineRect.size = txtProcessor.params.visibleBounds.size;
         lineRect.origin.x = 10;
         lineRect.origin.y = 10 + i * (txtProcessor.params.uiFont.lineHeight);
         
-        //填充行背景色
-        CGContextSetFillColorWithColor(context, [UIColor purpleColor].CGColor);
         NSString * _drawedStr = [txtProcessor.visibleLines objectAtIndex:i];
         /*
+        //填充行背景色
+        CGContextSetFillColorWithColor(context, [UIColor purpleColor].CGColor);
         CGSize _lineSize = [_drawedStr sizeWithFont:txtProcessor.uiFont];
         NSLog(@"%d %@  %@", i, NSStringFromCGSize(_lineSize), _drawedStr);
         CGContextFillRect(context, CGRectMake(lineRect.origin.x, lineRect.origin.y, _lineSize.width, _lineSize.height));
@@ -113,11 +130,10 @@
         [_drawedStr drawInRect:lineRect withFont:txtProcessor.params.uiFont];
     }
     
-    //----------
-    textFrame.origin.y = 0;
-    textFrame.origin.x = 100;
+#if DEBUG_SHOW_TIME_ONVIEW
+    textFrame.origin.y = -5;
     [[NSString stringWithFormat:@"总行数:%u 耗时:%f", [txtProcessor.visibleLines count], (double)(([[NSDate date] timeIntervalSince1970] - [date timeIntervalSince1970]))] drawInRect:textFrame withFont:[UIFont systemFontOfSize:12]];
-    
+#endif
 }
 
 - (void)refreshText:(NSString *)aString

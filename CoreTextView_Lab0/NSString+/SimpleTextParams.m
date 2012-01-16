@@ -25,6 +25,7 @@
     self = [super init];
     if (self) {
         foregroundColor = [UIColor blackColor];
+        backgroundColor = [UIColor whiteColor];
         fontSize = 11.0;
         lineSpace = 0.0;
         fontName = @"Helvetica";//Helvetica Arial
@@ -51,6 +52,7 @@
     fontSize = size;
     return [UIFont fontWithName:fontName size:fontSize];
 }
+
 - (UIFont *)font
 {
     return [UIFont fontWithName:fontName size:fontSize];

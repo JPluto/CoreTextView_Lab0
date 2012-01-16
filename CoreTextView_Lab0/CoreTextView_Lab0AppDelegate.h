@@ -8,12 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@class CoreTextViewController;
+@class TextViewController;
 
 @interface CoreTextView_Lab0AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (retain, nonatomic) UIWindow *window;
-@property (retain, nonatomic) CoreTextViewController * ctvc;
+@property (retain, nonatomic) TextViewController * ctvc;
 
 - (void)onClick_reloadText:(id)sender;
 

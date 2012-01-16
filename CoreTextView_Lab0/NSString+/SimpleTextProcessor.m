@@ -20,6 +20,15 @@
 @synthesize text;
 @synthesize params;
 
++ (SimpleTextProcessor *)processorWithParams:(SimpleTextParams *)aParams
+{
+    SimpleTextProcessor * processor = [SimpleTextProcessor new];
+    if (processor) {
+        processor.params = aParams;
+    }
+    return [processor autorelease];
+}
+
 - (id)init
 {
     self = [super init];
@@ -37,13 +46,14 @@
     [textView release];
     [pagesInfo release];
     [params release];
+    [visibleLines release];
     [super dealloc];
 }
 
 - (void)initSimpleTextParams
 {    
-    params->visibleBounds.origin.x = 10.0f;
-    params->visibleBounds.origin.y = 10.0f;
+    CGPoint _textOrig = CGPointMake(10.0, 10.0);
+    params.visibleBounds = CGRectMake(_textOrig.x, _textOrig.y, textView.frame.size.width - _textOrig.x * 2, textView.frame.size.height - _textOrig.y * 2);
     
     [params update];
     if (pagesInfo == nil) {
@@ -52,7 +62,6 @@
     if (params == nil) {
         params = [SimpleTextParams new];
     }
-
 }
 
 - (void)updateParams
@@ -64,17 +73,23 @@
 {
     NSString * tmpStr = [theString substringWithRange:aRange];
     NSArray * tmpLines = nil;
-    if (isForward) {
+    if (params != nil) {
+        params.visibleBounds = theRect;
+    }
+    
+    if (isForward) {//正向排版
         startGlyphIndex = aRange.location;
         tmpLines = [self textLinesFromString:tmpStr inRect:theRect usingFont:theFont lineBreakMode:lineBreakMode];
-    }else {
+    }else {//逆向排版(先逆向排版确定可显示的字符范围，再正向将可显示的字符正常排版出来)
+        //逆向
         startGlyphIndex = 0;
         tmpLines = [self textLinesFromReverseString:tmpStr inRect:theRect usingFont:theFont lineBreakMode:lineBreakMode];
-
-        startGlyphIndex = text.length - totalGlyphCount + 1;        
+        //正向
+        startGlyphIndex = text.length - totalGlyphCount + 1;
         tmpStr = [text substringFromIndex:startGlyphIndex];
         tmpLines = [self textLinesFromString:tmpStr inRect:theRect usingFont:theFont lineBreakMode:lineBreakMode];
     }
+    self.visibleLines = [NSMutableArray arrayWithArray:tmpLines];
     return tmpLines;
 }
 
@@ -83,7 +98,7 @@
     OUT_FUNCTION_NAME();
     NSMutableArray * tmp = [NSMutableArray new];
     CGSize tmpSize;
-    NSLog(@"theString :%u", theString.length);
+
 #if DEBUG_SHOW_TIME_ELAPSE
     NSDate * startDate = [NSDate date];
 #endif
@@ -98,7 +113,7 @@
         
         NSString * _getChar = [theString substringWithRange:NSMakeRange(i, 1)];
         
-        NSLog(@"getChar %@ :%@", _getChar, NSStringFromCGSize([_getChar sizeWithFont:theFont]));
+        //NSLog(@"getChar %@ :%@", _getChar, NSStringFromCGSize([_getChar sizeWithFont:theFont]));
         if ([_getChar isEqualToString:@"\n"]) {
             if (i == 0) {//屏蔽行首的回车
                 continue;
@@ -160,7 +175,6 @@
     NSDate * endDate = [NSDate date];
     NSLog(@"result :%u  耗时 :%f", tmp.count, ([endDate timeIntervalSince1970] - [startDate timeIntervalSince1970]));
 #endif
-    
     return [tmp autorelease];
 }
 

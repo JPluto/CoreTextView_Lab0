@@ -13,6 +13,11 @@
 @class TextView;
 @class SimpleTextParams;
 
+typedef struct {
+    NSString * line;
+    NSUInteger * location;
+} LocationChar;
+
 @interface SimpleTextProcessor : NSObject
 {
 @public
@@ -34,25 +39,27 @@
 }
 
 @property (nonatomic, retain) NSString * text;
-//@property (nonatomic, retain) UIFont * uiFont;
 @property (nonatomic, retain) NSMutableArray * pagesInfo;
 @property (nonatomic, retain) NSMutableArray * visibleLines;
 @property (nonatomic, assign) TextView * textView;
 @property (nonatomic) NSUInteger currentPage;
 @property (nonatomic, retain) SimpleTextParams * params;
 
++ (SimpleTextProcessor*)processorWithParams:(SimpleTextParams*)aParams;
 - (void)initSimpleTextParams;
 - (void)updateParams;
 
 - (NSArray *)textLinesFromRange:(NSRange)aRange OfString:(NSString*)theString inRect:(CGRect)theRect UsingFont:(UIFont*)theFont LineBreakMode:(UILineBreakMode)lineBreakMode IsForward:(BOOL)isForward;
-
 - (NSArray *) textLinesFromString:(NSString*)theString inRect:(CGRect)theRect usingFont:(UIFont*)theFont lineBreakMode:(UILineBreakMode) breakMode;
-
 - (NSArray *) textLinesFromReverseString:(NSString*)theString inRect:(CGRect)theRect usingFont:(UIFont*)theFont lineBreakMode:(UILineBreakMode) breakMode;
 
+//加载文本
 - (void)loadText:(NSString*)theString;
+//加载所有页面
 - (void)loadAllPagesInFrame:(CGRect)theRect;
+//加载对应页面编号
 - (void)loadPage:(NSUInteger) pageIndex InFrame:(CGRect)theFrame;
+//加载当前页面
 - (void)loadCurrentPageInFrame:(CGRect)theRect;
 
 @end

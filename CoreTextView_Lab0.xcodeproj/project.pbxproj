@@ -24,7 +24,7 @@
 		A28EDB52146D073800B88AEB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A28EDB51146D073800B88AEB /* main.m */; };
 		A28EDB56146D073800B88AEB /* CoreTextView_Lab0AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A28EDB55146D073800B88AEB /* CoreTextView_Lab0AppDelegate.m */; };
 		A28EDB5D146D079600B88AEB /* TestForm.xib in Resources */ = {isa = PBXBuildFile; fileRef = A28EDB5C146D079600B88AEB /* TestForm.xib */; };
-		A28EDB60146D07E000B88AEB /* CoreTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A28EDB5F146D07DF00B88AEB /* CoreTextViewController.m */; };
+		A28EDB60146D07E000B88AEB /* TextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A28EDB5F146D07DF00B88AEB /* TextViewController.m */; };
 		A28EDB75146D0C7600B88AEB /* 1 in Resources */ = {isa = PBXBuildFile; fileRef = A28EDB66146D0C7600B88AEB /* 1 */; };
 		A28EDB76146D0C7600B88AEB /* 10 in Resources */ = {isa = PBXBuildFile; fileRef = A28EDB67146D0C7600B88AEB /* 10 */; };
 		A28EDB77146D0C7600B88AEB /* 11 in Resources */ = {isa = PBXBuildFile; fileRef = A28EDB68146D0C7600B88AEB /* 11 */; };
@@ -84,8 +84,8 @@
 		A28EDB54146D073800B88AEB /* CoreTextView_Lab0AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CoreTextView_Lab0AppDelegate.h; sourceTree = "<group>"; };
 		A28EDB55146D073800B88AEB /* CoreTextView_Lab0AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CoreTextView_Lab0AppDelegate.m; sourceTree = "<group>"; };
 		A28EDB5C146D079600B88AEB /* TestForm.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestForm.xib; sourceTree = "<group>"; };
-		A28EDB5E146D07DF00B88AEB /* CoreTextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreTextViewController.h; sourceTree = "<group>"; };
-		A28EDB5F146D07DF00B88AEB /* CoreTextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreTextViewController.m; sourceTree = "<group>"; };
+		A28EDB5E146D07DF00B88AEB /* TextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextViewController.h; sourceTree = "<group>"; };
+		A28EDB5F146D07DF00B88AEB /* TextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextViewController.m; sourceTree = "<group>"; };
 		A28EDB66146D0C7600B88AEB /* 1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 1; sourceTree = "<group>"; };
 		A28EDB67146D0C7600B88AEB /* 10 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 10; sourceTree = "<group>"; };
 		A28EDB68146D0C7600B88AEB /* 11 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 11; sourceTree = "<group>"; };
@@ -216,8 +216,8 @@
 				A28EDB55146D073800B88AEB /* CoreTextView_Lab0AppDelegate.m */,
 				A28EDB4C146D073800B88AEB /* Supporting Files */,
 				A28EDB5C146D079600B88AEB /* TestForm.xib */,
-				A28EDB5E146D07DF00B88AEB /* CoreTextViewController.h */,
-				A28EDB5F146D07DF00B88AEB /* CoreTextViewController.m */,
+				A28EDB5E146D07DF00B88AEB /* TextViewController.h */,
+				A28EDB5F146D07DF00B88AEB /* TextViewController.m */,
 				A284C59E1499D793005A6BF3 /* TextScrollView.h */,
 				A284C59F1499D793005A6BF3 /* TextScrollView.m */,
 				A269D87714A9578A005D1327 /* TextBaseView.h */,
@@ -387,7 +387,7 @@
 			files = (
 				A28EDB52146D073800B88AEB /* main.m in Sources */,
 				A28EDB56146D073800B88AEB /* CoreTextView_Lab0AppDelegate.m in Sources */,
-				A28EDB60146D07E000B88AEB /* CoreTextViewController.m in Sources */,
+				A28EDB60146D07E000B88AEB /* TextViewController.m in Sources */,
 				A2AA8318147DF57100311B92 /* NSString+Utils.m in Sources */,
 				A2AA8319147DF57100311B92 /* TDSystemUtil.m in Sources */,
 				A2AA831A147DF57100311B92 /* UIButton+Utils.m in Sources */,
