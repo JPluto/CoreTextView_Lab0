@@ -10,6 +10,27 @@
 #import "SimpleTextParams.h"
 #import "TextView.h"
 
+@implementation LineInfo
+
+@synthesize string;
+@synthesize range;
+
++ (id)infoWithRange:(NSRange)aRange andString:(NSString *)aString
+{
+    LineInfo * info = [LineInfo new];
+    info.range = aRange;
+    info.string = aString;
+    return [info autorelease];
+}
+
+- (void)dealloc
+{
+    [string release];
+    [super dealloc];
+}
+
+@end
+
 @implementation SimpleTextProcessor
 
 //@synthesize uiFont;
@@ -47,6 +68,7 @@
     [pagesInfo release];
     [params release];
     [visibleLines release];
+    [linesInfo release];
     [super dealloc];
 }
 
@@ -55,6 +77,9 @@
     CGPoint _textOrig = CGPointMake(10.0, 10.0);
     params.visibleBounds = CGRectMake(_textOrig.x, _textOrig.y, textView.frame.size.width - _textOrig.x * 2, textView.frame.size.height - _textOrig.y * 2);
     
+    if (linesInfo == nil) {
+        linesInfo = [NSMutableArray new];
+    }
     [params update];
     if (pagesInfo == nil) {
         self.pagesInfo = [NSMutableArray array];
@@ -77,24 +102,28 @@
 - (NSArray *)textLinesFromRange:(NSRange)aRange OfString:(NSString *)theString inRect:(CGRect)theRect UsingFont:(UIFont *)theFont LineBreakMode:(UILineBreakMode)lineBreakMode IsForward:(BOOL)isForward
 {
     NSString * tmpStr = [theString substringWithRange:aRange];
-    NSArray * tmpLines = nil;
+    NSMutableArray * tmpLines = nil;
     if (params != nil) {
         params.visibleBounds = theRect;
     }
     
     if (isForward) {//正向排版
         startGlyphIndex = aRange.location;
-        tmpLines = [self textLinesFromString:tmpStr inRect:theRect usingFont:theFont lineBreakMode:lineBreakMode];
+        tmpLines = (NSMutableArray*)[self textLinesFromString:tmpStr inRect:theRect usingFont:theFont lineBreakMode:lineBreakMode];
     }else {//逆向排版(先逆向排版确定可显示的字符范围，再正向将可显示的字符正常排版出来)
         //逆向
         startGlyphIndex = 0;
-        tmpLines = [self textLinesFromReverseString:tmpStr inRect:theRect usingFont:theFont lineBreakMode:lineBreakMode];
+        tmpLines = (NSMutableArray*)[self textLinesFromReverseString:tmpStr inRect:theRect usingFont:theFont lineBreakMode:lineBreakMode];
         [XUtils printArray:tmpLines];
         //正向
         startGlyphIndex = tmpStr.length - totalGlyphCount + 1;
         tmpStr = [text substringFromIndex:startGlyphIndex];
-        tmpLines = [self textLinesFromString:tmpStr inRect:theRect usingFont:theFont lineBreakMode:lineBreakMode];
+        tmpLines = (NSMutableArray*)[self textLinesFromString:tmpStr inRect:theRect usingFont:theFont lineBreakMode:lineBreakMode];
+        NSUInteger maxLines = [self getMaxLinesCount];
+        NSLog(@"max :%u, tmpLines :%u", maxLines, [tmpLines count]);
+        tmpLines = [NSMutableArray arrayWithArray:[tmpLines subarrayWithRange:NSMakeRange(tmpLines.count - maxLines, maxLines)]];
     }
+    
     self.visibleLines = [NSMutableArray arrayWithArray:tmpLines];
     NSLog(@"%@ startGlyphIndex :%u; totalGlyphCount %u", DEBUG_FUNCTION_NAME, startGlyphIndex, totalGlyphCount);
     return tmpLines;
@@ -105,7 +134,8 @@
     OUT_FUNCTION_NAME();
     NSMutableArray * tmp = [NSMutableArray new];
     CGSize tmpSize;
-
+    [linesInfo removeAllObjects];
+    
 #if DEBUG_SHOW_TIME_ELAPSE
     NSDate * startDate = [NSDate date];
 #endif
@@ -118,20 +148,23 @@
             mutableString = [NSMutableString string];
         }
         
-        NSString * _getChar = [theString substringWithRange:NSMakeRange(i, 1)];
-        
-        //NSLog(@"getChar %@ :%@", _getChar, NSStringFromCGSize([_getChar sizeWithFont:theFont]));
+        NSString * _getChar = [theString substringWithRange:NSMakeRange(i, 1)];        
         if ([_getChar isEqualToString:@"\r"]) {
             NSLog(@"found \\r");
             if (i == 0) {
+                NSLog(@"屏蔽行首的回车");
+                i++;
                 continue;
             }
         }else if ([_getChar isEqualToString:@"\n"]) {
             NSLog(@"found \\n");
             if (i == 0) {//屏蔽行首的回车
+                NSLog(@"屏蔽行首的回车");
+                i++;
                 continue;
             }
         }else if ([_getChar isEqualToString:@"\t"]) {
+            NSLog(@"found \\t");
             [mutableString appendString:@" "];
         }else {
             [mutableString appendString: _getChar];
@@ -194,7 +227,7 @@
 
 - (NSArray *)textLinesFromReverseString:(NSString *)theString inRect:(CGRect)theRect usingFont:(UIFont *)theFont lineBreakMode:(UILineBreakMode)breakMode
 {
-    //OUT_FUNCTION_NAME();
+    OUT_FUNCTION_NAME();
     NSMutableArray * tmp = [NSMutableArray new];
     CGSize tmpSize;
     
@@ -217,6 +250,7 @@
         }else if ([_getChar isEqualToString:@"\n"]) {
             NSLog(@"found \\n");
         }else if ([_getChar isEqualToString:@"\t"]) {
+            NSLog(@"found \\t");
             [mutableString insertString:@" " atIndex:0];
         }else {
             //往第一个字符处添加字符
@@ -229,11 +263,11 @@
         NSString * _subStr = nil;
         if ([_getChar isEqualToString:@"\n"]) {
             _subStr = mutableString;
-            [tmp insertObject:mutableString atIndex:0];
+            [tmp insertObject:_subStr atIndex:0];
             mutableString = [NSMutableString string];
             
-            if (tmp.count * _lineHeight > theRect.size.height) {//整体高度超出显示区域
-                //NSLog(@"超出高度 :%@", [tmp objectAtIndex:0]);
+            if (tmp.count * _lineHeight >= theRect.size.height) {//整体高度超出显示区域
+                NSLog(@"超出高度 :%@", [tmp objectAtIndex:0]);
                 i += [[tmp objectAtIndex:0] length];
                 [tmp removeObjectAtIndex:0];
                 break;
@@ -245,12 +279,12 @@
             mutableString = [NSMutableString string];
             i++;//回溯
             
-            if (tmp.count * _lineHeight > theRect.size.height) {//整体高度超出显示区域
-                //NSLog(@"超出高度 :%@", [tmp objectAtIndex:0]);
-                i += [[tmp objectAtIndex:0] length];
-                [tmp removeObjectAtIndex:0];
-                break;
-            }
+//            if (tmp.count * _lineHeight > theRect.size.height) {//整体高度超出显示区域
+//                //NSLog(@"超出高度 :%@", [tmp objectAtIndex:0]);
+//                i += [[tmp objectAtIndex:0] length];
+//                [tmp removeObjectAtIndex:0];
+//                break;
+//            }
 
         }
         
@@ -262,7 +296,7 @@
                 [tmp removeObjectAtIndex:0];
                 break;
             }
-            
+            NSLog(@"搜索到开头!");
             mutableString = nil;
             break;
         }
@@ -355,7 +389,7 @@
     if (startGlyphIndex + totalGlyphCount + 1 >= text.length || startGlyphIndex >= NSNotFound) {
         return;
     }
-    startGlyphIndex += (totalGlyphCount - 1);
+    startGlyphIndex += totalGlyphCount;
     [self textLinesFromRange:NSMakeRange(startGlyphIndex, self.text.length - startGlyphIndex) OfString:text inRect:params.visibleBounds UsingFont:params.uiFont LineBreakMode:UILineBreakModeCharacterWrap IsForward:YES];
 }
 
@@ -367,8 +401,13 @@
     }
     NSUInteger endIndex = startGlyphIndex;
     startGlyphIndex = 0;
-    NSLog(@"%@", [text substringWithRange:NSMakeRange(startGlyphIndex, endIndex)]);
+    //NSLog(@"%@", [text substringWithRange:NSMakeRange(startGlyphIndex, endIndex)]);
     [self textLinesFromRange:NSMakeRange(startGlyphIndex, endIndex) OfString:text inRect:params.visibleBounds UsingFont:params.uiFont LineBreakMode:UILineBreakModeCharacterWrap IsForward:NO];
+}
+
+- (NSUInteger)getMaxLinesCount
+{
+    return params.visibleBounds.size.height / params.lineHeight;
 }
 
 @end

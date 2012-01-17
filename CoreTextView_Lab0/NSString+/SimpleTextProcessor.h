@@ -18,6 +18,19 @@ typedef struct {
     NSUInteger * location;
 } LocationChar;
 
+@interface LineInfo : NSObject {
+@private
+    NSString * string;
+    NSRange range;
+}
+@property (nonatomic, retain) NSString * string;
+@property (nonatomic, assign) NSRange range;
+
++ (id)infoWithRange:(NSRange)aRange andString:(NSString*)aString;
+
+@end
+
+
 @interface SimpleTextProcessor : NSObject
 {
 @public
@@ -29,6 +42,7 @@ typedef struct {
     NSUInteger totalGlyphCount;
     //当前页的字符行
     NSMutableArray * visibleLines;
+    NSMutableArray * linesInfo;
     //当前页号
     NSUInteger currentPage;
     //当前处理的文本
@@ -63,4 +77,5 @@ typedef struct {
 - (void)loadCurrentPageInFrame:(CGRect)theRect;
 - (void)loadNextPage;
 - (void)loadPrevPage;
+- (NSUInteger)getMaxLinesCount;
 @end

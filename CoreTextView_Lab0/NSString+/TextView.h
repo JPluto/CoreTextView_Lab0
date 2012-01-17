@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "TextBaseView.h"
 
-#define DEBUG_SHOW_TIME_ONVIEW  1
+#define DEBUG_SHOW_TIME_ONVIEW  0
 
 @class SimpleTextProcessor;
 @class SimpleTextParams;
