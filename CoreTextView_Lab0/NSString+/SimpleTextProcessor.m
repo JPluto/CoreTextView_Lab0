@@ -69,6 +69,11 @@
     [params update];
 }
 
+- (void)reloadText
+{
+    [self textLinesFromRange:NSMakeRange(startGlyphIndex, totalGlyphCount) OfString:text inRect:params.visibleBounds UsingFont:params.uiFont LineBreakMode:UILineBreakModeCharacterWrap IsForward:YES];
+}
+
 - (NSArray *)textLinesFromRange:(NSRange)aRange OfString:(NSString *)theString inRect:(CGRect)theRect UsingFont:(UIFont *)theFont LineBreakMode:(UILineBreakMode)lineBreakMode IsForward:(BOOL)isForward
 {
     NSString * tmpStr = [theString substringWithRange:aRange];
@@ -84,12 +89,14 @@
         //逆向
         startGlyphIndex = 0;
         tmpLines = [self textLinesFromReverseString:tmpStr inRect:theRect usingFont:theFont lineBreakMode:lineBreakMode];
+        [XUtils printArray:tmpLines];
         //正向
-        startGlyphIndex = text.length - totalGlyphCount + 1;
+        startGlyphIndex = tmpStr.length - totalGlyphCount + 1;
         tmpStr = [text substringFromIndex:startGlyphIndex];
         tmpLines = [self textLinesFromString:tmpStr inRect:theRect usingFont:theFont lineBreakMode:lineBreakMode];
     }
     self.visibleLines = [NSMutableArray arrayWithArray:tmpLines];
+    NSLog(@"%@ startGlyphIndex :%u; totalGlyphCount %u", DEBUG_FUNCTION_NAME, startGlyphIndex, totalGlyphCount);
     return tmpLines;
 }
 
@@ -114,7 +121,13 @@
         NSString * _getChar = [theString substringWithRange:NSMakeRange(i, 1)];
         
         //NSLog(@"getChar %@ :%@", _getChar, NSStringFromCGSize([_getChar sizeWithFont:theFont]));
-        if ([_getChar isEqualToString:@"\n"]) {
+        if ([_getChar isEqualToString:@"\r"]) {
+            NSLog(@"found \\r");
+            if (i == 0) {
+                continue;
+            }
+        }else if ([_getChar isEqualToString:@"\n"]) {
+            NSLog(@"found \\n");
             if (i == 0) {//屏蔽行首的回车
                 continue;
             }
@@ -127,22 +140,23 @@
         //tmpSize = [mutableString sizeWithFont:theFont constrainedToSize:theRect.size lineBreakMode:breakMode];
         
         NSString * _subStr = nil;
-        if (tmpSize.width > theRect.size.width) {
-            _subStr = [mutableString substringToIndex:mutableString.length - 1];
-            //NSLog(@"回溯  %@  %@  lineHeight :%f    \n_subStr :%@\nmutableString :%@", NSStringFromCGSize(tmpSize), NSStringFromCGSize([_subStr sizeWithFont:theFont]), _lineHeight, _subStr, mutableString);
-            [tmp addObject:_subStr];
+        
+        if ([_getChar isEqualToString:@"\n"]) {
+            [tmp addObject:mutableString];
             mutableString = [NSMutableString string];
-            i--;//回溯
-            
             if (tmp.count * _lineHeight > theRect.size.height) {//整体高度超出显示区域
                 //NSLog(@"超出高度 :%@", [tmp lastObject]);
                 i -= ((NSString*)tmp.lastObject).length;
                 [tmp removeLastObject];
                 break;
             }
-        }else if ([_getChar isEqualToString:@"\n"]) {
-            [tmp addObject:mutableString];
+        }else if (tmpSize.width > theRect.size.width) {
+            _subStr = [mutableString substringToIndex:mutableString.length - 1];
+            //NSLog(@"回溯  %@  %@  lineHeight :%f    \n_subStr :%@\nmutableString :%@", NSStringFromCGSize(tmpSize), NSStringFromCGSize([_subStr sizeWithFont:theFont]), _lineHeight, _subStr, mutableString);
+            [tmp addObject:_subStr];
             mutableString = [NSMutableString string];
+            i--;//回溯
+            
             if (tmp.count * _lineHeight > theRect.size.height) {//整体高度超出显示区域
                 //NSLog(@"超出高度 :%@", [tmp lastObject]);
                 i -= ((NSString*)tmp.lastObject).length;
@@ -198,8 +212,10 @@
         
         NSString * _getChar = [theString substringWithRange:NSMakeRange(i, 1)];
 
-        if ([_getChar isEqualToString:@"\n"]) {
-            
+        if ([_getChar isEqualToString:@"\r"]) {
+            NSLog(@"found \\r");
+        }else if ([_getChar isEqualToString:@"\n"]) {
+            NSLog(@"found \\n");
         }else if ([_getChar isEqualToString:@"\t"]) {
             [mutableString insertString:@" " atIndex:0];
         }else {
@@ -335,14 +351,24 @@
 
 - (void)loadNextPage
 {
-    startGlyphIndex += totalGlyphCount;
+    NSLog(@"%@ ", DEBUG_FUNCTION_NAME);
+    if (startGlyphIndex + totalGlyphCount + 1 >= text.length || startGlyphIndex >= NSNotFound) {
+        return;
+    }
+    startGlyphIndex += (totalGlyphCount - 1);
     [self textLinesFromRange:NSMakeRange(startGlyphIndex, self.text.length - startGlyphIndex) OfString:text inRect:params.visibleBounds UsingFont:params.uiFont LineBreakMode:UILineBreakModeCharacterWrap IsForward:YES];
-    [textView setNeedsDisplay];
 }
 
 - (void)loadPrevPage
 {
-    
+    NSLog(@"%@ ", DEBUG_FUNCTION_NAME);
+    if (startGlyphIndex == 0 || startGlyphIndex >= NSNotFound) {
+        return;
+    }
+    NSUInteger endIndex = startGlyphIndex;
+    startGlyphIndex = 0;
+    NSLog(@"%@", [text substringWithRange:NSMakeRange(startGlyphIndex, endIndex)]);
+    [self textLinesFromRange:NSMakeRange(startGlyphIndex, endIndex) OfString:text inRect:params.visibleBounds UsingFont:params.uiFont LineBreakMode:UILineBreakModeCharacterWrap IsForward:NO];
 }
 
 @end

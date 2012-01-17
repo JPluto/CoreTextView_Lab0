@@ -86,11 +86,12 @@
 {
     [super viewDidLoad];
     if (textViews == nil) {
-        textViews = [[NSArray alloc] initWithObjects:[TextView new], [CoreTextView new], [OpenGLES_TextView new], nil];
+        textViews = [[NSArray alloc] initWithObjects:[[TextView new] autorelease], [[CoreTextView new] autorelease], [[OpenGLES_TextView new] autorelease], nil];
         [[textViews objectAtIndex:0] setBackgroundColor:[UIColor colorWithAlpha:255 Red:222 green:228 blue:234]];
         [[textViews objectAtIndex:1] setBackgroundColor:[UIColor colorWithAlpha:255 Red:222 green:228 blue:234]];
         [[textViews objectAtIndex:2] setBackgroundColor:[UIColor colorWithAlpha:255 Red:222 green:228 blue:234]];
     }
+    
     if (segmentCtrl) {
         if (![[segmentCtrl allTargets] containsObject:self]) {
             [segmentCtrl addTarget:self action:@selector(segmentControlValueChanged:) forControlEvents:UIControlEventValueChanged];
@@ -100,18 +101,20 @@
     }
     
     scrollView.scrollEnabled = YES;
-
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
     OUT_FUNCTION_NAME();
+    
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+    
     if (segmentCtrl) {
         [segmentCtrl removeTarget:self action:@selector(segmentControlValueChanged:) forControlEvents:UIControlEventValueChanged];
     }
+    
     self.segmentCtrl = nil;
     self.currentTextView = nil;
     self.scrollView = nil;
@@ -120,27 +123,18 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     NSLog(@"%@  :%@", DEBUG_FUNCTION_NAME, [self.currentTextView classForCoder]);
+    
     if ([currentTextView isKindOfClass:[TextView class]]) {
         SimpleTextProcessor * processor = [(TextView*)currentTextView processor];
         CGRect textFrame = CGRectZero;
         textFrame.origin.x = 10;
         textFrame.origin.y = 10;
-        textFrame.size.width = self.view.frame.size.width - textFrame.origin.x * 2.0f;
-        textFrame.size.height = self.view.frame.size.height - textFrame.origin.y * 2.0f;
+        textFrame.size.width = self.currentTextView.frame.size.width - textFrame.origin.x * 2.0f;
+        textFrame.size.height = self.currentTextView.frame.size.height - textFrame.origin.y * 2.0f;
         processor.params.visibleBounds = textFrame;
-        
+        NSLog(@"frame :%@", NSStringFromCGRect(self.currentTextView.frame));
         [processor textLinesFromRange:NSMakeRange(0, processor.text.length) OfString:processor.text inRect:textFrame UsingFont:processor.params.uiFont LineBreakMode:UILineBreakModeCharacterWrap IsForward:YES];
     }
-//    if ([self.currentTextView respondsToSelector:@selector(loadText:)]) {
-//        NSString * fileContent = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:fileName ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-//        fileContent = [fileContent stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"];
-//        if ([self.currentTextView isKindOfClass:[CoreTextView class]]) {
-//            [(CoreTextView*)currentTextView loadText:fileContent];
-//        }else {
-//            [self.currentTextView loadText:fileContent];
-//            [currentTextView setNeedsDisplay];
-//        }
-//    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -192,6 +186,7 @@
         TextView * txtView = (TextView*)self.currentTextView;
         if (txtView.processor.params.fontSize > 5) {
             txtView.processor.params.fontSize -= 1.0f;
+            [txtView.processor reloadText];
             [txtView setNeedsDisplay];
         }
     }
@@ -227,6 +222,7 @@
         TextView * txtView = (TextView*)self.currentTextView;
         if (txtView.processor.params.fontSize < 30) {
             txtView.processor.params.fontSize += 1.0f;
+            [txtView.processor reloadText];
             [txtView setNeedsDisplay];
         }
     }
@@ -240,7 +236,8 @@
         [currentTextView setNeedsDisplay];
     }else if([currentTextView isKindOfClass:[TextView class]]) {
         SimpleTextProcessor * processor = [(TextView*)currentTextView processor];
-        
+        [processor loadPrevPage];
+        [currentTextView setNeedsDisplay];
     }
 }
 
@@ -253,7 +250,7 @@
     }else if([currentTextView isKindOfClass:[TextView class]]) {
         SimpleTextProcessor * processor = [(TextView*)currentTextView processor];
         [processor loadNextPage];
-        [self.view setNeedsDisplay];
+        [currentTextView setNeedsDisplay];
     }
 
 }
@@ -282,13 +279,16 @@
 {
     NSLog(@"%@,  %u", DEBUG_FUNCTION_NAME, segmentCtrl.selectedSegmentIndex);
     
-    ((UIView*)[textViews objectAtIndex:segmentCtrl.selectedSegmentIndex]).frame = self.currentTextView.frame;
+    UIView * _willSelectedView = [textViews objectAtIndex:segmentCtrl.selectedSegmentIndex];
+    
+    _willSelectedView.frame = self.currentTextView.frame;
     [currentTextView removeFromSuperview];
     self.currentTextView = [textViews objectAtIndex:segmentCtrl.selectedSegmentIndex];
     [scrollView addSubview:currentTextView];
     
     NSString * fileContent = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:fileName ofType:@""] encoding:NSUTF16LittleEndianStringEncoding error:nil] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    fileContent = [fileContent stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"];
+    fileContent = [fileContent stringByReplacingOccurrencesOfString:@"\r" withString:@""];
+    
     if ([currentTextView isKindOfClass:[TextView class]]) {
         [currentTextView loadText:fileContent];
         [currentTextView setNeedsDisplay];

@@ -17,14 +17,13 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
+    _window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
-    self.window.backgroundColor = [UIColor whiteColor];
+    _window.backgroundColor = [UIColor whiteColor];
     
-    self.ctvc = [[TextViewController alloc] initWithNibName:@"TestForm" bundle:nil];
-    
-    [self.window addSubview:ctvc.view];
-    [self.window makeKeyAndVisible];
+    ctvc = [[TextViewController alloc] initWithNibName:@"TestForm" bundle:nil];
+    [_window addSubview:ctvc.view];
+    [_window makeKeyAndVisible];
     return YES;
 }
 

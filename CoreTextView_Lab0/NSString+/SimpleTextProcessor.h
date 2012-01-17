@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #define DEBUG_SHOW_TIME_ELAPSE   0
-
+#define REVERSE_SEGMENT_MAX_WORDS   500
 @class TextView;
 @class SimpleTextParams;
 
@@ -21,7 +21,6 @@ typedef struct {
 @interface SimpleTextProcessor : NSObject
 {
 @public
-    
     //完全分页信息
     NSMutableArray * pagesInfo;
     //当前页起始下标
@@ -49,6 +48,7 @@ typedef struct {
 - (void)initSimpleTextParams;
 - (void)updateParams;
 
+- (void)reloadText;
 - (NSArray *)textLinesFromRange:(NSRange)aRange OfString:(NSString*)theString inRect:(CGRect)theRect UsingFont:(UIFont*)theFont LineBreakMode:(UILineBreakMode)lineBreakMode IsForward:(BOOL)isForward;
 - (NSArray *) textLinesFromString:(NSString*)theString inRect:(CGRect)theRect usingFont:(UIFont*)theFont lineBreakMode:(UILineBreakMode) breakMode;
 - (NSArray *) textLinesFromReverseString:(NSString*)theString inRect:(CGRect)theRect usingFont:(UIFont*)theFont lineBreakMode:(UILineBreakMode) breakMode;

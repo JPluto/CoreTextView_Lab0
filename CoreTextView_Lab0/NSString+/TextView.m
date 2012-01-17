@@ -19,6 +19,8 @@ static SimpleTextParams * _globalTextParams;
 {
     if (_globalTextParams == nil) {
         _globalTextParams = [SimpleTextParams new];
+        _globalTextParams.foregroundColor = [UIColor blackColor];
+        _globalTextParams.backgroundColor = [UIColor clearColor];
     }
     return _globalTextParams;
 }
@@ -31,8 +33,8 @@ static SimpleTextParams * _globalTextParams;
         // Initialization code
         if (processor == nil) {
             self.processor = [SimpleTextProcessor processorWithParams:[TextView uniqTextParams]];
-            self.processor.params.foregroundColor = [UIColor blackColor];
-            self.processor.params.backgroundColor = [UIColor clearColor];
+//            self.processor.params.foregroundColor = [UIColor blackColor];
+//            self.processor.params.backgroundColor = [UIColor clearColor];
         }
     }
     return self;
@@ -45,8 +47,8 @@ static SimpleTextParams * _globalTextParams;
     if (self) {
         if (processor == nil) {
             self.processor = [SimpleTextProcessor processorWithParams:[TextView uniqTextParams]];
-            self.processor.params.foregroundColor = [UIColor blackColor];
-            self.processor.params.backgroundColor = [UIColor clearColor];
+//            self.processor.params.foregroundColor = [UIColor blackColor];
+//            self.processor.params.backgroundColor = [UIColor clearColor];
         }
     }
     return self;
@@ -59,8 +61,8 @@ static SimpleTextParams * _globalTextParams;
     if (self) {
         if (processor == nil) {
             self.processor = [SimpleTextProcessor processorWithParams:[TextView uniqTextParams]];
-            self.processor.params.foregroundColor = [UIColor blackColor];
-            self.processor.params.backgroundColor = [UIColor clearColor];
+//            self.processor.params.foregroundColor = [UIColor blackColor];
+//            self.processor.params.backgroundColor = [UIColor clearColor];
         }
     }
     return self;
@@ -76,9 +78,10 @@ static SimpleTextParams * _globalTextParams;
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
-    //OUT_FUNCTION_NAME();
+    OUT_FUNCTION_NAME();
+    NSLog(@"visibleLines :%u", [processor.visibleLines count]);
     [super drawRect:rect];
-    
+
     // Drawing code
     CGContextRef context = UIGraphicsGetCurrentContext();
     
@@ -89,10 +92,7 @@ static SimpleTextParams * _globalTextParams;
     textFrame.size.height = self.frame.size.height - textFrame.origin.y * 2.0f;
 //    processor.params.visibleBounds = textFrame;
     
-    NSDate * date = [NSDate date];
-    //加载文本
-    //[processor textLinesFromRange:NSMakeRange(0, processor.text.length) OfString:processor.text inRect:textFrame UsingFont:processor.params.uiFont LineBreakMode:UILineBreakModeClip IsForward:YES];
-    
+    NSDate * date = [NSDate date];   
     //填充测试背景色
     CGContextSetFillColorWithColor(context, processor.params.backgroundColor.CGColor);
     CGContextFillRect(context, self.bounds);
